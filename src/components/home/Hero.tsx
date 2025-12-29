@@ -15,27 +15,25 @@ const banner_slider: string[] = [
     "/assets/img/hero/hero-6/thumb-5.jpg",
 ];
 
-function ensureMinSlides<T>(items: T[], min: number): T[] {
-    if (items.length >= min) return items;
-    const out: T[] = [];
-    while (out.length < min) out.push(...items);
-    return out.slice(0, min);
-}
-
-// Swiper loop with slidesPerView:'auto' can warn if there aren't enough slides visible.
-// Keep a conservative minimum to avoid warnings on wide viewports.
-const banner_slider_loop = ensureMinSlides(banner_slider, 32);
+// Ensure enough items for a smooth infinite loop on wide viewports (slidesPerView:'auto')
+const MIN_SLIDES = 20;
+const banner_slider_loop =
+    banner_slider.length < MIN_SLIDES
+        ? Array.from({ length: MIN_SLIDES }, (_, i) => banner_slider[i % banner_slider.length])
+        : banner_slider;
 
 const setting = {
     loop: true,
-    freeMode: true,
+    freeMode: false,
     slidesPerView: 'auto' as const,
     spaceBetween: 30,
-    centeredSlides: true,
+    centeredSlides: false, // start from the left edge
     allowTouchMove: false,
-    speed: 30000,
+    speed: 6000,
+    loopAdditionalSlides: 10, // helps Swiper keep a stable loop cache
+    initialSlide: 0,
     autoplay: {
-        delay: 1,
+        delay: 1, // near-continuous scroll
         disableOnInteraction: true,
     },
 };
