@@ -5,8 +5,9 @@ import BlogSidebarArea from "@/components/pages/blog-sidebar/BlogSidebarArea";
 import BlogHero from "@/components/pages/blog-sidebar/BlogHero";
 import BlogRelated from "@/components/pages/blog-sidebar/BlogRelated";
 import Cta from "@/components/common/Cta";
+import { getSiteUrl } from "@/lib/siteUrl";
 
-const SITE_URL = process.env.SITE_URL || "https://www.inomadigital.com";
+const SITE_URL = getSiteUrl();
 export const revalidate = 300;
 
 function stripHtml(html?: string) {

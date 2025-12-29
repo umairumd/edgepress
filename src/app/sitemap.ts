@@ -1,7 +1,9 @@
 import type { MetadataRoute } from "next";
 import { getPosts, getPortfolioItems } from "@/lib/wp";
 
-const SITE_URL = process.env.SITE_URL || "https://www.inomadigital.com";
+import { getSiteUrl } from "@/lib/siteUrl";
+
+const SITE_URL = getSiteUrl();
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes = ["", "/about", "/service", "/portfolio", "/team", "/pricing", "/faq", "/contact", "/blog"].map((route) => ({

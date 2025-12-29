@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPortfolioItem, getPortfolioItems } from "@/lib/wp";
 import Image from "next/image";
+import { getSiteUrl } from "@/lib/siteUrl";
 
-const SITE_URL = process.env.SITE_URL || "https://www.inomadigital.com";
+const SITE_URL = getSiteUrl();
 export const revalidate = 300;
 
 function stripHtml(html?: string) {

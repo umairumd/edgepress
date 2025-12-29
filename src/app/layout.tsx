@@ -5,10 +5,12 @@ import "react-responsive-modal/styles.css";
 import "@/styles/globals.scss";
 import LayoutWrapper from "@/components/common/LayoutWrapper";
 import { fontVarsClassName } from "./fonts";
+import { getSiteUrl } from "@/lib/siteUrl";
 
-const SITE_URL = process.env.SITE_URL || "https://www.inomadigital.com";
+const SITE_URL = getSiteUrl();
 
 export const metadata: Metadata = {
+  // Don't throw during build if SITE_URL is misconfigured.
   metadataBase: new URL(SITE_URL),
   title: {
     default: "Inoma Digital",
