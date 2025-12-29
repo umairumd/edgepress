@@ -43,7 +43,8 @@ export default function RootLayout({
       <head>
         {/* Static CSS from public folder */}
         <link rel="stylesheet" href="/assets/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="/assets/css/animate.css" />
+        {/* Animations are non-critical for mobile LCP/FCP; load only on desktop */}
+        <link rel="stylesheet" href="/assets/css/animate.css" media="(min-width: 992px)" />
         <link rel="stylesheet" href="/assets/css/fontawesome-all.min.css" />
         <link rel="stylesheet" href="/assets/css/defauls-spacing.css" />
         <link rel="stylesheet" href="/assets/css/main.css" />

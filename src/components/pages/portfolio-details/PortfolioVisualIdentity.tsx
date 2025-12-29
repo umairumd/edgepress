@@ -9,6 +9,15 @@ const slider_data: string[] = [
     "/assets/img/portfolio/details/thumb-4.jpg",
 ];
 
+function ensureMinSlides<T>(items: T[], min: number): T[] {
+    if (items.length >= min) return items;
+    const out: T[] = [];
+    while (out.length < min) out.push(...items);
+    return out.slice(0, min);
+}
+
+const slider_data_loop = ensureMinSlides(slider_data, 10);
+
 const setting = {
     slidesPerView: 2,
     speed: 700,
@@ -68,7 +77,7 @@ const PortfolioVisualIdentity = () => {
                     <div className="col-lg-11">
                         <div className="td-portfolio-identity-slider-wrap">
                             <Swiper {...setting} modules={[Autoplay, Navigation]} className="swiper-container td-portfolio-identity-slider">
-                                {slider_data.map((img, i) => (
+                                {slider_data_loop.map((img, i) => (
                                     <SwiperSlide key={i} className="swiper-slide">
                                         <div className="td-portfolio-identity-slider-thumb">
                                             <img className="w-100" src={img} alt="" />
