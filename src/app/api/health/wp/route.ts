@@ -37,7 +37,13 @@ export async function GET() {
   try {
     const res = await fetch(endpoint, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      // Some security layers (e.g., Cloudflare Bot Fight Mode) can be stricter for
+      // non-browser user agents. This is a harmless header for WordPress/WPGraphQL.
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "User-Agent": "Mozilla/5.0 (compatible; InomaDigital/1.0; +https://inomadigital.com)",
+      },
       body: JSON.stringify({ query }),
       // Don't cache health checks
       cache: "no-store",
@@ -58,10 +64,18 @@ export async function GET() {
         ok: res.ok && !json?.errors,
         wpHost: host,
         httpStatus: res.status,
+        responseHeaders: {
+          server: res.headers.get("server"),
+          "content-type": res.headers.get("content-type"),
+          location: res.headers.get("location"),
+          "cf-ray": res.headers.get("cf-ray"),
+          "cf-cache-status": res.headers.get("cf-cache-status"),
+        },
         hasGraphQlErrors: Boolean(json?.errors?.length),
         graphQlErrors: json?.errors?.slice?.(0, 3) ?? undefined,
         postCountSample: Array.isArray(posts) ? posts.length : 0,
         postsSample: Array.isArray(posts) ? posts : undefined,
+        bodyPreview: !res.ok ? text.slice(0, 800) : undefined,
       },
       { status: res.ok ? 200 : 502 }
     );
