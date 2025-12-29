@@ -167,6 +167,29 @@ img {
 .td-header-6-wrapper.header-sticky {
     background: #fff !important;
 }
+
+/* Default (non-home) header should always look like Home sticky */
+.td-header-6-wrapper.td-header-default {
+    background: #fff !important;
+    border-bottom: 1px solid rgba(53, 52, 52, 0.2) !important;
+}
+.td-header-6-wrapper.td-header-default .logo-1 {
+    display: none !important;
+}
+.td-header-6-wrapper.td-header-default .logo-2 {
+    display: block !important;
+}
+.td-header-6-wrapper.td-header-default .tdmenu__navbar-wrap > ul > li > a,
+.td-header-6-wrapper.td-header-default .tdmenu__navbar-wrap > ul > li .sub-menu > li > a {
+    color: var(--td-common-black) !important;
+}
+.td-header-6-wrapper.td-header-default .tdmenu-offcanvas-open-bar span {
+    background: #062539 !important;
+}
+.td-header-6-wrapper.td-header-default .td-btn-12 {
+    border-color: rgba(48, 49, 51, 0.15) !important;
+    color: #062539 !important;
+}
 /* Keep home header dark on mobile too (sticky stays white) */
 @media (max-width: 991px) {
     .td-header-6-wrapper {
@@ -368,11 +391,11 @@ img {
 }
 
 /* Home non-sticky (dark hero bg): make Let’s Talk match contrast like inner mobile reference */
-.td-header-6-wrapper:not(.header-sticky) .td-btn-12 {
+.td-header-6-wrapper:not(.td-header-default):not(.header-sticky) .td-btn-12 {
     color: #fff !important;
     border-color: rgba(255, 255, 255, 0.28) !important;
 }
-.td-header-6-wrapper:not(.header-sticky) .td-btn-12:hover {
+.td-header-6-wrapper:not(.td-header-default):not(.header-sticky) .td-btn-12:hover {
     background: #b8e9ff !important;
     border-color: #b8e9ff !important;
     color: #062539 !important;
@@ -395,8 +418,63 @@ img {
     color: #062539 !important;
 }
 
+/* Default header hover should match sticky behavior */
+.td-header-6-wrapper.td-header-default .td-btn-12:hover {
+    background: #b8e9ff !important;
+    border-color: #b8e9ff !important;
+    color: #062539 !important;
+}
+
+/* Mobile/Chrome: reduce sticky drift by disabling slide animation on header */
+@media (max-width: 991px) {
+    /* Keep a smooth reveal, but use a shorter, snappier animation on mobile */
+    .header-sticky {
+        -webkit-animation-duration: 0.35s !important;
+        animation-duration: 0.35s !important;
+        -webkit-animation-timing-function: ease-out !important;
+        animation-timing-function: ease-out !important;
+    }
+}
+
+/* Mobile: stabilize fixed sticky header during Chrome URL bar expand/collapse */
+@media (max-width: 991px) {
+    .td-header-6-wrapper.header-sticky {
+        will-change: transform;
+        transform: translateZ(0);
+        top: 0 !important;
+    }
+    /* Prevent tiny sub-pixel shifts */
+    .td-header-6-wrapper.header-sticky,
+    .td-header-6-wrapper.header-sticky * {
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+    }
+}
+
 /* Desktop/global: Let’s Talk hover should be #b8e9ff on all pages */
 /* (kept via header-specific rules above; avoid duplicating global override) */
+
+/* Disable active-link highlight in header nav (keep hover effects) */
+.td-header-6-wrapper .tdmenu__navbar-wrap > ul > li.active > a {
+    color: inherit !important;
+}
+.td-header-6-wrapper .tdmenu__navbar-wrap > ul > li .sub-menu li.active > a {
+    color: inherit !important;
+}
+
+/* Menu hover color: ONLY on Home top header (dark, non-sticky, non-default) */
+.td-header-6-wrapper:not(.td-header-default):not(.header-sticky) .tdmenu__navbar-wrap > ul > li:hover > a,
+.td-header-6-wrapper:not(.td-header-default):not(.header-sticky) .tdmenu__navbar-wrap > ul > li > a:focus {
+    color: #b8e9ff !important;
+}
+
+/* Everywhere else: do NOT change nav item color on hover/focus (prevents “stuck” highlight feeling) */
+.td-header-6-wrapper.td-header-default .tdmenu__navbar-wrap > ul > li:hover > a,
+.td-header-6-wrapper.td-header-default .tdmenu__navbar-wrap > ul > li > a:focus,
+.td-header-6-wrapper.header-sticky .tdmenu__navbar-wrap > ul > li:hover > a,
+.td-header-6-wrapper.header-sticky .tdmenu__navbar-wrap > ul > li > a:focus {
+    color: inherit !important;
+}
 
 /* Mobile offcanvas menu: replace black accents with #062539 */
 .td-btn-menu-black {
@@ -427,6 +505,52 @@ img {
 }
 
 /* Font test: Clash Display Variable (loaded from /public/fonts) */
+
+/* Simple modal (replaces react-responsive-modal to avoid React 19 peer warnings) */
+.inoma-modal__overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+}
+.inoma-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    border: 0;
+}
+.inoma-modal__content {
+    position: relative;
+    width: min(960px, 100%);
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+.inoma-modal__close {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    border: 1px solid rgba(28, 29, 31, 0.18);
+    background: rgba(255, 255, 255, 0.9);
+    color: #062539;
+    font-size: 22px;
+    line-height: 1;
+}
+.inoma-modal__close:hover {
+    background: #b8e9ff;
+    border-color: #b8e9ff;
+}
+.inoma-modal__frame {
+    width: 100%;
+    background: #000;
+}
 @font-face {
     font-family: "Clash Display Variable";
     src: url("/fonts/ClashDisplay-Variable.ttf") format("truetype");

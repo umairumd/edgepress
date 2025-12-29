@@ -43,7 +43,7 @@ export default function NotFound() {
                 <h2 style={{ fontSize: "200px" }}>404</h2>
                 <div className="sm-title">Page not found</div>
                 <p style={{ maxWidth: "520px", margin: "0 auto 34px", color: "rgba(28, 29, 31, 0.7)" }}>
-                  Sorry, the page you're looking for doesn't exist.
+                  Sorry, the page you&apos;re looking for doesn&apos;t exist.
                 </p>
                 <Link className="td-btn-2" href="/">Go Home</Link>
               </div>

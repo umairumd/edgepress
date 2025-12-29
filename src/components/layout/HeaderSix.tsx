@@ -1,11 +1,16 @@
 "use client";
 import Link from "next/link";
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import NavMenu from "./headers/Menu/NavMenu";
 import Offcanvas from "./headers/Menu/Offcanvas";
 import UseSticky from "@/hooks/UseSticky";
 
-const HeaderSix = () => {
+type HeaderSixProps = {
+    /** Home keeps dark-at-top + white-when-sticky; Default uses Home-sticky styling on all non-home pages. */
+    variant?: "home" | "default";
+};
+
+const HeaderSix = ({ variant = "home" }: HeaderSixProps) => {
 
     const { sticky } = UseSticky();
     const [offCanvas, setOffCanvas] = useState<boolean>(false);
@@ -13,25 +18,54 @@ const HeaderSix = () => {
     const [headerHeight, setHeaderHeight] = useState<number>(0);
 
     useEffect(() => {
-        if (headerRef.current) {
-            setHeaderHeight(headerRef.current.offsetHeight);
-        }
-    }, []);
+        const el = headerRef.current;
+        if (!el) return;
+
+        const measure = () => setHeaderHeight(el.offsetHeight);
+        measure();
+
+        // Keep spacer accurate across breakpoints + sticky state (reduces mobile drift/jank).
+        const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(measure) : null;
+        ro?.observe(el);
+        window.addEventListener("resize", measure, { passive: true } as AddEventListenerOptions);
+        return () => {
+            ro?.disconnect();
+            window.removeEventListener("resize", measure);
+        };
+    }, [sticky]);
+
+    const wrapperClassName = useMemo(() => {
+        const base = [
+            "td-header__area",
+            "td-header-sticky-white",
+            "td-header-spacing",
+            "td-header-6-wrapper",
+            variant === "default" ? "td-header-default" : null,
+            sticky ? "header-sticky" : "p-relative",
+            "z-index-1",
+        ]
+            .filter(Boolean)
+            .join(" ");
+        return base;
+    }, [sticky, variant]);
 
     return (
         <>
             <header>
-                {sticky && headerHeight > 0 && <div style={{ height: `${headerHeight}px` }} aria-hidden="true" />}
-                <div ref={headerRef} id="header-sticky" className={`td-header__area td-header-sticky-white td-header-spacing td-header-6-wrapper ${sticky ? "header-sticky" : "p-relative"} z-index-1`}>
+                {/* Spacer prevents layout jump when header becomes fixed; keep it stable for better mobile behavior. */}
+                <div style={{ height: sticky && headerHeight > 0 ? `${headerHeight}px` : 0 }} aria-hidden="true" />
+                <div ref={headerRef} id="header-sticky" className={wrapperClassName}>
                     <div className="container-fluid container-1710">
                         <div className="row align-items-center">
                             <div className="col-xxl-2 col-xl-2 col-4">
                                 <div className="logo">
                                     <Link className="logo-1" href="/">
-                                        <img data-width="96" src="/assets/img/logo/inoma-logo-dark.png" alt="Inoma Digital" />
+                                        {/* logo-1 = shown on non-sticky (dark header on Home) */}
+                                        <img data-width="96" src="/assets/img/logo/inoma-logo-dark.png" alt="Inoma Digital" decoding="async" />
                                     </Link>
                                     <Link className="logo-2 d-none" href="/">
-                                        <img data-width="96" src="/assets/img/logo/inoma-logo-light.png" alt="Inoma Digital" />
+                                        {/* logo-2 = shown on sticky/white header */}
+                                        <img data-width="96" src="/assets/img/logo/inoma-logo-light.png" alt="Inoma Digital" decoding="async" />
                                     </Link>
                                 </div>
                             </div>

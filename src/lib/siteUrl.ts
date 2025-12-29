@@ -20,5 +20,3 @@ export function getSiteUrl(): string {
     return FALLBACK_SITE_URL;
   }
 }
-
-

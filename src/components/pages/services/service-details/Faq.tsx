@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import faq_data, { FaqItem } from "@/data/FaqData";
 
 interface FaqProps {
@@ -12,27 +12,19 @@ interface FaqProps {
 
 const Faq = ({ style, page, defaultOpenIndex }: FaqProps) => {
 
-    const [faqData, setFaqData] = useState<FaqItem[]>([]);
+    const pageKey = page ?? "home_2";
+    const openIndex = defaultOpenIndex ?? (pageKey === "home_2" ? 1 : 0);
 
-    useEffect(() => {
-        const pageKey = page ?? "home_2";
-        const openIndex = defaultOpenIndex ?? (pageKey === "home_2" ? 1 : 0);
+    const faqData = useMemo(() => {
+        return faq_data.filter((item) => item.page === pageKey);
+    }, [pageKey]);
 
-        const filtered = faq_data.filter(item => item.page === pageKey);
-        const updatedData = filtered.map((item, index) => ({
-            ...item,
-            showAnswer: index === openIndex
-        }));
-        setFaqData(updatedData);
-    }, [page, defaultOpenIndex]);
+    const [openId, setOpenId] = useState<number | null>(() => {
+        return faqData[openIndex]?.id ?? faqData[0]?.id ?? null;
+    });
 
     const toggleAnswer = (faqId: number) => {
-        setFaqData((prevFaqData) =>
-            prevFaqData.map((faq) => ({
-                ...faq,
-                showAnswer: faq.id === faqId ? !faq.showAnswer : false
-            }))
-        );
+        setOpenId((prev) => (prev === faqId ? null : faqId));
     };
 
     return (
@@ -52,12 +44,12 @@ const Faq = ({ style, page, defaultOpenIndex }: FaqProps) => {
                                     {faqData.map((item) => (
                                         <div key={item.id} className="accordion-items">
                                             <h2 className="accordion-header" onClick={() => toggleAnswer(item.id)}>
-                                                <button className={`accordion-buttons ${item.showAnswer ? "" : "collapsed"} `} type="button" style={{ cursor: "pointer" }}>
+                                                <button className={`accordion-buttons ${item.id === openId ? "" : "collapsed"} `} type="button" style={{ cursor: "pointer" }}>
                                                     {item.title}
                                                     <span className="plus-icon"></span>
                                                 </button>
                                             </h2>
-                                            <div className={`accordion-collapse collapse ${item.showAnswer ? "show" : ""}`}>
+                                            <div className={`accordion-collapse collapse ${item.id === openId ? "show" : ""}`}>
                                                 <div className="accordion-body">
                                                     <p>
                                                         {item.desc}

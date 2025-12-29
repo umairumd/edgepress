@@ -12,7 +12,7 @@ const ServiceArea = () => {
                 <div className="row justify-content-center">
                     <div className="col-lg-9">
                         <div className="td-service-main-content text-center pt-140 mb-60">
-                            <span className="mb-25 d-inline-block">//  Who we are</span>
+                            <span className="mb-25 d-inline-block">{"//  Who we are"}</span>
                             <h2>We provide clear strategies and creative execution to help businesses grow with precision</h2>
                         </div>
                     </div>

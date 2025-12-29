@@ -1,27 +1,19 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import faq_data, { FaqItem } from "@/data/FaqData";
 
 const FaqArea = () => {
 
-    const [faqData, setFaqData] = useState<FaqItem[]>([]);
-
-    useEffect(() => {
-        const filtered = faq_data.filter(item => item.page === "inner_faq");
-        const updatedData = filtered.map((item, index) => ({
-            ...item,
-            showAnswer: index === 0 // Open the first one by default
-        }));
-        setFaqData(updatedData);
+    const faqData = useMemo(() => {
+        return faq_data.filter((item) => item.page === "inner_faq");
     }, []);
 
+    const [openId, setOpenId] = useState<number | null>(() => {
+        return faqData[0]?.id ?? null;
+    });
+
     const toggleAnswer = (faqId: number) => {
-        setFaqData((prevFaqData) =>
-            prevFaqData.map((faq) => ({
-                ...faq,
-                showAnswer: faq.id === faqId ? !faq.showAnswer : false
-            }))
-        );
+        setOpenId((prev) => (prev === faqId ? null : faqId));
     };
 
     return (
@@ -51,12 +43,12 @@ const FaqArea = () => {
                                     {faqData.map((item) => (
                                         <div key={item.id} className="accordion-items">
                                             <h2 className="accordion-header" onClick={() => toggleAnswer(item.id)}>
-                                                <button className={`accordion-buttons ${item.showAnswer ? "" : "collapsed"} `} type="button" style={{ cursor: "pointer" }}>
+                                                <button className={`accordion-buttons ${item.id === openId ? "" : "collapsed"} `} type="button" style={{ cursor: "pointer" }}>
                                                     {item.title}
                                                     <span className="plus-icon"></span>
                                                 </button>
                                             </h2>
-                                            <div className={`accordion-collapse collapse ${item.showAnswer ? "show" : ""}`}>
+                                            <div className={`accordion-collapse collapse ${item.id === openId ? "show" : ""}`}>
                                                 <div className="accordion-body">
                                                     <p>
                                                         {item.desc}

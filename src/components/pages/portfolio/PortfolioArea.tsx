@@ -4,13 +4,14 @@ import Link from "next/link";
 import portfolio_data from "@/data/PortfolioData";
 import { PortfolioItem } from "@/lib/wp";
 import Image from "next/image";
+import type Isotope from "isotope-layout";
 
 type Props = {
     items?: PortfolioItem[];
 };
 
 const PortfolioArea = ({ items }: Props) => {
-    const isotopeRef = useRef<any>(null);
+    const isotopeRef = useRef<Isotope | null>(null);
     const [filterKey, setFilterKey] = useState("*");
     const [selectedFilter, setSelectedFilter] = useState("*");
     const rafRef = useRef<number | null>(null);
@@ -20,7 +21,7 @@ const PortfolioArea = ({ items }: Props) => {
         if (rafRef.current) cancelAnimationFrame(rafRef.current);
         rafRef.current = requestAnimationFrame(() => {
             try {
-                isotopeRef.current.layout?.();
+                isotopeRef.current?.layout();
             } catch {
                 // ignore
             }

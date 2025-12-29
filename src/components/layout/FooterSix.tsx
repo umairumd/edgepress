@@ -14,7 +14,7 @@ const FooterSix = ({ style }: FooterSixProps = {}) => {
                         <div className="col-lg-3 col-md-6 col-sm-6">
                             <div className="td-footer-logo mb-30">
                                 <Link href="/">
-                                        <img src="/assets/img/logo/inoma-logo-geometry.png" alt="Inoma Digital" />
+                                        <img src="/assets/img/logo/inoma-logo-geometry.png" alt="Inoma Digital" loading="lazy" decoding="async" />
                                 </Link>
                             </div>
                         </div>

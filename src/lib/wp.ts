@@ -7,6 +7,45 @@ type WPImage = {
   height?: number | null;
 };
 
+type WpMediaNode = {
+  sourceUrl?: string | null;
+  altText?: string | null;
+  mediaDetails?: {
+    width?: number | null;
+    height?: number | null;
+  } | null;
+};
+
+type WpSeoNode = {
+  title?: string | null;
+  metaDesc?: string | null;
+  canonical?: string | null;
+  opengraphTitle?: string | null;
+  opengraphDescription?: string | null;
+  opengraphImage?: WpMediaNode | null;
+  twitterTitle?: string | null;
+  twitterDescription?: string | null;
+  twitterImage?: WpMediaNode | null;
+};
+
+type WpCategoryNode = {
+  slug?: string | null;
+  name?: string | null;
+  count?: number | null;
+};
+
+type WpPostNode = {
+  slug?: string | null;
+  title?: string | null;
+  excerpt?: string | null;
+  content?: string | null;
+  date?: string | null;
+  categories?: { nodes?: WpCategoryNode[] | null } | null;
+  author?: { node?: { name?: string | null } | null } | null;
+  featuredImage?: { node?: WpMediaNode | null } | null;
+  seo?: WpSeoNode | null;
+};
+
 function normalizeWpMediaUrl(url?: string): string | undefined {
   if (!url) return undefined;
   if (!WP_ENDPOINT) return url;
@@ -27,7 +66,7 @@ function normalizeWpMediaUrl(url?: string): string | undefined {
   return url;
 }
 
-function mapWpImage(node: any | undefined): WPImage | undefined {
+function mapWpImage(node: WpMediaNode | null | undefined): WPImage | undefined {
   if (!node?.sourceUrl) return undefined;
   return {
     url: normalizeWpMediaUrl(node.sourceUrl)!,
@@ -72,7 +111,7 @@ export type PortfolioItem = {
   seo?: YoastSeo;
 };
 
-async function wpFetch<T>(query: string, variables?: Record<string, any>): Promise<T | null> {
+async function wpFetch<T>(query: string, variables?: Record<string, unknown>): Promise<T | null> {
   if (!WP_ENDPOINT) {
     if (process.env.NODE_ENV !== "production") {
       console.warn("[wpFetch] Missing WP_GRAPHQL_ENDPOINT env var");
@@ -95,16 +134,16 @@ async function wpFetch<T>(query: string, variables?: Record<string, any>): Promi
       }
       return null;
     }
-    const json = await res.json().catch((e: any) => {
+    const json = await res.json().catch((e: unknown) => {
       if (!isProd) console.error("[wpFetch] Invalid JSON response", e);
       return null;
     });
     if (!json) return null;
-    if (json.errors) {
-      if (!isProd) console.error("[wpFetch] GraphQL errors", json.errors);
+    if ((json as { errors?: unknown }).errors) {
+      if (!isProd) console.error("[wpFetch] GraphQL errors", (json as { errors?: unknown }).errors);
       return null;
     }
-    return json.data as T;
+    return (json as { data?: T }).data ?? null;
   } catch (err) {
     if (process.env.NODE_ENV !== "production") {
       console.error("[wpFetch] Request failed", err);
@@ -118,7 +157,7 @@ type WPGraphQlResponse<T> = {
   errors?: Array<{ message?: string }>;
 };
 
-async function wpFetchRaw<T>(query: string, variables?: Record<string, any>): Promise<WPGraphQlResponse<T> | null> {
+async function wpFetchRaw<T>(query: string, variables?: Record<string, unknown>): Promise<WPGraphQlResponse<T> | null> {
   if (!WP_ENDPOINT) {
     if (process.env.NODE_ENV !== "production") {
       console.warn("[wpFetchRaw] Missing WP_GRAPHQL_ENDPOINT env var");
@@ -153,7 +192,7 @@ function isMissingYoastSeoField(errors?: Array<{ message?: string }>) {
 
 export async function getPosts(limit = 12): Promise<Post[]> {
   const data = await wpFetch<{
-    posts: { nodes: any[] };
+    posts: { nodes: WpPostNode[] };
   }>(
     `
     query GetPosts($limit: Int!) {
@@ -175,17 +214,17 @@ export async function getPosts(limit = 12): Promise<Post[]> {
   if (!data?.posts?.nodes) return [];
 
   return data.posts.nodes.map((node) => ({
-    slug: node.slug,
-    title: node.title,
-    excerpt: node.excerpt,
-    date: node.date,
-    category: node.categories?.nodes?.[0]?.name,
+    slug: node.slug ?? "",
+    title: node.title ?? "",
+    excerpt: node.excerpt ?? undefined,
+    date: node.date ?? undefined,
+    category: node.categories?.nodes?.[0]?.name ?? undefined,
     featuredImage: mapWpImage(node.featuredImage?.node),
   }));
 }
 
 export async function getPost(slug: string): Promise<Post | null> {
-  type PostResponse = { post: any | null };
+  type PostResponse = { post: WpPostNode | null };
 
   const queryWithSeo = `
     query GetPost($slug: ID!) {
@@ -237,13 +276,13 @@ export async function getPost(slug: string): Promise<Post | null> {
   if (!post) return null;
 
   return {
-    slug: post.slug,
-    title: post.title,
-    excerpt: post.excerpt,
-    content: post.content,
-    date: post.date,
-    category: post.categories?.nodes?.[0]?.name,
-    author: post.author?.node?.name,
+    slug: post.slug ?? "",
+    title: post.title ?? "",
+    excerpt: post.excerpt ?? undefined,
+    content: post.content ?? undefined,
+    date: post.date ?? undefined,
+    category: post.categories?.nodes?.[0]?.name ?? undefined,
+    author: post.author?.node?.name ?? undefined,
     featuredImage: mapWpImage(post.featuredImage?.node),
     seo: post.seo
       ? {
@@ -263,7 +302,7 @@ export async function getPost(slug: string): Promise<Post | null> {
 
 export async function getRecentPosts(limit = 5): Promise<Post[]> {
   const data = await wpFetch<{
-    posts: { nodes: any[] };
+    posts: { nodes: WpPostNode[] };
   }>(
     `
     query GetRecentPosts($limit: Int!) {
@@ -284,10 +323,10 @@ export async function getRecentPosts(limit = 5): Promise<Post[]> {
   if (!data?.posts?.nodes) return [];
 
   return data.posts.nodes.map((node) => ({
-    slug: node.slug,
-    title: node.title,
-    date: node.date,
-    category: node.categories?.nodes?.[0]?.name,
+    slug: node.slug ?? "",
+    title: node.title ?? "",
+    date: node.date ?? undefined,
+    category: node.categories?.nodes?.[0]?.name ?? undefined,
     featuredImage: mapWpImage(node.featuredImage?.node),
   }));
 }
@@ -296,7 +335,7 @@ export type Category = { slug: string; name: string; count?: number };
 
 export async function getCategories(): Promise<Category[]> {
   const data = await wpFetch<{
-    categories: { nodes: any[] };
+    categories: { nodes: WpCategoryNode[] };
   }>(
     `
     query GetCategories {
@@ -312,12 +351,16 @@ export async function getCategories(): Promise<Category[]> {
   );
 
   if (!data?.categories?.nodes) return [];
-  return data.categories.nodes.map((c) => ({ slug: c.slug, name: c.name, count: c.count }));
+  return data.categories.nodes.map((c) => ({
+    slug: c.slug ?? "",
+    name: c.name ?? "",
+    count: c.count ?? undefined,
+  }));
 }
 
 export async function getPortfolioItems(limit = 12): Promise<PortfolioItem[]> {
   const data = await wpFetch<{
-    portfolioItems?: { nodes: any[] };
+    portfolioItems?: { nodes: WpPostNode[] };
   }>(
     `
     query GetPortfolioItems($limit: Int!) {
@@ -339,16 +382,16 @@ export async function getPortfolioItems(limit = 12): Promise<PortfolioItem[]> {
   if (!nodes) return [];
 
   return nodes.map((node) => ({
-    slug: node.slug,
-    title: node.title,
-    excerpt: node.excerpt,
-    date: node.date,
+    slug: node.slug ?? "",
+    title: node.title ?? "",
+    excerpt: node.excerpt ?? undefined,
+    date: node.date ?? undefined,
     featuredImage: mapWpImage(node.featuredImage?.node),
   }));
 }
 
 export async function getPortfolioItem(slug: string): Promise<PortfolioItem | null> {
-  type PortfolioResponse = { portfolioItem?: any | null };
+  type PortfolioResponse = { portfolioItem?: WpPostNode | null };
 
   const queryWithSeo = `
     query GetPortfolioItem($slug: ID!) {
@@ -396,11 +439,11 @@ export async function getPortfolioItem(slug: string): Promise<PortfolioItem | nu
   if (!item) return null;
 
   return {
-    slug: item.slug,
-    title: item.title,
-    excerpt: item.excerpt,
-    content: item.content,
-    date: item.date,
+    slug: item.slug ?? "",
+    title: item.title ?? "",
+    excerpt: item.excerpt ?? undefined,
+    content: item.content ?? undefined,
+    date: item.date ?? undefined,
     featuredImage: mapWpImage(item.featuredImage?.node),
     seo: item.seo
       ? {

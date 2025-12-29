@@ -92,7 +92,13 @@ const Hero = () => {
                             {banner_slider_loop.map((thumb, i) => (
                                 <SwiperSlide key={i} className="swiper-slide">
                                     <div className="td-hero-6-thumb">
-                                        <img src={thumb} alt="" />
+                                        <img
+                                            src={thumb}
+                                            alt=""
+                                            loading={i === 0 ? "eager" : "lazy"}
+                                            fetchPriority={i === 0 ? "high" : "auto"}
+                                            decoding="async"
+                                        />
                                     </div>
                                 </SwiperSlide>
                             ))}

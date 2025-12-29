@@ -1,12 +1,9 @@
 "use client";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Thumbs } from 'swiper/modules';
+import type { Swiper as SwiperClass } from "swiper";
 import Link from 'next/link';
 import { useState } from 'react';
-
-// ... (keep data arrays as is, they are outside the replacement block if I target correctly)
-// Wait, I can't leave comments in replacement content if I'm replacing the whole file or large block.
-// Better to target specific blocks.
 
 const avatar_data: string[] = [
     "/assets/img/testimonial/tes-6/01.png",
@@ -92,7 +89,7 @@ const setting3 = {
 };
 
 const Testimonial = () => {
-    const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
+    const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
 
     return (
         <div className="td-testimonial-area td-testimonial-6-bg pt-155 pb-160">
@@ -131,7 +128,7 @@ const Testimonial = () => {
                                 {avatar_data.map((avatar, i) => (
                                     <SwiperSlide key={i} className="swiper-slide">
                                         <div className="td-testimonial-bottom-thumb">
-                                            <img src={avatar} alt="" />
+                                            <img src={avatar} alt="" loading="lazy" decoding="async" />
                                         </div>
                                     </SwiperSlide>
                                 ))}
@@ -150,7 +147,7 @@ const Testimonial = () => {
                                 {brand_slider.map((brand, i) => (
                                     <SwiperSlide key={i} className="swiper-slide">
                                         <div className="brands-logo">
-                                            <Link href="#"><img src={brand} alt="" /></Link>
+                                            <Link href="#"><img src={brand} alt="" loading="lazy" decoding="async" /></Link>
                                         </div>
                                     </SwiperSlide>
                                 ))}

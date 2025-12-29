@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "react-toastify/dist/ReactToastify.css";
 import "swiper/swiper-bundle.css";
-import "react-responsive-modal/styles.css";
 import "@/styles/globals.scss";
 import LayoutWrapper from "@/components/common/LayoutWrapper";
 import { fontVarsClassName } from "./fonts";
