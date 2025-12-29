@@ -154,7 +154,7 @@ export async function getPost(slug: string): Promise<Post | null> {
 
   const queryWithSeo = `
     query GetPost($slug: ID!) {
-      post(id: $slug, idType: URI) {
+      post(id: $slug, idType: SLUG) {
         slug
         title
         excerpt
@@ -180,7 +180,7 @@ export async function getPost(slug: string): Promise<Post | null> {
 
   const queryBase = `
     query GetPost($slug: ID!) {
-      post(id: $slug, idType: URI) {
+      post(id: $slug, idType: SLUG) {
         slug
         title
         excerpt
@@ -317,7 +317,7 @@ export async function getPortfolioItem(slug: string): Promise<PortfolioItem | nu
 
   const queryWithSeo = `
     query GetPortfolioItem($slug: ID!) {
-      portfolioItem(id: $slug, idType: URI) {
+      portfolioItem(id: $slug, idType: SLUG) {
         slug
         title
         excerpt
@@ -341,7 +341,7 @@ export async function getPortfolioItem(slug: string): Promise<PortfolioItem | nu
 
   const queryBase = `
     query GetPortfolioItem($slug: ID!) {
-      portfolioItem(id: $slug, idType: URI) {
+      portfolioItem(id: $slug, idType: SLUG) {
         slug
         title
         excerpt
