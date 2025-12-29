@@ -1,0 +1,559 @@
+// Global overrides (base template styles come from /public/assets/css/*.css)
+
+// Prevent horizontal scroll from image overflow
+html, body {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+}
+
+/* Map template font variables to self-hosted next/font faces */
+:root {
+    --td-ff-body: var(--font-inter), serif !important;
+    --td-ff-heading: var(--font-plus-jakarta), serif !important;
+    --td-ff-dm: var(--font-dm-serif), serif !important;
+    --td-ff-dm-sans: var(--font-dm-sans), sans-serif !important;
+    --td-ff-manrope: var(--font-manrope), serif !important;
+    --td-ff-bebas: var(--font-bebas-neue), serif !important;
+    --td-ff-teko: var(--font-teko), sans-serif !important;
+    --td-ff-rethink: var(--font-rethink-sans), serif !important;
+    --td-ff-bellefair: var(--font-bellefair), serif !important;
+    --td-ff-roboto: var(--font-roboto), serif !important;
+}
+
+// Ensure images don't cause overflow
+img {
+    max-width: 100% !important;
+    height: auto !important;
+}
+
+/* Scroll-to-top button colors */
+.scroll__top {
+    background: #b8e9ff !important;
+    color: #062539 !important;
+}
+.scroll__top:hover {
+    background: #b8e9ff !important;
+    color: #062539 !important;
+}
+
+/* Contact page: map info card theme */
+.td-contact-map-wrap {
+    background: #062539 !important;
+}
+.td-contact-map-wrap h6 {
+    color: #b8e9ff !important;
+}
+.td-contact-map-wrap a,
+.td-contact-map-wrap p {
+    color: #fff !important;
+}
+.td-contact-map-wrap .td-contact-info-item i {
+    color: #b8e9ff !important;
+    margin-top: 2px;
+}
+
+/* Contact page: nicer mobile gutters for the contact info card */
+@media (max-width: 767px) {
+    .td-contact-map-wrap {
+        width: calc(100% - 30px) !important;
+        margin-left: 15px !important;
+        margin-right: 15px !important;
+        left: auto !important;
+        right: auto !important;
+    }
+}
+
+/* Contact page: breadcrumb headline tweaks on mobile */
+@media (max-width: 575px) {
+    /* Reduce the big bottom gap (overrides utility mb-100) */
+    .td-breadcrumb-area.td-breadcrumb-spacing.mb-100 {
+        margin-bottom: 40px !important;
+    }
+}
+
+/* Contact page: italic inquiry word to match template "span" styling vibe */
+.td-italic-inquiry {
+    font-family: var(--td-ff-dm) !important;
+    font-style: italic !important;
+    font-weight: 400 !important;
+}
+
+/* Contact page: form submit button hover (Let’s Talk) */
+.td-contact-7-btn {
+    background: #062539 !important;
+    border-color: #062539 !important;
+    color: #fff !important;
+}
+.td-contact-7-btn:hover {
+    background: #b8e9ff !important;
+    border-color: #b8e9ff !important;
+    color: #062539 !important;
+}
+
+/* Pricing page: small note under price + micro-line under cards */
+.td-pricing-note {
+    font-size: 16px;
+    line-height: 1.4;
+    color: rgba(28, 29, 31, 0.7);
+}
+.td-pricing-microline p {
+    color: rgba(28, 29, 31, 0.7);
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+/* Pricing page: make package subtext smaller */
+.td-pricing-main-wrap .td-pricing-6-top .para {
+    font-size: 16px !important;
+    line-height: 1.45 !important;
+    margin-bottom: 40px !important;
+}
+
+/* Pricing page: package name label uses the site's italic font */
+.td-pricing-main-wrap .td-pricing-6-top .package {
+    font-family: var(--td-ff-dm-sans) !important;
+    font-style: normal !important;
+    font-weight: 600 !important;
+    font-size: 36px !important;
+    color: #062539 !important;
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+}
+
+/* Pricing page: Growth Package (active) CTA theme */
+.td-pricing-main-wrap .td-pricing-6-wrap .price-btn.greens {
+    background: #b8e9ff !important;
+    border-color: #b8e9ff !important;
+    color: #062539 !important;
+}
+.td-pricing-main-wrap .td-pricing-6-wrap .price-btn.greens:hover {
+    background: #062539 !important;
+    border-color: #062539 !important;
+    color: #b8e9ff !important;
+}
+
+/* Pricing page: other CTAs hover (Brand Foundation + Agency Partner) */
+.td-pricing-main-wrap .td-pricing-6-wrap .price-btn:not(.greens):hover {
+    background: #b8e9ff !important;
+    border-color: #b8e9ff !important;
+    color: #062539 !important;
+}
+
+/* Services page: VIEW DETAILS hover (light blue bg + dark blue text) */
+.td-service-pin-item .td-btn-group-border:hover .td-btn-2,
+.td-service-pin-item .td-btn-2.td-btn-primary:hover {
+    background: #b8e9ff !important;
+    border-color: #b8e9ff !important;
+    color: #062539 !important;
+}
+
+/* Services page: arrow circle buttons should match VIEW DETAILS hover */
+.td-service-pin-item .td-btn-group-border:hover .td-btn-circle,
+.td-service-pin-item .td-btn-circle:hover {
+    background: #b8e9ff !important;
+    border-color: #b8e9ff !important;
+    color: #062539 !important;
+}
+
+/* Service page: experience badge color */
+.td-service-main-expreance .expreance {
+    color: #b8e9ff !important;
+}
+
+/* HeaderSix: dark hero bg; white sticky; logo sizing */
+.td-header-6-wrapper {
+    background: #052538 !important;
+}
+.td-header-6-wrapper.header-sticky {
+    background: #fff !important;
+}
+/* Keep home header dark on mobile too (sticky stays white) */
+@media (max-width: 991px) {
+    .td-header-6-wrapper {
+        background: #052538 !important;
+        padding: 12px 0 !important;
+    }
+}
+.td-header-6-wrapper .logo {
+    text-align: left !important;
+}
+.td-header-6-wrapper .logo img {
+    max-width: 170px !important;
+    height: auto !important;
+}
+@media (max-width: 991px) {
+    .td-header-6-wrapper .logo img {
+        max-width: 140px !important;
+    }
+}
+
+/* Match logo sizing across all headers to Home */
+.td-header-about-wrapper .logo img,
+.td-header-5-wrapper .logo img,
+.td-header-blog .logo img {
+    max-width: 170px !important;
+    height: auto !important;
+}
+@media (max-width: 991px) {
+    .td-header-about-wrapper .logo img,
+    .td-header-5-wrapper .logo img,
+    .td-header-blog .logo img {
+        max-width: 140px !important;
+    }
+}
+
+/* Match offcanvas (mobile menu) logo sizing too */
+.tdmobile__menu .nav-logo img {
+    max-width: 170px !important;
+    height: auto !important;
+}
+@media (max-width: 991px) {
+    .tdmobile__menu .nav-logo img {
+        max-width: 140px !important;
+    }
+}
+
+/* Footer logo: make geometry mark ~half size */
+.td-footer-logo img {
+    max-width: 135px !important;
+    height: auto !important;
+}
+@media (max-width: 991px) {
+    .td-footer-logo img {
+        max-width: 110px !important;
+    }
+}
+
+/* Footer connect block: match footer link typography + icon accent */
+.td-footer-connect a {
+    font-weight: 500;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+    color: rgba(255, 255, 255, 0.65) !important;
+}
+.td-footer-connect a:hover {
+    color: #b8e9ff !important;
+}
+.td-footer-connect i {
+    color: #b8e9ff !important;
+}
+
+/* Footer separator line above copyright */
+.td-footer-separator {
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.16);
+    margin: 20px 0;
+}
+
+/* Color overrides */
+:root {
+    --td-theme-3: #062539 !important; /* replace #063231 */
+    --td-common-green-2: #b8e9ff !important; /* replace #8bea7c */
+}
+
+/* Header menu spacing: match Home across inner pages */
+.td-header-about-wrapper .tdmenu__navbar-wrap > ul > li:not(:last-child),
+.td-header-blog .tdmenu__navbar-wrap > ul > li:not(:last-child),
+.td-header-5-wrapper .tdmenu__navbar-wrap > ul > li:not(:last-child) {
+    margin-right: 65px !important; /* same as base/home */
+}
+
+/* Gradients that used rgb(6,50,49) */
+.td-text-opacity > div,
+.td-text-invert > div {
+    background-image: linear-gradient(to right, #062539 50%, rgb(168, 169, 169) 50%) !important;
+}
+
+/* Service hover title color (#aff172 -> #b8e9ff) */
+.td-service-6-item:hover .td-service-6-item-title h3 {
+    color: #b8e9ff !important;
+}
+
+/* Replace #ffbf43 accent with #b8e9ff */
+.td-service-6-item:hover .td-service-6-btn a {
+    border: 1px solid #b8e9ff !important;
+    background: #b8e9ff !important;
+}
+
+.td-section-6-subtitle::before {
+    background: #b8e9ff !important;
+}
+
+.td-counter-6-item:hover {
+    background: #b8e9ff !important;
+    border-color: #b8e9ff !important;
+}
+
+/* Footer green accents -> #b8e9ff */
+.td-footer-6-wrap .td-footer-widget-list li a:hover,
+.td-footer-6-wrap .td-footer-title {
+    color: #b8e9ff !important;
+}
+
+/* Hero icon accent that used #8bea7c */
+.td-hero-6-line span::after,
+.td-hero-6-line span::before {
+    background: #b8e9ff !important;
+}
+
+/* (reverted) keep template hero divider line above tags */
+
+.td-hero-6-title {
+    letter-spacing: -0.02em;
+}
+
+@media (max-width: 575px) {
+    .td-hero-6-title {
+        font-size: 64px !important;
+    }
+}
+
+/* Remove pill/rounded backdrop behind the header menu */
+.tdmenu__navbar-wrap > ul {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+}
+
+/* Header menu hover color */
+.tdmenu__navbar-wrap > ul > li > a:hover,
+.tdmenu__navbar-wrap > ul > li.active > a,
+.tdmenu__navbar-wrap > ul > li.menu-item-has-children:hover > a {
+    color: #b8e9ff !important;
+}
+
+.td-header-6-wrapper .tdmenu__navbar-wrap > ul > li:hover > a,
+.td-header-6-wrapper .tdmenu__navbar-wrap > ul > li > a:focus,
+.td-header-6-wrapper.header-sticky .tdmenu__navbar-wrap > ul > li:hover > a,
+.td-header-6-wrapper.header-sticky .tdmenu__navbar-wrap > ul > li > a:focus {
+    color: #b8e9ff !important;
+}
+
+.tdmenu__navbar-wrap > ul > li .sub-menu > li > a:hover,
+.tdmenu__navbar-wrap > ul > li .sub-menu > li.active > a {
+    color: #b8e9ff !important;
+}
+
+/* Uppercase menu text */
+.td-header-6-wrapper .tdmenu__navbar-wrap > ul > li > a,
+.td-header-6-wrapper .tdmenu__navbar-wrap > ul > li .sub-menu > li > a {
+    text-transform: uppercase !important;
+    letter-spacing: 0.02em;
+}
+
+/* Home header (HeaderSix) mobile structure: match inner pages (pill + black circle) */
+.td-header-6-wrapper .tdmenu-offcanvas-open-btn {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #b8e9ff !important;
+    border: none !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.td-header-6-wrapper .tdmenu-offcanvas-open-bar span {
+    height: 1px !important;
+    width: 15px !important;
+    background: #062539 !important;
+}
+.td-header-6-wrapper .tdmenu-offcanvas-open-bar span:not(:last-child) {
+    width: 15px !important;
+    margin-bottom: 4px !important;
+}
+
+/* Home non-sticky (dark hero bg): make Let’s Talk match contrast like inner mobile reference */
+.td-header-6-wrapper:not(.header-sticky) .td-btn-12 {
+    color: #fff !important;
+    border-color: rgba(255, 255, 255, 0.28) !important;
+}
+.td-header-6-wrapper:not(.header-sticky) .td-btn-12:hover {
+    background: #b8e9ff !important;
+    border-color: #b8e9ff !important;
+    color: #062539 !important;
+}
+
+/* Mobile menu button across site: light blue circle + dark icon */
+.tdmenu-offcanvas-open-btn.mobile-nav-toggler {
+    background: #b8e9ff !important;
+    border: none !important;
+}
+.tdmenu-offcanvas-open-btn.mobile-nav-toggler .tdmenu-offcanvas-open-bar span {
+    background: #062539 !important;
+}
+
+/* Sticky header (white bg): Let’s Talk hover should be #b8e9ff */
+.header-sticky .td-btn-12:hover,
+.td-header-6-wrapper.header-sticky .td-btn-12:hover {
+    background: #b8e9ff !important;
+    border-color: #b8e9ff !important;
+    color: #062539 !important;
+}
+
+/* Desktop/global: Let’s Talk hover should be #b8e9ff on all pages */
+/* (kept via header-specific rules above; avoid duplicating global override) */
+
+/* Mobile offcanvas menu: replace black accents with #062539 */
+.td-btn-menu-black {
+    background: #062539 !important;
+    border-color: #062539 !important;
+}
+
+/* Optional: keep text/icon contrast on the CTA button */
+.td-btn-menu-black,
+.td-btn-menu-black:hover {
+    color: #fff !important;
+}
+
+/* Mobile offcanvas: dropdown toggle + social icons (black -> #062539) */
+.tdmobile__menu .navigation li.menu-item-has-children .dropdown-btn,
+.tdmobile__menu .navigation li.menu-item-has-children .dropdown-btn.open {
+    background: #062539 !important;
+}
+
+.tdmobile__menu .social-links ul li a,
+.tdmobile__menu .social-links ul li a:hover {
+    color: #062539 !important;
+}
+
+/* Home header: allow hamburger hover animation like other pages */
+.td-header-6-wrapper .tdmenu-offcanvas-open-btn:hover .tdmenu-offcanvas-open-bar span:not(:last-child) {
+    width: 24px !important;
+}
+
+/* Font test: Clash Display Variable (loaded from /public/fonts) */
+@font-face {
+    font-family: "Clash Display Variable";
+    src: url("/fonts/ClashDisplay-Variable.ttf") format("truetype");
+    font-weight: 200 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Video popup modal sizing */
+.video-modal {
+    width: min(960px, 92vw);
+    padding: 0 !important;
+}
+
+.video-modal iframe {
+    border-radius: 10px;
+}
+
+// CTA and footer stacking control
+// Raise CTA above footer for overlap; keep footer low
+.td-cta-area,
+.td-cta-wrap {
+    position: relative !important;
+    z-index: 5 !important;
+}
+
+.td-footer-area,
+footer {
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+// Reduce blog hero top padding to remove extra gap under header
+.td-blog-bigthumb-spacing {
+    padding-top: 100px !important;
+    @media only screen and (min-width: 1200px) and (max-width: 1399px),
+           only screen and (min-width: 992px) and (max-width: 1199px),
+           only screen and (min-width: 768px) and (max-width: 991px),
+           only screen and (min-width: 576px) and (max-width: 767px),
+           (max-width: 575px) {
+        padding-top: 80px !important;
+    }
+}
+
+// Home hero (Home Six) top spacing to match inner pages rhythm
+.td-hero-6-spacing {
+    padding-top: 100px !important;
+    @media only screen and (min-width: 768px) and (max-width: 991px),
+           only screen and (min-width: 576px) and (max-width: 767px),
+           (max-width: 575px) {
+        padding-top: 80px !important;
+    }
+}
+
+// Home hero tags: reduce spacing between items (template uses space-around which spreads too much with 5 items)
+.td-hero-6-tag ul {
+    justify-content: center !important;
+    gap: 56px !important;
+    @media only screen and (min-width: 768px) and (max-width: 991px),
+           only screen and (min-width: 576px) and (max-width: 767px),
+           (max-width: 575px) {
+        gap: 18px !important;
+    }
+}
+
+.td-hero-6-tag ul li a {
+    padding: 10px 14px !important;
+}
+
+// Override compiled CSS from public/assets/css/main.css
+// This ensures our SCSS changes take precedence
+.td-breadcrumb-spacing {
+    padding-top: 100px !important;
+    
+    @media only screen and (min-width: 768px) and (max-width: 991px), 
+           only screen and (min-width: 576px) and (max-width: 767px), 
+           (max-width: 575px) {
+        padding-top: 80px !important;
+    }
+}
+
+.td-breadcrumb-2-spacing {
+    padding-top: 100px !important;
+    
+    @media only screen and (min-width: 768px) and (max-width: 991px), 
+           only screen and (min-width: 576px) and (max-width: 767px), 
+           (max-width: 575px) {
+        padding-top: 80px !important;
+    }
+}
+
+.td-about-main-spacing {
+    padding-top: 100px !important;
+    
+    @media only screen and (min-width: 768px) and (max-width: 991px), 
+           only screen and (min-width: 576px) and (max-width: 767px), 
+           (max-width: 575px) {
+        padding-top: 80px !important;
+    }
+}
+
+// Ensure "awards" span is italicized with correct font
+.td-testimonial-title span {
+    font-family: var(--td-ff-dm) !important;
+    font-style: italic !important;
+    font-weight: 400 !important;
+    display: inline !important;
+}
+
+// Ensure spans inside td-text-invert divs get the same gradient animation
+// The span should inherit the background from its parent line div
+.td-text-invert > div span {
+    background-size: inherit !important;
+    background-position-x: inherit !important;
+    color: transparent !important;
+    background-clip: text !important;
+    -webkit-background-clip: text !important;
+    background-image: inherit !important;
+}
+
+// Fix stacking context for smooth-wrapper (keep neutral)
+#smooth-wrapper {
+    position: relative;
+    z-index: 0;
+}
+
+#smooth-content {
+    position: relative;
+    z-index: 0;
+}

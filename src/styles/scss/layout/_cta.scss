@@ -1,0 +1,38 @@
+@use '../utils' as *;
+
+/*=============================
+	09. blog
+===============================*/
+
+.td-cta{
+    &-area{
+        overflow: visible;
+        padding-bottom: 0; // rely on footer padding for spacing; keep overlap clean
+    }
+    &-wrap{
+        border-radius: 10px;
+        margin-bottom: -160px;
+        overflow: hidden;
+        position: relative;
+        & .title{
+            font-weight: 800;
+            font-size: 120px;
+            letter-spacing: -0.03em;
+            line-height: 1;
+            @media #{$sm,$xs} {
+                font-size: 60px;
+            }
+        }
+    }
+    &-shape{
+        position: absolute;
+        bottom: 70px;
+        right: 100px;
+        z-index: -1;
+        &-2{
+            position: absolute;
+            top: 13px;
+            left: -46px;
+        }
+    }
+}

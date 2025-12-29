@@ -1,0 +1,85 @@
+"use client";
+import type { JSX } from "react";
+import CountUp from "react-countup";
+import { useInView } from "react-intersection-observer";
+
+interface DataType {
+    id: number;
+    count: number;
+    count_text?: string;
+    title: JSX.Element;
+}
+
+const counter_data: DataType[] = [
+    {
+        id: 1,
+        count: 25,
+        count_text: "k",
+        title: (<>Happy<br /> customers</>),
+    },
+    {
+        id: 2,
+        count: 11,
+        count_text: "k",
+        title: (<>Projects<br /> completed</>),
+    },
+    {
+        id: 3,
+        count: 20,
+        title: (<>Awards <br /> achievement</>),
+    },
+    {
+        id: 4,
+        count: 25,
+        title: (<>Years of <br /> experience</>),
+    },
+];
+
+const Counter = () => {
+    const { ref, inView } = useInView({
+        threshold: 0.3,
+        triggerOnce: true,
+    });
+
+    return (
+        <div className="td-counter-area pt-155 pb-140" ref={ref}>
+            <div className="container">
+                <div className="row align-items-end mb-70">
+                    <div className="col-lg-8">
+                        <div className="td-service-6-title-wrap mb-30">
+                            <span className="td-section-6-subtitle mb-20 d-inline-block">AWESOME FUNFACT</span>
+                            <h2 className="td-section-6-bigtitle td-text-opacity">WHAT WE<br /> ARE ACHIEVE</h2>
+                        </div>
+                    </div>
+                    <div className="col-lg-4">
+                        <div className="td-service-6-title-text mr-80 mb-35">
+                            <p className="td-section-6-text mb-30">We&apos;re a digital production studio
+                                fueled by passion and innovation. </p>
+                            <p className="td-section-6-text">Our mission is to revolutionize
+                                creative work for companies with
+                                style and substance. work intersect in
+                                a meaningful way lifestyle, and our own</p>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-12 ">
+                    <div className="td-counter-6-wrap">
+                        {counter_data.map((item) => (
+                            <div key={item.id} className="td-counter-6-item wow fadeInLeft" data-wow-delay=".3s" data-wow-duration="1s">
+                                <h3 className="count d-flex align-items-center justify-content-center">
+                                    <span className="odometer">
+                                        {inView ? <CountUp end={item.count} duration={2} /> : 0}
+                                    </span>
+                                    {item.count_text}
+                                </h3>
+                                <span className="text">{item.title}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export default Counter;

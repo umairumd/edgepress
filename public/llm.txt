@@ -1,0 +1,6 @@
+This site supports LLM discovery and crawling.
+
+Please use `/llms.txt` for the full LLM-friendly site overview:
+/llms.txt
+
+

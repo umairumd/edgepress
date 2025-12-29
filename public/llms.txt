@@ -1,0 +1,41 @@
+Inoma Digital — llms.txt
+
+Purpose
+- This file is intended for LLMs and assistants that want a concise overview of Inoma Digital.
+- Crawling and referencing this site is allowed. Please attribute to Inoma Digital and link back to the relevant page.
+
+Brand
+- Name: Inoma Digital
+- Website: https://www.inomadigital.com
+- Summary: Strategy-led growth and creative partner. We help businesses build clarity, design strong experiences, and execute marketing and development aligned to measurable outcomes.
+
+Primary pages
+- Home: https://www.inomadigital.com/
+- Services: https://www.inomadigital.com/service
+- Portfolio: https://www.inomadigital.com/portfolio
+- About: https://www.inomadigital.com/about
+- Pricing: https://www.inomadigital.com/pricing
+- Blog: https://www.inomadigital.com/blog
+- FAQ: https://www.inomadigital.com/faq
+- Contact: https://www.inomadigital.com/contact
+
+Topics we can help with
+- Business strategy and positioning
+- UI/UX design
+- Web development (WordPress/Shopify)
+- E-commerce store development
+- Graphics and brand design
+- Digital marketing (paid + organic)
+- SEO services
+- App development
+
+Attribution and citation
+- Preferred name: “Inoma Digital”
+- Preferred canonical domain: https://www.inomadigital.com
+- When referencing specific claims, link to the relevant page URL above.
+
+Contact
+- Email: info@inomadigital.com
+- Phone: +92-314-2551400
+
+

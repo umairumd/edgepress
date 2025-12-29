@@ -1,0 +1,385 @@
+const WP_ENDPOINT = process.env.WP_GRAPHQL_ENDPOINT;
+
+type WPImage = {
+  url: string;
+  alt?: string | null;
+  width?: number | null;
+  height?: number | null;
+};
+
+function normalizeWpMediaUrl(url?: string): string | undefined {
+  if (!url) return undefined;
+  if (!WP_ENDPOINT) return url;
+  try {
+    const endpoint = new URL(WP_ENDPOINT);
+    const media = new URL(url);
+
+    // If media is served from the same host as the GraphQL endpoint, normalize
+    // protocol to match the endpoint. This fixes local dev setups where WP
+    // returns https URLs with a self-signed cert (Next/Image fetch fails).
+    if (media.hostname === endpoint.hostname && media.protocol !== endpoint.protocol) {
+      media.protocol = endpoint.protocol;
+      return media.toString();
+    }
+  } catch {
+    // ignore, return original url
+  }
+  return url;
+}
+
+function mapWpImage(node: any | undefined): WPImage | undefined {
+  if (!node?.sourceUrl) return undefined;
+  return {
+    url: normalizeWpMediaUrl(node.sourceUrl)!,
+    alt: node.altText,
+    width: node.mediaDetails?.width ?? null,
+    height: node.mediaDetails?.height ?? null,
+  };
+}
+
+export type YoastSeo = {
+  title?: string | null;
+  metaDesc?: string | null;
+  canonical?: string | null;
+  opengraphTitle?: string | null;
+  opengraphDescription?: string | null;
+  opengraphImage?: WPImage;
+  twitterTitle?: string | null;
+  twitterDescription?: string | null;
+  twitterImage?: WPImage;
+};
+
+export type Post = {
+  slug: string;
+  title: string;
+  excerpt?: string;
+  content?: string;
+  date?: string;
+  category?: string;
+  featuredImage?: WPImage;
+  author?: string;
+  seo?: YoastSeo;
+};
+
+export type PortfolioItem = {
+  slug: string;
+  title: string;
+  excerpt?: string;
+  content?: string;
+  date?: string;
+  category?: string;
+  featuredImage?: WPImage;
+  seo?: YoastSeo;
+};
+
+async function wpFetch<T>(query: string, variables?: Record<string, any>): Promise<T | null> {
+  if (!WP_ENDPOINT) return null;
+  try {
+    const res = await fetch(WP_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query, variables }),
+      next: { revalidate: 300 },
+    });
+    if (!res.ok) return null;
+    const json = await res.json();
+    if (json.errors) return null;
+    return json.data as T;
+  } catch (err) {
+    return null;
+  }
+}
+
+type WPGraphQlResponse<T> = {
+  data?: T;
+  errors?: Array<{ message?: string }>;
+};
+
+async function wpFetchRaw<T>(query: string, variables?: Record<string, any>): Promise<WPGraphQlResponse<T> | null> {
+  if (!WP_ENDPOINT) return null;
+  try {
+    const res = await fetch(WP_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query, variables }),
+      next: { revalidate: 300 },
+    });
+    if (!res.ok) return null;
+    return (await res.json()) as WPGraphQlResponse<T>;
+  } catch {
+    return null;
+  }
+}
+
+function isMissingYoastSeoField(errors?: Array<{ message?: string }>) {
+  if (!errors?.length) return false;
+  return errors.some((e) => (e.message || "").includes('Cannot query field "seo"'));
+}
+
+export async function getPosts(limit = 12): Promise<Post[]> {
+  const data = await wpFetch<{
+    posts: { nodes: any[] };
+  }>(
+    `
+    query GetPosts($limit: Int!) {
+      posts(first: $limit, where: {orderby: {field: DATE, order: DESC}}) {
+        nodes {
+          slug
+          title
+          excerpt
+          date
+          categories(first: 1) { nodes { name } }
+          featuredImage { node { sourceUrl altText mediaDetails { width height } } }
+        }
+      }
+    }
+    `,
+    { limit }
+  );
+
+  if (!data?.posts?.nodes) return [];
+
+  return data.posts.nodes.map((node) => ({
+    slug: node.slug,
+    title: node.title,
+    excerpt: node.excerpt,
+    date: node.date,
+    category: node.categories?.nodes?.[0]?.name,
+    featuredImage: mapWpImage(node.featuredImage?.node),
+  }));
+}
+
+export async function getPost(slug: string): Promise<Post | null> {
+  type PostResponse = { post: any | null };
+
+  const queryWithSeo = `
+    query GetPost($slug: ID!) {
+      post(id: $slug, idType: URI) {
+        slug
+        title
+        excerpt
+        content
+        date
+        categories(first: 1) { nodes { name } }
+        author { node { name } }
+        featuredImage { node { sourceUrl altText mediaDetails { width height } } }
+        seo {
+          title
+          metaDesc
+          canonical
+          opengraphTitle
+          opengraphDescription
+          opengraphImage { sourceUrl altText mediaDetails { width height } }
+          twitterTitle
+          twitterDescription
+          twitterImage { sourceUrl altText mediaDetails { width height } }
+        }
+      }
+    }
+  `;
+
+  const queryBase = `
+    query GetPost($slug: ID!) {
+      post(id: $slug, idType: URI) {
+        slug
+        title
+        excerpt
+        content
+        date
+        categories(first: 1) { nodes { name } }
+        author { node { name } }
+        featuredImage { node { sourceUrl altText mediaDetails { width height } } }
+      }
+    }
+  `;
+
+  const raw = await wpFetchRaw<PostResponse>(queryWithSeo, { slug });
+  const fallback = raw?.errors && isMissingYoastSeoField(raw.errors)
+    ? await wpFetch<PostResponse>(queryBase, { slug })
+    : raw?.data;
+
+  const post = fallback?.post;
+  if (!post) return null;
+
+  return {
+    slug: post.slug,
+    title: post.title,
+    excerpt: post.excerpt,
+    content: post.content,
+    date: post.date,
+    category: post.categories?.nodes?.[0]?.name,
+    author: post.author?.node?.name,
+    featuredImage: mapWpImage(post.featuredImage?.node),
+    seo: post.seo
+      ? {
+          title: post.seo.title,
+          metaDesc: post.seo.metaDesc,
+          canonical: post.seo.canonical,
+          opengraphTitle: post.seo.opengraphTitle,
+          opengraphDescription: post.seo.opengraphDescription,
+          opengraphImage: mapWpImage(post.seo.opengraphImage),
+          twitterTitle: post.seo.twitterTitle,
+          twitterDescription: post.seo.twitterDescription,
+          twitterImage: mapWpImage(post.seo.twitterImage),
+        }
+      : undefined,
+  };
+}
+
+export async function getRecentPosts(limit = 5): Promise<Post[]> {
+  const data = await wpFetch<{
+    posts: { nodes: any[] };
+  }>(
+    `
+    query GetRecentPosts($limit: Int!) {
+      posts(first: $limit, where: {orderby: {field: DATE, order: DESC}}) {
+        nodes {
+          slug
+          title
+          date
+          categories(first: 1) { nodes { name } }
+          featuredImage { node { sourceUrl altText mediaDetails { width height } } }
+        }
+      }
+    }
+    `,
+    { limit }
+  );
+
+  if (!data?.posts?.nodes) return [];
+
+  return data.posts.nodes.map((node) => ({
+    slug: node.slug,
+    title: node.title,
+    date: node.date,
+    category: node.categories?.nodes?.[0]?.name,
+    featuredImage: mapWpImage(node.featuredImage?.node),
+  }));
+}
+
+export type Category = { slug: string; name: string; count?: number };
+
+export async function getCategories(): Promise<Category[]> {
+  const data = await wpFetch<{
+    categories: { nodes: any[] };
+  }>(
+    `
+    query GetCategories {
+      categories(first: 50, where: {hideEmpty: true}) {
+        nodes {
+          slug
+          name
+          count
+        }
+      }
+    }
+    `
+  );
+
+  if (!data?.categories?.nodes) return [];
+  return data.categories.nodes.map((c) => ({ slug: c.slug, name: c.name, count: c.count }));
+}
+
+export async function getPortfolioItems(limit = 12): Promise<PortfolioItem[]> {
+  const data = await wpFetch<{
+    portfolioItems?: { nodes: any[] };
+  }>(
+    `
+    query GetPortfolioItems($limit: Int!) {
+      portfolioItems(first: $limit, where: {orderby: {field: DATE, order: DESC}}) {
+        nodes {
+          slug
+          title
+          excerpt
+          date
+          featuredImage { node { sourceUrl altText mediaDetails { width height } } }
+        }
+      }
+    }
+    `,
+    { limit }
+  );
+
+  const nodes = data?.portfolioItems?.nodes;
+  if (!nodes) return [];
+
+  return nodes.map((node) => ({
+    slug: node.slug,
+    title: node.title,
+    excerpt: node.excerpt,
+    date: node.date,
+    featuredImage: mapWpImage(node.featuredImage?.node),
+  }));
+}
+
+export async function getPortfolioItem(slug: string): Promise<PortfolioItem | null> {
+  type PortfolioResponse = { portfolioItem?: any | null };
+
+  const queryWithSeo = `
+    query GetPortfolioItem($slug: ID!) {
+      portfolioItem(id: $slug, idType: URI) {
+        slug
+        title
+        excerpt
+        content
+        date
+        featuredImage { node { sourceUrl altText mediaDetails { width height } } }
+        seo {
+          title
+          metaDesc
+          canonical
+          opengraphTitle
+          opengraphDescription
+          opengraphImage { sourceUrl altText mediaDetails { width height } }
+          twitterTitle
+          twitterDescription
+          twitterImage { sourceUrl altText mediaDetails { width height } }
+        }
+      }
+    }
+  `;
+
+  const queryBase = `
+    query GetPortfolioItem($slug: ID!) {
+      portfolioItem(id: $slug, idType: URI) {
+        slug
+        title
+        excerpt
+        content
+        date
+        featuredImage { node { sourceUrl altText mediaDetails { width height } } }
+      }
+    }
+  `;
+
+  const raw = await wpFetchRaw<PortfolioResponse>(queryWithSeo, { slug });
+  const fallback = raw?.errors && isMissingYoastSeoField(raw.errors)
+    ? await wpFetch<PortfolioResponse>(queryBase, { slug })
+    : raw?.data;
+
+  const item = fallback?.portfolioItem;
+  if (!item) return null;
+
+  return {
+    slug: item.slug,
+    title: item.title,
+    excerpt: item.excerpt,
+    content: item.content,
+    date: item.date,
+    featuredImage: mapWpImage(item.featuredImage?.node),
+    seo: item.seo
+      ? {
+          title: item.seo.title,
+          metaDesc: item.seo.metaDesc,
+          canonical: item.seo.canonical,
+          opengraphTitle: item.seo.opengraphTitle,
+          opengraphDescription: item.seo.opengraphDescription,
+          opengraphImage: mapWpImage(item.seo.opengraphImage),
+          twitterTitle: item.seo.twitterTitle,
+          twitterDescription: item.seo.twitterDescription,
+          twitterImage: mapWpImage(item.seo.twitterImage),
+        }
+      : undefined,
+  };
+}
+
