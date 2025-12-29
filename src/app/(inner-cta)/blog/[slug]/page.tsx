@@ -96,7 +96,6 @@ export default async function BlogDetailsPage({ params }: { params: Promise<{ sl
         category={post.category}
         author={post.author || "Inoma Digital"}
         featuredImage={post.featuredImage?.url}
-        excerpt={post.excerpt}
         recentPosts={sidebarRecent}
         categories={categories}
         currentUrl={currentUrl}

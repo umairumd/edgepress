@@ -6,7 +6,10 @@ export default function BlogSidebarPage() {
     return (
         <main>
             <BlogHero />
-            <BlogSidebarArea />
+            <BlogSidebarArea
+                title="Blog Post"
+                contentHtml="<p>This is a placeholder page for the blog sidebar layout. Visit <a href='/blog'>/blog</a> to view real posts.</p>"
+            />
             <BlogRelated />
         </main>
     );
