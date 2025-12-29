@@ -75,11 +75,13 @@ export type PortfolioItem = {
 async function wpFetch<T>(query: string, variables?: Record<string, any>): Promise<T | null> {
   if (!WP_ENDPOINT) return null;
   try {
+    const isProd = process.env.NODE_ENV === "production";
     const res = await fetch(WP_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ query, variables }),
-      next: { revalidate: 300 },
+      // In dev, avoid caching so WordPress changes show up immediately.
+      ...(isProd ? { next: { revalidate: 300 } } : { cache: "no-store" }),
     });
     if (!res.ok) return null;
     const json = await res.json();
@@ -98,11 +100,12 @@ type WPGraphQlResponse<T> = {
 async function wpFetchRaw<T>(query: string, variables?: Record<string, any>): Promise<WPGraphQlResponse<T> | null> {
   if (!WP_ENDPOINT) return null;
   try {
+    const isProd = process.env.NODE_ENV === "production";
     const res = await fetch(WP_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ query, variables }),
-      next: { revalidate: 300 },
+      ...(isProd ? { next: { revalidate: 300 } } : { cache: "no-store" }),
     });
     if (!res.ok) return null;
     return (await res.json()) as WPGraphQlResponse<T>;
