@@ -20,7 +20,8 @@ const useSplitTextBgAnim = () => {
             });
             splits.push(split);
 
-            split.lines.forEach((line) => {
+            // `split.lines` can be null depending on SplitType results / DOM state.
+            (split.lines ?? []).forEach((line) => {
                gsap.to(line, {
                   backgroundPositionX: 0,
                   ease: "none",
