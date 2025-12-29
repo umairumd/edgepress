@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 
 function safeHost(url?: string) {
   if (!url) return null;
@@ -11,7 +11,17 @@ function safeHost(url?: string) {
 
 export const runtime = "nodejs";
 
-export async function GET() {
+function isAuthorized(req: NextRequest) {
+  const token = (process.env.HEALTHCHECK_TOKEN || "").trim();
+  if (!token) return false;
+  const provided = req.nextUrl.searchParams.get("token") || "";
+  return provided === token;
+}
+
+export async function GET(req: NextRequest) {
+  // Don't expose health details publicly unless explicitly authorized.
+  if (!isAuthorized(req)) return new NextResponse("Not Found", { status: 404 });
+
   const endpoint = (process.env.WP_GRAPHQL_ENDPOINT || "").trim();
   const host = safeHost(endpoint);
 
