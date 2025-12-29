@@ -1,4 +1,4 @@
-const WP_ENDPOINT = process.env.WP_GRAPHQL_ENDPOINT;
+const WP_ENDPOINT = (process.env.WP_GRAPHQL_ENDPOINT || "").trim() || undefined;
 
 type WPImage = {
   url: string;
@@ -73,7 +73,12 @@ export type PortfolioItem = {
 };
 
 async function wpFetch<T>(query: string, variables?: Record<string, any>): Promise<T | null> {
-  if (!WP_ENDPOINT) return null;
+  if (!WP_ENDPOINT) {
+    if (process.env.NODE_ENV !== "production") {
+      console.warn("[wpFetch] Missing WP_GRAPHQL_ENDPOINT env var");
+    }
+    return null;
+  }
   try {
     const isProd = process.env.NODE_ENV === "production";
     const res = await fetch(WP_ENDPOINT, {
@@ -83,11 +88,27 @@ async function wpFetch<T>(query: string, variables?: Record<string, any>): Promi
       // In dev, avoid caching so WordPress changes show up immediately.
       ...(isProd ? { next: { revalidate: 300 } } : { cache: "no-store" }),
     });
-    if (!res.ok) return null;
-    const json = await res.json();
-    if (json.errors) return null;
+    if (!res.ok) {
+      if (!isProd) {
+        const text = await res.text().catch(() => "");
+        console.error(`[wpFetch] HTTP ${res.status} from ${WP_ENDPOINT}`, text.slice(0, 500));
+      }
+      return null;
+    }
+    const json = await res.json().catch((e: any) => {
+      if (!isProd) console.error("[wpFetch] Invalid JSON response", e);
+      return null;
+    });
+    if (!json) return null;
+    if (json.errors) {
+      if (!isProd) console.error("[wpFetch] GraphQL errors", json.errors);
+      return null;
+    }
     return json.data as T;
   } catch (err) {
+    if (process.env.NODE_ENV !== "production") {
+      console.error("[wpFetch] Request failed", err);
+    }
     return null;
   }
 }
@@ -98,7 +119,12 @@ type WPGraphQlResponse<T> = {
 };
 
 async function wpFetchRaw<T>(query: string, variables?: Record<string, any>): Promise<WPGraphQlResponse<T> | null> {
-  if (!WP_ENDPOINT) return null;
+  if (!WP_ENDPOINT) {
+    if (process.env.NODE_ENV !== "production") {
+      console.warn("[wpFetchRaw] Missing WP_GRAPHQL_ENDPOINT env var");
+    }
+    return null;
+  }
   try {
     const isProd = process.env.NODE_ENV === "production";
     const res = await fetch(WP_ENDPOINT, {
@@ -107,7 +133,13 @@ async function wpFetchRaw<T>(query: string, variables?: Record<string, any>): Pr
       body: JSON.stringify({ query, variables }),
       ...(isProd ? { next: { revalidate: 300 } } : { cache: "no-store" }),
     });
-    if (!res.ok) return null;
+    if (!res.ok) {
+      if (!isProd) {
+        const text = await res.text().catch(() => "");
+        console.error(`[wpFetchRaw] HTTP ${res.status} from ${WP_ENDPOINT}`, text.slice(0, 500));
+      }
+      return null;
+    }
     return (await res.json()) as WPGraphQlResponse<T>;
   } catch {
     return null;
