@@ -39,7 +39,7 @@ const setting = {
 
 const Testimonial = () => {
     return (
-        <div className="td-testimonial-area pt-115 pb-150">
+        <div className="td-testimonial-area pt-115 pb-150 td-about-testimonial">
             <div className="container">
                 <div className="row">
                     <div className="col-lg-4">

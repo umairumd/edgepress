@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import AboutArea from "@/components/pages/about/AboutArea";
 import Feature from "@/components/pages/about/Feature";
 import Testimonial from "@/components/pages/about/Testimonial";
-import Team from "@/components/pages/about/Team";
+import Founders from "@/components/pages/about/Founders";
 import Awards from "@/components/pages/about/Awards";
 
 export const metadata: Metadata = {
@@ -16,7 +16,7 @@ export default function AboutPage() {
             <AboutArea />
             <Testimonial />
             <Feature />
-            <Team />
+            <Founders />
             <Awards />
         </main>
     );

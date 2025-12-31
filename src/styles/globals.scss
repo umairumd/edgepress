@@ -52,6 +52,65 @@ img {
     margin-top: 2px;
 }
 
+/* Contact page: map placeholder to avoid “blank gap” while Google Maps loads */
+.td-contact-map-inner {
+    position: relative;
+    background: #f4f6f8;
+}
+.td-contact-map-inner iframe {
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+.td-contact-map-inner iframe[data-loaded="true"] {
+    opacity: 1;
+}
+.td-contact-map-skeleton {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+        radial-gradient(800px 300px at 20% 20%, rgba(184, 233, 255, 0.30) 0%, rgba(184, 233, 255, 0) 70%),
+        radial-gradient(700px 260px at 80% 70%, rgba(2, 119, 181, 0.12) 0%, rgba(2, 119, 181, 0) 70%),
+        linear-gradient(90deg, rgba(244, 246, 248, 1) 0%, rgba(236, 244, 250, 1) 50%, rgba(244, 246, 248, 1) 100%);
+    background-size: 100% 100%, 100% 100%, 200% 100%;
+    animation: tdMapShimmer 1.6s ease-in-out infinite;
+    border-bottom: 1px solid rgba(6, 37, 57, 0.06);
+}
+@keyframes tdMapShimmer {
+    0% { background-position: 0 0, 0 0, 0% 0; }
+    100% { background-position: 0 0, 0 0, 200% 0; }
+}
+.td-contact-map-skeleton__content {
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(6, 37, 57, 0.10);
+    border-radius: 14px;
+    padding: 16px 18px;
+    text-align: center;
+    backdrop-filter: blur(6px);
+}
+.td-contact-map-skeleton__title {
+    font-weight: 700;
+    color: #062539;
+    margin-bottom: 8px;
+}
+.td-contact-map-skeleton__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    padding: 10px 14px;
+    background: #b8e9ff;
+    color: #062539;
+    font-weight: 700;
+}
+.td-contact-map-skeleton__link:hover {
+    background: #062539;
+    color: #fff;
+}
+
 /* Contact page: nicer mobile gutters for the contact info card */
 @media (max-width: 767px) {
     .td-contact-map-wrap {
@@ -83,6 +142,9 @@ img {
     background: #062539 !important;
     border-color: #062539 !important;
     color: #fff !important;
+    border-radius: 999px !important;
+    padding-left: 34px !important;
+    padding-right: 34px !important;
 }
 .td-contact-7-btn:hover {
     background: #b8e9ff !important;
@@ -137,6 +199,250 @@ img {
     background: #b8e9ff !important;
     border-color: #b8e9ff !important;
     color: #062539 !important;
+}
+
+/* Pricing page: make packages less dull (cards + featured) */
+.td-pricing-main-wrap .pricing-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 18px;
+    border: 1px solid rgba(6, 37, 57, 0.12) !important;
+    background: #fff;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    box-shadow: 0 14px 40px rgba(6, 37, 57, 0.06);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.td-pricing-main-wrap .pricing-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(900px 320px at 10% 0%, rgba(184, 233, 255, 0.32) 0%, rgba(184, 233, 255, 0) 62%),
+        radial-gradient(760px 320px at 90% 100%, rgba(184, 233, 255, 0.28) 0%, rgba(184, 233, 255, 0) 68%);
+    opacity: 0;
+    transition: opacity 0.18s ease;
+}
+.td-pricing-main-wrap .pricing-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(2, 119, 181, 0.35) !important;
+    box-shadow: 0 24px 60px rgba(6, 37, 57, 0.10);
+}
+.td-pricing-main-wrap .pricing-card:hover::before {
+    opacity: 1;
+}
+.td-pricing-main-wrap .pricing-card--featured {
+    background: #0277b5;
+    border-color: #0277b5 !important;
+    box-shadow: 0 28px 70px rgba(2, 119, 181, 0.18);
+}
+.td-pricing-main-wrap .pricing-card--featured::before {
+    opacity: 1;
+}
+
+.td-pricing-main-wrap .pricing-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    left: auto;
+    transform: none;
+    background: rgba(255, 255, 255, 0.92);
+    color: #062539;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 10px 22px rgba(6, 37, 57, 0.18);
+}
+
+/* Pricing buttons: align to teal brand */
+.td-pricing-main-wrap .td-pricing-6-wrap .price-btn {
+    border-radius: 999px !important;
+    padding: 14px 34px !important;
+    text-align: center !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+.td-pricing-main-wrap .td-pricing-6-wrap .price-btn.greens {
+    background: #fff !important;
+    border-color: #fff !important;
+    color: #0277b5 !important;
+}
+.td-pricing-main-wrap .td-pricing-6-wrap .price-btn.greens:hover {
+    background: #062539 !important;
+    border-color: #062539 !important;
+    color: #fff !important;
+}
+.td-pricing-main-wrap .td-pricing-6-wrap .price-btn:not(.greens) {
+    border-color: rgba(2, 119, 181, 0.25) !important;
+    color: #062539 !important;
+    background: #fff !important;
+}
+.td-pricing-main-wrap .td-pricing-6-wrap .price-btn:not(.greens):hover {
+    background: #b8e9ff !important;
+    border-color: #b8e9ff !important;
+    color: #062539 !important;
+    box-shadow: 0 12px 28px rgba(184, 233, 255, 0.45);
+}
+
+/* Portfolio: Behance CTA button group theme */
+.td-portfolio-filter-area .td-btn-group .td-btn-circle {
+    background: #b8e9ff !important;
+    color: #062539 !important;
+}
+.td-portfolio-filter-area .td-btn-group .td-btn-2 {
+    background: #b8e9ff !important;
+    border-color: #b8e9ff !important;
+    color: #062539 !important;
+}
+.td-portfolio-filter-area .td-btn-group:hover .td-btn-circle,
+.td-portfolio-filter-area .td-btn-group:hover .td-btn-2 {
+    background: #062539 !important;
+    border-color: #062539 !important;
+    color: #b8e9ff !important;
+}
+
+/* Portfolio: clean 16:9 thumbnails, no hover effects/overlays */
+.td-portfolio-card-thumb {
+    display: block;
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 6px;
+    background: #f4f6f8;
+}
+.td-portfolio-card-thumb img {
+    transform: none !important;
+    transition: none !important;
+}
+/* Disable template hover zoom just in case */
+.td-portfolio-filter-wrapper:hover .td-portfolio-filter-thumb img {
+    transform: none !important;
+}
+.td-portfolio-card-title {
+    margin: 14px 0 0;
+    font-weight: 600;
+    font-size: 24px;
+    letter-spacing: -0.02em;
+    color: var(--td-common-black);
+}
+.td-portfolio-card-title a:hover {
+    color: var(--td-common-black);
+}
+
+/* Portfolio detail: long image with desktop padding + mobile full-bleed */
+.td-portfolio-entry-title {
+    font-weight: 600;
+    letter-spacing: -0.03em;
+}
+.td-portfolio-entry-image-wrap {
+    width: 100%;
+}
+@media (max-width: 575px) {
+    .td-portfolio-entry-image-wrap {
+        width: 100vw;
+        max-width: 100vw;
+        margin-left: 50%;
+        transform: translateX(-50%);
+    }
+    .td-portfolio-entry-image {
+        border-radius: 0 !important;
+        display: block;
+    }
+}
+
+/* Pricing bullets: teal checks for clearer scanning */
+.td-pricing-main-wrap .td-pricing-6-list ul li::before {
+    width: 8px !important;
+    height: 8px !important;
+    background: #0277b5 !important;
+    opacity: 0.85;
+}
+
+/* Pricing: improve package title + featured content colors + equal heights */
+.td-pricing-main-wrap .td-pricing-6-top {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+.td-pricing-main-wrap .pricing-card--featured .td-pricing-6-top {
+    padding-top: 78px !important; /* prevents badge overlap */
+    border-bottom-color: rgba(255, 255, 255, 0.22) !important;
+}
+
+/* Package name: serif italic (premium) */
+.td-pricing-main-wrap .td-pricing-6-top .package {
+    font-family: var(--td-ff-dm) !important;
+    font-style: italic !important;
+    font-weight: 400 !important;
+    font-size: clamp(34px, 2.6vw, 46px) !important;
+    line-height: 1.05 !important;
+    text-transform: none !important;
+    text-decoration: none !important;
+    color: #062539 !important;
+}
+
+/* Pricing: mobile responsiveness (avoid cramped layout) */
+@media (min-width: 992px) {
+    /* Equal-height cards only where cards are side-by-side */
+    .td-pricing-main-wrap .pricing-row > [class*="col-"] {
+        display: flex;
+    }
+}
+@media (max-width: 991px) {
+    /* On mobile/tablet, let cards size naturally */
+    .td-pricing-main-wrap .pricing-card {
+        height: auto;
+        transform: none !important;
+    }
+    .td-pricing-main-wrap .pricing-card:hover {
+        transform: none !important;
+    }
+    .td-pricing-main-wrap .pricing-badge {
+        top: 12px;
+        right: 12px;
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+    .td-pricing-main-wrap .pricing-card--featured .td-pricing-6-top {
+        padding-top: 64px !important;
+    }
+    .td-pricing-main-wrap .td-pricing-6-top .package {
+        font-size: clamp(28px, 7vw, 38px) !important;
+        line-height: 1.08 !important;
+    }
+}
+.td-pricing-main-wrap .pricing-card--featured .td-pricing-6-top .package {
+    color: #fff !important;
+}
+.td-pricing-main-wrap .pricing-card--featured .td-pricing-6-top .para,
+.td-pricing-main-wrap .pricing-card--featured .td-pricing-6-top .price,
+.td-pricing-main-wrap .pricing-card--featured .td-pricing-note {
+    color: rgba(255, 255, 255, 0.92) !important;
+}
+.td-pricing-main-wrap .pricing-card--featured .td-pricing-note {
+    color: rgba(255, 255, 255, 0.78) !important;
+}
+
+/* Make the list section fill remaining height */
+.td-pricing-main-wrap .pricing-card .td-pricing-6-list {
+    flex: 1;
+}
+
+/* Featured plan list contrast */
+.td-pricing-main-wrap .pricing-card--featured .td-pricing-6-list ul li {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+.td-pricing-main-wrap .pricing-card--featured .td-pricing-6-list ul li::before {
+    background: rgba(255, 255, 255, 0.9) !important;
+    opacity: 1;
 }
 
 /* Services page: VIEW DETAILS hover (light blue bg + dark blue text) */
@@ -369,6 +675,16 @@ img {
     letter-spacing: 0.02em;
 }
 
+/* Desktop dropdown indicator (small chevron) */
+.tdmenu__dropdown-indicator {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 6px;
+    font-size: 12px;
+    opacity: 0.7;
+    transform: translateY(1px);
+}
+
 /* Home header (HeaderSix) mobile structure: match inner pages (pill + black circle) */
 .td-header-6-wrapper .tdmenu-offcanvas-open-btn {
     width: 52px;
@@ -505,8 +821,15 @@ img {
 }
 
 /* Font test: Clash Display Variable (loaded from /public/fonts) */
+@font-face {
+    font-family: "Clash Display Variable";
+    src: url("/fonts/ClashDisplay-Variable.ttf") format("truetype");
+    font-weight: 200 800;
+    font-style: normal;
+    font-display: swap;
+}
 
-/* Simple modal (replaces react-responsive-modal to avoid React 19 peer warnings) */
+/* In-house video modal (replaces react-responsive-modal) */
 .inoma-modal__overlay {
     position: fixed;
     inset: 0;
@@ -551,36 +874,244 @@ img {
     width: 100%;
     background: #000;
 }
-@font-face {
-    font-family: "Clash Display Variable";
-    src: url("/fonts/ClashDisplay-Variable.ttf") format("truetype");
-    font-weight: 200 800;
-    font-style: normal;
-    font-display: swap;
+
+/* Founders card: center text below image, no hover overlay */
+.td-team-founder .td-team-4-thumb {
+    position: relative;
+    overflow: hidden;
+}
+.td-team-founder .td-team-4-thumb img {
+    display: block;
+    border-radius: 0 !important;
+}
+.td-team-founder .td-team-4-thumb::after,
+.td-team-founder .td-team-4-thumb::before {
+    display: none !important;
+    content: none !important;
+    background: none !important;
+    opacity: 0 !important;
+    transition: none !important;
+}
+.td-team-founder .td-team-4-content {
+    position: static !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    color: var(--td-common-black) !important;
+    margin-top: 12px;
+    transition: none !important;
+}
+.td-team-founder:hover .td-team-4-content {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+}
+.td-team-founder .td-team-4-title,
+.td-team-founder .td-team-4-subtitle {
+    color: var(--td-common-black) !important;
+}
+.td-team-founder .td-team-4-title {
+    font-family: var(--font-inter) !important;
+    font-size: clamp(30px, 2.8vw, 36px) !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.02em;
+}
+.td-team-founder .td-team-4-subtitle {
+    font-size: 14px;
+    letter-spacing: 0.02em;
+}
+.td-team-founder-name {
+    font-family: var(--font-inter) !important;
+    margin: 6px 0 0;
 }
 
-/* Video popup modal sizing */
-.video-modal {
-    width: min(960px, 92vw);
-    padding: 0 !important;
+/* About Highlights list: hover turns light blue */
+/* Template uses a ::before overlay with var(--td-theme-primary) (green). Override to branding blue. */
+.td-awards-about-wrap .td-awards-5-list-item::before {
+    background: #b8e9ff !important;
+}
+.td-awards-about-wrap .td-awards-5-list-item:hover span {
+    color: #062539 !important;
 }
 
-.video-modal iframe {
-    border-radius: 10px;
+/* About Highlights badge: teal */
+.td-awards-about-wrap .td-awards-5-btn {
+    background: #0277b5 !important;
+    color: #fff !important;
+}
+.td-awards-about-wrap .td-awards-5-btn:hover {
+    background: #062539 !important;
+    color: #fff !important;
 }
 
-// CTA and footer stacking control
-// Raise CTA above footer for overlap; keep footer low
-.td-cta-area,
-.td-cta-wrap {
-    position: relative !important;
-    z-index: 5 !important;
+/* About: Testimonials accent (light blue tint + high contrast UI) */
+.td-about-testimonial {
+    /* Top fade + bottom fade for a framed “soft glow” */
+    background:
+        linear-gradient(180deg, rgba(184, 233, 255, 0.18) 0%, rgba(184, 233, 255, 0) 70%),
+        linear-gradient(0deg, rgba(184, 233, 255, 0.16) 0%, rgba(184, 233, 255, 0) 65%);
+}
+.td-about-testimonial .td-testimonial-5-ratings-wrap .title {
+    color: #062539 !important;
+}
+.td-about-testimonial .td-testimonial-5-ratings-wrap .ratings {
+    background: #b8e9ff;
+    color: #062539;
+    padding: 6px 12px;
+    border-radius: 999px;
+    display: inline-flex;
+    gap: 4px;
+}
+.td-about-testimonial .td-testimonial-5-ratings-wrap .review {
+    color: rgba(6, 37, 57, 0.72) !important;
+}
+.td-about-testimonial .td-testimonial-5-prev,
+.td-about-testimonial .td-testimonial-5-next {
+    background: #b8e9ff !important;
+    border: 1px solid rgba(6, 37, 57, 0.12);
+    color: #062539 !important;
+    border-radius: 999px;
+}
+.td-about-testimonial .td-testimonial-5-prev:hover,
+.td-about-testimonial .td-testimonial-5-next:hover {
+    background: #062539 !important;
+    border-color: #062539 !important;
+    color: #b8e9ff !important;
+}
+.td-about-testimonial .td-testimonial-5-content {
+    background: rgba(255, 255, 255, 0.75);
+    border: 1px solid rgba(6, 37, 57, 0.10);
+    border-radius: 14px;
+    padding: 34px 34px;
+    backdrop-filter: blur(6px);
+}
+.td-about-testimonial .td-testimonial-5-content p {
+    color: #062539 !important;
+}
+.td-about-testimonial .td-testimonial-5-content > span {
+    color: rgba(6, 37, 57, 0.65) !important;
+    font-weight: 600;
 }
 
-.td-footer-area,
-footer {
-    position: relative !important;
-    z-index: 1 !important;
+/* Founders heading: avoid descender clipping */
+.td-about-founders-area .td-section-page-title {
+    line-height: 1.35 !important;
+    overflow: visible !important;
+    padding-bottom: 6px;
+}
+
+/* About: Founders Story contrast band */
+.td-about-founders-area {
+    position: relative;
+    overflow: hidden;
+    /* Static light grey background for clean contrast */
+    background: #f4f6f8;
+}
+.td-about-founders-area::before,
+.td-about-founders-area::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(6, 37, 57, 0.08);
+}
+.td-about-founders-area::before {
+    top: 0;
+}
+.td-about-founders-area::after {
+    bottom: 0;
+}
+
+/* (Removed no-op pseudo selectors to satisfy lint rules) */
+
+.td-about-founders-area .container,
+.td-about-founders-area .container-fluid {
+    position: relative;
+    z-index: 1;
+}
+
+.td-about-founders-area::after,
+.td-about-founders-area::before {
+    z-index: 0;
+}
+
+.td-about-founders-area .td-team-founder.td-team-4-wrap {
+    position: relative;
+    z-index: 2;
+}
+
+.td-about-founders-area .td-team-founder.td-team-4-wrap::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: radial-gradient(rgba(6, 37, 57, 0.08) 1px, rgba(0, 0, 0, 0) 1px);
+    background-size: 22px 22px;
+    opacity: 0.05;
+}
+
+/* Founders cards: clean tiles for readability */
+.td-about-founders-area .td-team-founder.td-team-4-wrap {
+    border: 1px solid rgba(6, 37, 57, 0.10);
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 18px 45px rgba(6, 37, 57, 0.08);
+}
+.td-about-founders-area .td-team-founder .td-team-4-thumb {
+    border-bottom: 1px solid rgba(6, 37, 57, 0.08);
+}
+.td-about-founders-area .td-team-founder .td-team-4-content {
+    padding: 16px 14px;
+    margin-top: 0;
+}
+.td-about-founders-area .td-team-founder .td-team-4-subtitle {
+    color: rgba(6, 37, 57, 0.65) !important;
+}
+
+/* About page CTA branding */
+.about-brand-btn {
+    background: #b8e9ff !important;
+    border-color: #b8e9ff !important;
+    color: #062539 !important;
+}
+.about-brand-btn:hover {
+    background: #062539 !important;
+    border-color: #062539 !important;
+    color: #b8e9ff !important;
+}
+.about-brand-circle {
+    background: #b8e9ff !important;
+    border-color: #b8e9ff !important;
+    color: #062539 !important;
+}
+.about-brand-circle:hover {
+    background: #062539 !important;
+    border-color: #062539 !important;
+    color: #b8e9ff !important;
+}
+
+/* About hero accents */
+.about-accent {
+    color: #0277b5 !important;
+}
+.td-section-page-title .about-accent {
+    font-family: inherit !important;
+    font-style: inherit !important;
+    font-weight: inherit !important;
+}
+
+/* About page: Feature headline (prevent descender clipping on multi-line) */
+.td-about-main-feature-title {
+    line-height: 1.24 !important;
+    padding-bottom: 10px;
+    overflow: visible !important;
+}
+
+// Portfolio detail: match Team page CTA behavior (CTA floats, footer gets extra top padding)
+// Team pages achieve this via <FooterSix style /> (td-footer-spacing => padding-top: 275px).
+// Portfolio detail uses the regular inner layout footer, so we add the same spacing only here.
+main.td-has-cta-footer + footer .td-footer-area {
+    padding-top: 275px !important;
 }
 
 // Reduce blog hero top padding to remove extra gap under header

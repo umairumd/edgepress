@@ -15,8 +15,8 @@ export default async function PortfolioPage() {
     return (
         <main>
             <BreadcrumbOne
-                sub_title="LATEST PORTFOLIO"
-                title={<>Classic <span>grid</span></>}
+                sub_title="OUR RECENT WORK"
+                title={<>Our <span>Portfolio</span></>}
             />
             <PortfolioArea items={items} />
         </main>

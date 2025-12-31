@@ -25,15 +25,8 @@ const brand_data: string[] = [
     "/assets/img/brand/brands-6/logo-7.png",
 ];
 
-function ensureMinSlides<T>(items: T[], min: number): T[] {
-    if (items.length >= min) return items;
-    const out: T[] = [];
-    while (out.length < min) out.push(...items);
-    return out.slice(0, min);
-}
-
 // Ensure enough items for Swiper loop with slidesPerView:'auto' on wide screens (avoids console warnings)
-const brand_slider = ensureMinSlides(brand_data, 48);
+const brand_slider = brand_data.length < 24 ? [...brand_data, ...brand_data] : brand_data;
 
 interface DataType {
     id: number;

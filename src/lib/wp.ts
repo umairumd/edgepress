@@ -16,6 +16,10 @@ type WpMediaNode = {
   } | null;
 };
 
+type WpMediaEdge = {
+  node?: WpMediaNode | null;
+} | null;
+
 type WpSeoNode = {
   title?: string | null;
   metaDesc?: string | null;
@@ -34,6 +38,11 @@ type WpCategoryNode = {
   count?: number | null;
 };
 
+type WpTermNode = {
+  slug?: string | null;
+  name?: string | null;
+};
+
 type WpPostNode = {
   slug?: string | null;
   title?: string | null;
@@ -44,6 +53,12 @@ type WpPostNode = {
   author?: { node?: { name?: string | null } | null } | null;
   featuredImage?: { node?: WpMediaNode | null } | null;
   seo?: WpSeoNode | null;
+};
+
+type WpPortfolioNode = WpPostNode & {
+  // Taxonomy connection name can differ per WPGraphQL schema; we fetch dynamically.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
 };
 
 function normalizeWpMediaUrl(url?: string): string | undefined {
@@ -107,9 +122,56 @@ export type PortfolioItem = {
   content?: string;
   date?: string;
   category?: string;
+  categories?: Array<{ slug: string; name: string }>;
   featuredImage?: WPImage;
+  entryImage?: WPImage;
   seo?: YoastSeo;
 };
+
+const PORTFOLIO_TAX_FIELD = (process.env.WP_PORTFOLIO_TAX_FIELD || "").trim() || "portfolioCategories";
+const PORTFOLIO_ENTRY_FIELD = (process.env.WP_PORTFOLIO_ENTRY_FIELD || "").trim() || "portfolioEntryImage";
+const PORTFOLIO_ACF_GROUP_FIELD = (process.env.WP_PORTFOLIO_ACF_GROUP_FIELD || "").trim() || undefined;
+
+const PORTFOLIO_ENTRY_FIELD_CANDIDATES = Array.from(
+  // Prefer the most common WPGraphQL-for-ACF casing first to avoid avoidable GraphQL errors.
+  new Set(["portfolioEntryImage", PORTFOLIO_ENTRY_FIELD, "portfolioentryimage"].filter(Boolean))
+);
+
+function mapWpTerms(terms?: { nodes?: WpTermNode[] | null } | null): Array<{ slug: string; name: string }> | undefined {
+  const nodes = terms?.nodes;
+  if (!nodes?.length) return undefined;
+  const out = nodes
+    .map((t) => ({ slug: t.slug ?? "", name: t.name ?? "" }))
+    .filter((t) => t.slug || t.name);
+  return out.length ? out : undefined;
+}
+
+function getPortfolioTaxonomyConnection(node: WpPortfolioNode): { nodes?: WpTermNode[] | null } | null | undefined {
+  const value = node?.[PORTFOLIO_TAX_FIELD] as { nodes?: WpTermNode[] | null } | null | undefined;
+  return value;
+}
+
+function getPortfolioEntryImageNode(node: WpPortfolioNode): WpMediaNode | null | undefined {
+  if (PORTFOLIO_ACF_GROUP_FIELD) {
+    const group = node?.[PORTFOLIO_ACF_GROUP_FIELD] as Record<string, unknown> | null | undefined;
+    for (const key of PORTFOLIO_ENTRY_FIELD_CANDIDATES) {
+      const field = group?.[key] as unknown;
+      if (!field) continue;
+      const edge = field as WpMediaEdge;
+      if (edge && typeof edge === "object" && "node" in edge) return edge.node ?? undefined;
+      return field as WpMediaNode | null | undefined;
+    }
+    return undefined;
+  }
+  for (const key of PORTFOLIO_ENTRY_FIELD_CANDIDATES) {
+    const field = node?.[key] as unknown;
+    if (!field) continue;
+    const edge = field as WpMediaEdge;
+    if (edge && typeof edge === "object" && "node" in edge) return edge.node ?? undefined;
+    return (field as WpMediaNode | null | undefined) ?? undefined;
+  }
+  return undefined;
+}
 
 async function wpFetch<T>(query: string, variables?: Record<string, unknown>): Promise<T | null> {
   if (!WP_ENDPOINT) {
@@ -359,70 +421,132 @@ export async function getCategories(): Promise<Category[]> {
 }
 
 export async function getPortfolioItems(limit = 12): Promise<PortfolioItem[]> {
-  const data = await wpFetch<{
-    portfolioItems?: { nodes: WpPostNode[] };
-  }>(
-    `
+  const taxSelection = `${PORTFOLIO_TAX_FIELD} { nodes { slug name } }`;
+  const buildQueryFull = (entryField: string, shape: "edge" | "direct") => {
+    const entrySelection =
+      shape === "edge"
+        ? `${entryField} { node { sourceUrl altText mediaDetails { width height } } }`
+        : `${entryField} { sourceUrl altText mediaDetails { width height } }`;
+    const entryFieldSelection = PORTFOLIO_ACF_GROUP_FIELD
+      ? `${PORTFOLIO_ACF_GROUP_FIELD} { ${entrySelection} }`
+      : entrySelection;
+    return `
+      query GetPortfolioItems($limit: Int!) {
+        portfolioItems(first: $limit, where: {orderby: {field: DATE, order: DESC}}) {
+          nodes {
+            slug
+            title
+            date
+            featuredImage { node { sourceUrl altText mediaDetails { width height } } }
+            ${taxSelection}
+            ${entryFieldSelection}
+          }
+        }
+      }
+    `;
+  };
+
+  const queryBase = `
     query GetPortfolioItems($limit: Int!) {
       portfolioItems(first: $limit, where: {orderby: {field: DATE, order: DESC}}) {
         nodes {
           slug
           title
-          excerpt
           date
           featuredImage { node { sourceUrl altText mediaDetails { width height } } }
         }
       }
     }
-    `,
-    { limit }
-  );
+  `;
 
-  const nodes = data?.portfolioItems?.nodes;
-  if (!nodes) return [];
+  // Try a few likely field names for the entry image (WPGraphQL for ACF often camelCases).
+  let raw: WPGraphQlResponse<{ portfolioItems?: { nodes: WpPortfolioNode[] } }> | null = null;
+  for (const candidate of PORTFOLIO_ENTRY_FIELD_CANDIDATES) {
+    raw = await wpFetchRaw<{ portfolioItems?: { nodes: WpPortfolioNode[] } }>(buildQueryFull(candidate, "edge"), { limit });
+    if (raw && !raw.errors) break;
+    raw = await wpFetchRaw<{ portfolioItems?: { nodes: WpPortfolioNode[] } }>(buildQueryFull(candidate, "direct"), { limit });
+    if (raw && !raw.errors) break;
+  }
 
-  return nodes.map((node) => ({
-    slug: node.slug ?? "",
-    title: node.title ?? "",
-    excerpt: node.excerpt ?? undefined,
-    date: node.date ?? undefined,
-    featuredImage: mapWpImage(node.featuredImage?.node),
-  }));
+  const fallback = raw?.errors
+    ? await wpFetch<{ portfolioItems?: { nodes: WpPortfolioNode[] } }>(queryBase, { limit })
+    : raw?.data;
+  const nodes = fallback?.portfolioItems?.nodes;
+  if (!nodes?.length) return [];
+
+  return nodes.map((node) => {
+    const categories = mapWpTerms(getPortfolioTaxonomyConnection(node));
+    return {
+      slug: node.slug ?? "",
+      title: node.title ?? "",
+      date: node.date ?? undefined,
+      featuredImage: mapWpImage(node.featuredImage?.node),
+      entryImage: mapWpImage(getPortfolioEntryImageNode(node)),
+      categories,
+      // Keep a simple string category for backwards-compat UI. Prefer first term name.
+      category: categories?.[0]?.name ?? undefined,
+    };
+  });
 }
 
 export async function getPortfolioItem(slug: string): Promise<PortfolioItem | null> {
-  type PortfolioResponse = { portfolioItem?: WpPostNode | null };
+  type PortfolioResponse = { portfolioItem?: WpPortfolioNode | null };
 
-  const queryWithSeo = `
-    query GetPortfolioItem($slug: ID!) {
-      portfolioItem(id: $slug, idType: SLUG) {
-        slug
-        title
-        excerpt
-        content
-        date
-        featuredImage { node { sourceUrl altText mediaDetails { width height } } }
-        seo {
+  const taxSelection = `${PORTFOLIO_TAX_FIELD} { nodes { slug name } }`;
+  const buildEntryFieldSelection = (entryField: string, shape: "edge" | "direct") => {
+    const entrySelection =
+      shape === "edge"
+        ? `${entryField} { node { sourceUrl altText mediaDetails { width height } } }`
+        : `${entryField} { sourceUrl altText mediaDetails { width height } }`;
+    return PORTFOLIO_ACF_GROUP_FIELD
+      ? `${PORTFOLIO_ACF_GROUP_FIELD} { ${entrySelection} }`
+      : entrySelection;
+  };
+
+  const buildQueryWithSeo = (entryField: string, shape: "edge" | "direct") => `
+      query GetPortfolioItem($slug: ID!) {
+        portfolioItem(id: $slug, idType: SLUG) {
+          slug
           title
-          metaDesc
-          canonical
-          opengraphTitle
-          opengraphDescription
-          opengraphImage { sourceUrl altText mediaDetails { width height } }
-          twitterTitle
-          twitterDescription
-          twitterImage { sourceUrl altText mediaDetails { width height } }
+          content
+          date
+          featuredImage { node { sourceUrl altText mediaDetails { width height } } }
+          ${taxSelection}
+          ${buildEntryFieldSelection(entryField, shape)}
+          seo {
+            title
+            metaDesc
+            canonical
+            opengraphTitle
+            opengraphDescription
+            opengraphImage { sourceUrl altText mediaDetails { width height } }
+            twitterTitle
+            twitterDescription
+            twitterImage { sourceUrl altText mediaDetails { width height } }
+          }
         }
       }
-    }
-  `;
+    `;
 
-  const queryBase = `
+  const buildQueryBase = (entryField: string, shape: "edge" | "direct") => `
+      query GetPortfolioItem($slug: ID!) {
+        portfolioItem(id: $slug, idType: SLUG) {
+          slug
+          title
+          content
+          date
+          featuredImage { node { sourceUrl altText mediaDetails { width height } } }
+          ${taxSelection}
+          ${buildEntryFieldSelection(entryField, shape)}
+        }
+      }
+    `;
+
+  const minimalQuery = `
     query GetPortfolioItem($slug: ID!) {
       portfolioItem(id: $slug, idType: SLUG) {
         slug
         title
-        excerpt
         content
         date
         featuredImage { node { sourceUrl altText mediaDetails { width height } } }
@@ -430,21 +554,38 @@ export async function getPortfolioItem(slug: string): Promise<PortfolioItem | nu
     }
   `;
 
-  const raw = await wpFetchRaw<PortfolioResponse>(queryWithSeo, { slug });
-  const fallback = raw?.errors && isMissingYoastSeoField(raw.errors)
-    ? await wpFetch<PortfolioResponse>(queryBase, { slug })
-    : raw?.data;
+  let item: WpPortfolioNode | null | undefined;
+  for (const candidate of PORTFOLIO_ENTRY_FIELD_CANDIDATES) {
+    for (const shape of ["edge", "direct"] as const) {
+      const raw = await wpFetchRaw<PortfolioResponse>(buildQueryWithSeo(candidate, shape), { slug });
+      const data = raw?.errors && isMissingYoastSeoField(raw.errors)
+        ? await wpFetch<PortfolioResponse>(buildQueryBase(candidate, shape), { slug })
+        : raw?.data;
+      item = data?.portfolioItem;
+      if (item) break;
+    }
+    if (item) break;
+  }
 
-  const item = fallback?.portfolioItem;
+  // Final fallback: avoid breaking the page if ACF/tax fields are not queryable.
+  if (!item) {
+    const data = await wpFetch<PortfolioResponse>(minimalQuery, { slug });
+    item = data?.portfolioItem ?? null;
+  }
+
   if (!item) return null;
+
+  const categories = mapWpTerms(getPortfolioTaxonomyConnection(item));
 
   return {
     slug: item.slug ?? "",
     title: item.title ?? "",
-    excerpt: item.excerpt ?? undefined,
     content: item.content ?? undefined,
     date: item.date ?? undefined,
     featuredImage: mapWpImage(item.featuredImage?.node),
+    entryImage: mapWpImage(getPortfolioEntryImageNode(item)),
+    categories,
+    category: categories?.[0]?.name ?? undefined,
     seo: item.seo
       ? {
           title: item.seo.title,

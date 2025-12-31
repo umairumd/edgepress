@@ -5,11 +5,12 @@ const PricingArea = () => {
     return (
         <div className="td-pricing-area td-pricing-main-wrap pb-130">
             <div className="container">
-                <div className="row">
+                <div className="row pricing-row">
                     {pricing_data.map((item) => (
                         <div key={item.id} className="col-xl-4 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay=".4s" data-wow-duration="1s">
-                            <div className="td-pricing-6-wrap mb-30">
+                            <div className={`td-pricing-6-wrap mb-30 pricing-card ${item.active ? "pricing-card--featured" : ""}`}>
                                 <div className="td-pricing-6-top">
+                                    {item.active ? <div className="pricing-badge">Most Popular</div> : null}
                                     <span className="package mb-35 d-inline-block">{item.title}</span>
                                     <p className="para mb-55">{item.desc}</p>
                                     <h6 className="price mb-15">{item.price}</h6>

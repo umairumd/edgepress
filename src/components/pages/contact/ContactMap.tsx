@@ -1,6 +1,11 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
 
 const ContactMap = () => {
+    const [isLoaded, setIsLoaded] = useState(false);
+
     return (
         <div className="td-contact-map-area">
             <div className="container-fluid p-0">
@@ -24,14 +29,30 @@ const ContactMap = () => {
                                 </div>
                             </div>
                             <div className="td-contact-map-inner">
+                                {!isLoaded && (
+                                    <div className="td-contact-map-skeleton" aria-hidden="true">
+                                        <div className="td-contact-map-skeleton__content">
+                                            <div className="td-contact-map-skeleton__title">Loading map…</div>
+                                            <a
+                                                className="td-contact-map-skeleton__link"
+                                                href="https://www.google.com/maps?cid=0xa3d289e5fa228a2"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                Open in Google Maps
+                                            </a>
+                                        </div>
+                                    </div>
+                                )}
                                 <iframe
                                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3426.921637343648!2d73.43281717625457!3d30.804831782143342!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3922a76448baad03%3A0xa3d289e5fa228a2!2sInoma%20Digital!5e0!3m2!1sen!2s!4v1766956899442!5m2!1sen!2s"
-                                    width="600"
-                                    height="450"
+                                    title="Inoma Digital location on Google Maps"
                                     style={{ border: 0 }}
-                                    loading="lazy"
+                                    loading="eager"
                                     allowFullScreen
                                     referrerPolicy="no-referrer-when-downgrade"
+                                    onLoad={() => setIsLoaded(true)}
+                                    data-loaded={isLoaded ? "true" : "false"}
                                 ></iframe>
                             </div>
                         </div>

@@ -69,16 +69,47 @@ const PortfolioArea = ({ items }: Props) => {
 
     const filteredData = useMemo(() => {
         if (items && items.length) {
+            const normalizeCat = (input?: string) => (input || "").trim().toLowerCase();
+            const normalizeSlug = (input?: string) =>
+                normalizeCat(input)
+                    .replace(/\s+/g, "-")
+                    .replace(/[^a-z0-9-]/g, "")
+                    .trim();
+            const toKnownFilterSlug = (slug: string) => {
+                const s = normalizeSlug(slug);
+                if (s === "case-studies" || s === "websites" || s === "logos") return s;
+                if (s.includes("case")) return "case-studies";
+                if (s.includes("website") || s.includes("web")) return "websites";
+                if (s.includes("logo")) return "logos";
+                return "case-studies";
+            };
+            const toFilterClasses = (item: PortfolioItem) => {
+                const slugs =
+                    item.categories?.map((c) => c.slug).filter(Boolean) ??
+                    (item.category ? [item.category] : []);
+                const mapped = slugs.map(toKnownFilterSlug);
+                return Array.from(new Set(mapped)).join(" ") || "case-studies";
+            };
+
             return items.map((item, idx) => ({
                 id: item.slug ?? `item-${idx}`,
                 img: item.featuredImage?.url ?? "/assets/img/portfolio/portfolio-6/thumb.jpg",
                 title: item.title,
-                tag: item.category ?? "Portfolio",
-                category: "prof",
+                categoryClasses: toFilterClasses(item),
                 slug: item.slug,
             }));
         }
-        return portfolio_data.filter((items) => items.page === "portfolio_1").map((p) => ({ ...p, slug: "portfolio-details" }));
+        // Template fallback: map old categories to the new filter buckets
+        const mapLegacyToNew = (legacy: string) => {
+            const l = legacy || "";
+            if (l.includes("prof3")) return "logos";
+            if (l.includes("prof2")) return "websites";
+            if (l.includes("prof1")) return "case-studies";
+            return "case-studies";
+        };
+        return portfolio_data
+            .filter((items) => items.page === "portfolio_1")
+            .map((p) => ({ ...p, slug: "portfolio-details", categoryClasses: mapLegacyToNew(p.category) }));
     }, [items]);
 
     return (
@@ -88,34 +119,34 @@ const PortfolioArea = ({ items }: Props) => {
                     <div className="col-lg-12 mb-50">
                         <div className="td-portfolio-filter-btn text-center masonary-menu">
                             <button className={`${selectedFilter === "*" ? "is-checked active" : ""}`} onClick={handleFilterKeyChange("*")}> SHOW ALL </button>
-                            <button className={`${selectedFilter === "prof" ? "is-checked active" : ""}`} onClick={handleFilterKeyChange("prof")}> digital  </button>
-                            <button className={`${selectedFilter === "prof1" ? "is-checked active" : ""}`} onClick={handleFilterKeyChange("prof1")}> marketing  </button>
-                            <button className={`${selectedFilter === "prof2" ? "is-checked active" : ""}`} onClick={handleFilterKeyChange("prof2")}> studio  </button>
-                            <button className={`${selectedFilter === "prof3" ? "is-checked active" : ""}`} onClick={handleFilterKeyChange("prof3")}> creative  </button>
+                            <button className={`${selectedFilter === "case-studies" ? "is-checked active" : ""}`} onClick={handleFilterKeyChange("case-studies")}> CASE STUDIES </button>
+                            <button className={`${selectedFilter === "websites" ? "is-checked active" : ""}`} onClick={handleFilterKeyChange("websites")}> WEBSITES </button>
+                            <button className={`${selectedFilter === "logos" ? "is-checked active" : ""}`} onClick={handleFilterKeyChange("logos")}> LOGOS </button>
                         </div>
                     </div>
                 </div>
                 <div className="grid row">
                     {filteredData.map((item) => (
-                        <div key={item.id} className={`col-md-6 grid-item ${item.category} mb-30`}>
-                            <div className="td-portfolio-filter-wrapper p-relative">
-                                <div className="td-portfolio-filter-thumb fix">
+                        <div key={item.id} className={`col-md-6 grid-item ${item.categoryClasses} mb-30`}>
+                            <div className="td-portfolio-card">
+                                <Link className="td-portfolio-card-thumb" href={`/portfolio/${item.slug ?? "details"}`}>
                                     <Image
-                                        className="w-100"
                                         src={item.img}
                                         alt={typeof item.title === "string" ? item.title : "Project"}
-                                        width={1200}
-                                        height={800}
+                                        fill
                                         sizes="(max-width: 768px) 100vw, 50vw"
-                                        style={{ height: "auto" }}
-                                        unoptimized={process.env.NODE_ENV !== "production" && typeof item.img === "string" && item.img.startsWith("http")}
+                                        style={{ objectFit: "cover" }}
+                                        unoptimized={
+                                            process.env.NODE_ENV !== "production" &&
+                                            typeof item.img === "string" &&
+                                            item.img.startsWith("http")
+                                        }
                                         onLoadingComplete={relayout}
                                     />
-                                </div>
-                                <div className="td-portfolio-filter-content">
-                                    <span className="mb-10">{item.tag}</span>
-                                    <h3 className="titles"><Link href={`/portfolio/${item.slug ?? "details"}`}>{item.title}</Link></h3>
-                                </div>
+                                </Link>
+                                <h3 className="td-portfolio-card-title">
+                                    <Link href={`/portfolio/${item.slug ?? "details"}`}>{item.title}</Link>
+                                </h3>
                             </div>
                         </div>
                     ))}
@@ -124,11 +155,11 @@ const PortfolioArea = ({ items }: Props) => {
                     <div className="col-12">
                         <div className="d-flex justify-content-center mt-50">
                             <div className="td-btn-group">
-                                <Link className="td-btn-circle" href="/service">
-                                    <i className="fa-solid fa-arrow-right"></i>
+                                <Link className="td-btn-circle" href="https://www.behance.net/inoma" target="_blank" rel="noopener noreferrer" aria-label="View Behance Portfolio">
+                                    <i className="fa-brands fa-behance"></i>
                                 </Link>
-                                <Link className="td-btn-2 td-btn-primary" href="/service">SEE MORE PROJECT</Link>
-                                <Link className="td-btn-circle" href="/service">
+                                <Link className="td-btn-2 td-btn-primary" href="https://www.behance.net/inoma" target="_blank" rel="noopener noreferrer">View Behance Portfolio</Link>
+                                <Link className="td-btn-circle" href="https://www.behance.net/inoma" target="_blank" rel="noopener noreferrer" aria-label="View Behance Portfolio">
                                     <i className="fa-solid fa-arrow-right"></i>
                                 </Link>
                             </div>

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getPortfolioItem, getPortfolioItems } from "@/lib/wp";
 import Image from "next/image";
 import { getSiteUrl } from "@/lib/siteUrl";
+import Cta from "@/components/common/Cta";
 
 const SITE_URL = getSiteUrl();
 export const revalidate = 300;
@@ -17,15 +18,16 @@ export async function generateStaticParams() {
     return items.map((p) => ({ slug: p.slug }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-    const item = await getPortfolioItem(params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+    const { slug } = await params;
+    const item = await getPortfolioItem(slug);
     const title = item?.seo?.title ? stripHtml(item.seo.title) : item?.title ? stripHtml(item.title) : "Portfolio";
     const description = item?.seo?.metaDesc
         ? stripHtml(item.seo.metaDesc)
         : item?.excerpt
             ? stripHtml(item.excerpt)
             : "Project details.";
-    const canonical = item?.seo?.canonical || `${SITE_URL}/portfolio/${params.slug}`;
+    const canonical = item?.seo?.canonical || `${SITE_URL}/portfolio/${slug}`;
     const image = item?.seo?.opengraphImage?.url || item?.featuredImage?.url;
     const ogTitle = item?.seo?.opengraphTitle ? stripHtml(item.seo.opengraphTitle) : title;
     const ogDesc = item?.seo?.opengraphDescription ? stripHtml(item.seo.opengraphDescription) : description;
@@ -53,73 +55,59 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     };
 }
 
-export default async function PortfolioDetailsPage({ params }: { params: { slug: string } }) {
-    const item = await getPortfolioItem(params.slug);
+export default async function PortfolioDetailsPage({ params }: { params: Promise<{ slug: string }> }) {
+    const { slug } = await params;
+    const item = await getPortfolioItem(slug);
     if (!item) return notFound();
     const isDev = process.env.NODE_ENV !== "production";
+
+    const entryImage = item.entryImage?.url || item.featuredImage?.url;
+    const entryAlt = item.entryImage?.alt || item.featuredImage?.alt || stripHtml(item.title);
+    const entryWidth = item.entryImage?.width || item.featuredImage?.width || 1600;
+    const entryHeight = item.entryImage?.height || item.featuredImage?.height || 4000;
 
     const structuredData = {
         "@context": "https://schema.org",
         "@type": "CreativeWork",
         name: stripHtml(item.title),
-        image: item.featuredImage?.url,
+        image: entryImage,
         description: stripHtml(item.excerpt),
-        url: `${SITE_URL}/portfolio/${params.slug}`,
+        url: `${SITE_URL}/portfolio/${slug}`,
         author: { "@type": "Organization", name: "Inoma Digital" },
     };
 
     return (
-        <main>
-            <div className="td-portfolio-details-area pb-120 pt-120">
+        <main className="td-has-cta-footer">
+            <div className="td-portfolio-entry-area pb-120 pt-120">
                 <div className="container">
                     <div className="row">
                         <div className="col-12">
-                            {item.featuredImage?.url && (
-                                <div className="td-portfolio-details-thumb mb-50">
+                            <div className="td-portfolio-entry-header mb-40">
+                                <h1 className="td-portfolio-entry-title" dangerouslySetInnerHTML={{ __html: item.title }} />
+                            </div>
+
+                            {entryImage ? (
+                                <div className="td-portfolio-entry-image-wrap">
                                     <Image
-                                        className="w-100"
-                                        src={item.featuredImage.url}
-                                        alt={item.featuredImage.alt || stripHtml(item.title)}
-                                        width={1400}
-                                        height={900}
+                                        className="w-100 td-portfolio-entry-image"
+                                        src={entryImage}
+                                        alt={entryAlt}
+                                        width={entryWidth}
+                                        height={entryHeight}
                                         sizes="100vw"
                                         style={{ height: "auto" }}
                                         priority
-                                        unoptimized={isDev && item.featuredImage.url.startsWith("http")}
+                                        unoptimized={isDev && entryImage.startsWith("http")}
                                     />
                                 </div>
+                            ) : (
+                                <p>Project image coming soon.</p>
                             )}
-                        </div>
-                        <div className="col-lg-8">
-                            <div className="td-portfolio-details-content">
-                                <h3 className="mb-20" dangerouslySetInnerHTML={{ __html: item.title }} />
-                                {item.content ? (
-                                    <div className="td-portfolio-details-body" dangerouslySetInnerHTML={{ __html: item.content }} />
-                                ) : (
-                                    <p>Details coming soon.</p>
-                                )}
-                            </div>
-                        </div>
-                        <div className="col-lg-4">
-                            <div className="td-portfolio-details-info" style={{ background: '#f8f8f8', padding: '30px', borderRadius: '10px' }}>
-                                <h4 className="mb-25">Project Info</h4>
-                                {item.date && (
-                                    <div className="mb-20">
-                                        <strong>Date:</strong>
-                                        <p>{new Date(item.date).toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" })}</p>
-                                    </div>
-                                )}
-                                {item.category && (
-                                    <div className="mb-20">
-                                        <strong>Category:</strong>
-                                        <p>{item.category}</p>
-                                    </div>
-                                )}
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <Cta />
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}

@@ -9,6 +9,11 @@ const NavMenu = () => {
                 <li key={menu.id} className={menu.has_dropdown ? "menu-item-has-children" : ""}>
                     <Link href={menu.link}>
                         {menu.title}
+                        {menu.has_dropdown ? (
+                            <span className="tdmenu__dropdown-indicator" aria-hidden="true">
+                                <i className="fa-regular fa-angle-down"></i>
+                            </span>
+                        ) : null}
                     </Link>
 
                     {menu.has_dropdown && menu.sub_menus && (

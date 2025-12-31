@@ -43,16 +43,9 @@ const team_data: TeamMember[] = [
     },
 ];
 
-function ensureMinSlides<T>(items: T[], min: number): T[] {
-    if (items.length >= min) return items;
-    const out: T[] = [];
-    while (out.length < min) out.push(...items);
-    return out.slice(0, min);
-}
-
 // Swiper loop with slidesPerView:'auto' can warn if there aren't enough slides.
-// Keep a conservative minimum to avoid warnings on wide viewports.
-const team_slider = ensureMinSlides(team_data, 32);
+// Duplicate for smooth infinite loop without console warnings.
+const team_slider = team_data.length < 10 ? [...team_data, ...team_data] : team_data;
 
 const setting = {
     loop: true,
@@ -96,14 +89,7 @@ const Team = () => {
                                     <div className="td-team-6-wrap">
                                         <div className="td-team-6-thumb mb-20">
                                             <Link href="/team">
-                                                <img
-                                                    className="w-100"
-                                                    src={item.thumb}
-                                                    alt=""
-                                                    loading={idx === 0 ? "eager" : "lazy"}
-                                                    fetchPriority={idx === 0 ? "high" : "auto"}
-                                                    decoding="async"
-                                                />
+                                                <img className="w-100" src={item.thumb} alt="" />
                                             </Link>
                                         </div>
                                         <div className="td-team-6-content">

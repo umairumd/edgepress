@@ -38,7 +38,6 @@ export const dmSerif = DM_Serif_Display({
 export const dmSans = DM_Sans({
   subsets: ["latin"],
   display: "swap",
-  preload: false,
   variable: "--font-dm-sans",
 });
 
@@ -52,21 +51,18 @@ export const bebasNeue = Bebas_Neue({
   subsets: ["latin"],
   display: "swap",
   weight: ["400"],
-  preload: false,
   variable: "--font-bebas-neue",
 });
 
 export const teko = Teko({
   subsets: ["latin"],
   display: "swap",
-  preload: false,
   variable: "--font-teko",
 });
 
 export const rethinkSans = Rethink_Sans({
   subsets: ["latin"],
   display: "swap",
-  preload: false,
   variable: "--font-rethink-sans",
 });
 
@@ -74,7 +70,6 @@ export const bellefair = Bellefair({
   subsets: ["latin"],
   display: "swap",
   weight: ["400"],
-  preload: false,
   variable: "--font-bellefair",
 });
 
@@ -82,7 +77,6 @@ export const roboto = Roboto({
   subsets: ["latin"],
   display: "swap",
   weight: ["400", "500", "700"],
-  preload: false,
   variable: "--font-roboto",
 });
 

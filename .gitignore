@@ -41,3 +41,9 @@ yarn-error.log*
 
 # PageSpeed reports
 extras/*.pdf
+
+# Extras (local-only assets; keep repo clean)
+extras/*.jpg
+extras/*.jpeg
+extras/*.png
+extras/*.webp

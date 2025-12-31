@@ -31,14 +31,12 @@ const menu_data: MenuItem[] = [
     {
         id: 5,
         title: "About",
-        link: "#",
+        link: "/about",
         has_dropdown: true,
         sub_menus: [
-            { link: "/about", title: "About" },
             { link: "/team", title: "Team" },
             { link: "/pricing", title: "Pricing" },
             { link: "/contact", title: "Contact" },
-            { link: "/faq", title: "FAQ" },
         ],
     },
     {

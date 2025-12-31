@@ -1,7 +1,9 @@
 "use client";
+import { useEffect, useMemo, useRef } from "react";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import Link from "next/link";
+import type { Swiper as SwiperType } from "swiper";
 
 const banner_slider: string[] = [
     "/assets/img/hero/hero-6/thumb.jpg",
@@ -15,30 +17,89 @@ const banner_slider: string[] = [
     "/assets/img/hero/hero-6/thumb-5.jpg",
 ];
 
-// Ensure enough items for a smooth infinite loop on wide viewports (slidesPerView:'auto')
-const MIN_SLIDES = 20;
-const banner_slider_loop =
-    banner_slider.length < MIN_SLIDES
-        ? Array.from({ length: MIN_SLIDES }, (_, i) => banner_slider[i % banner_slider.length])
-        : banner_slider;
-
-const setting = {
-    loop: true,
-    freeMode: false,
-    slidesPerView: 'auto' as const,
-    spaceBetween: 30,
-    centeredSlides: false, // start from the left edge
-    allowTouchMove: false,
-    speed: 6000,
-    loopAdditionalSlides: 10, // helps Swiper keep a stable loop cache
-    initialSlide: 0,
-    autoplay: {
-        delay: 1, // near-continuous scroll
-        disableOnInteraction: true,
-    },
-};
-
 const Hero = () => {
+    const swiperRef = useRef<SwiperType | null>(null);
+
+    // Swiper loop with slidesPerView:'auto' needs enough physical slides to stay stable on wide screens.
+    const banner_slider_loop = useMemo(() => {
+        const minSlides = 24;
+        const out: string[] = [];
+        while (out.length < minSlides) out.push(...banner_slider);
+        return out;
+    }, []);
+
+    useEffect(() => {
+        // Force a post-mount update — avoids intermittent "blank slider" when widths are 0 at init.
+        const tick = () => {
+            const s = swiperRef.current;
+            if (!s || s.destroyed) return;
+            try {
+                s.update();
+                if (s.params.loop) (s as unknown as { loopFix?: () => void }).loopFix?.();
+            } catch {
+                // ignore
+            }
+        };
+
+        const raf = requestAnimationFrame(tick);
+        const t1 = window.setTimeout(tick, 100);
+        const t2 = window.setTimeout(tick, 350);
+        return () => {
+            cancelAnimationFrame(raf);
+            window.clearTimeout(t1);
+            window.clearTimeout(t2);
+        };
+    }, []);
+
+    const setting = {
+        loop: true,
+        slidesPerView: 'auto' as const,
+        spaceBetween: 30,
+        centeredSlides: false,
+        allowTouchMove: false,
+        speed: 30000,
+        watchSlidesProgress: true,
+        observer: true,
+        observeParents: true,
+        resizeObserver: true,
+        autoplay: {
+            delay: 0,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: false,
+            waitForTransition: false,
+        },
+        onInit: (swiper: SwiperType) => {
+            swiperRef.current = swiper;
+            try {
+                swiper.wrapperEl.classList.add("slide-transition");
+                swiper.update();
+                (swiper as unknown as { loopFix?: () => void }).loopFix?.();
+            } catch {
+                // ignore
+            }
+        },
+        onResize: () => {
+            const s = swiperRef.current;
+            if (!s || s.destroyed) return;
+            try {
+                s.update();
+                (s as unknown as { loopFix?: () => void }).loopFix?.();
+            } catch {
+                // ignore
+            }
+        },
+        onImagesReady: () => {
+            const s = swiperRef.current;
+            if (!s || s.destroyed) return;
+            try {
+                s.update();
+                (s as unknown as { loopFix?: () => void }).loopFix?.();
+            } catch {
+                // ignore
+            }
+        },
+    };
+
     return (
         <div className="td-hero-area td-hero-6-spacing include-bg" style={{ backgroundImage: `url(/assets/img/hero/hero-6/bg.jpg)` }}>
             <div className="container">
@@ -91,9 +152,21 @@ const Hero = () => {
             <div className="container-fluid container-1680">
                 <div className="row">
                     <div className="col-lg-12">
-                        <Swiper {...setting} modules={[Autoplay]} onSwiper={(swiper) => {
-                            swiper.wrapperEl.classList.add("slide-transition");
-                        }} className="swiper-container td-hero-6-slider">
+                        <Swiper
+                            {...setting}
+                            modules={[Autoplay]}
+                            onSwiper={(swiper) => {
+                                swiperRef.current = swiper;
+                                try {
+                                    swiper.wrapperEl.classList.add("slide-transition");
+                                    swiper.update();
+                                    (swiper as unknown as { loopFix?: () => void }).loopFix?.();
+                                } catch {
+                                    // ignore
+                                }
+                            }}
+                            className="swiper-container td-hero-6-slider"
+                        >
                             {banner_slider_loop.map((thumb, i) => (
                                 <SwiperSlide key={i} className="swiper-slide">
                                     <div className="td-hero-6-thumb">

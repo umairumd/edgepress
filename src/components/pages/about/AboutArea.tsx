@@ -8,9 +8,10 @@ const AboutArea = () => {
                     <div className="col-lg-12">
                         <div className="td-about-main-wrapper pb-90">
                             <h2 className="td-section-page-title td-title-anim text-center">
-                                We&apos;re full service creative and digital
-                                agency, working globally with<br />
-                                <span>largest brands</span>
+                                We&apos;re full service <span className="about-accent">digital agency</span> <br />
+                                <span style={{ fontFamily: "var(--td-ff-dm)", fontStyle: "italic", fontWeight: 400 }}>
+                                    helping businesses grow
+                                </span>
                             </h2>
                         </div>
                     </div>
@@ -21,26 +22,23 @@ const AboutArea = () => {
                     </div>
                     <div className="col-lg-7">
                         <div className="td-about-main-content ml-110 mb-40 wow fadeInRight" data-wow-delay=".5s" data-wow-duration="1s">
-                            <h3 className="td-about-main-title mb-20">Driving innovation through strategic consulting</h3>
+                            <h3 className="td-about-main-title mb-20">Driving sustainable business growth through technology</h3>
                             <div className="row">
                                 <div className="col-lg-5 col-md-5">
                                     <div className="td-about-main-bigtext">
-                                        <h2>15</h2>
+                                        <h2>8+</h2>
                                         <span>Years of experience</span>
                                     </div>
                                 </div>
                                 <div className="col-lg-7 col-md-7">
                                     <div className="td-about-main-text mt-30">
-                                        <p className="mb-30">We are excited for our work and how it
-                                            positively impacts clients. With  over
-                                            of experience we have been and
-                                            constantly oppurtunity</p>
+                                        <p className="mb-30">A digital agency built on systems, clarity, and long-term results. Helping businesses through strategy, design, technology, and marketing.</p>
                                         <div className="td-btn-group">
-                                            <Link className="td-btn-circle" href="/contact">
+                                            <Link className="td-btn-circle about-brand-circle" href="/contact">
                                                 <i className="fa-solid fa-arrow-right"></i>
                                             </Link>
-                                            <Link className="td-btn-2 td-btn-primary" href="/contact">EXPLORE MORE</Link>
-                                            <Link className="td-btn-circle" href="/contact">
+                                            <Link className="td-btn-2 td-btn-primary about-brand-btn" href="/contact">EXPLORE MORE</Link>
+                                            <Link className="td-btn-circle about-brand-circle" href="/contact">
                                                 <i className="fa-solid fa-arrow-right"></i>
                                             </Link>
                                         </div>

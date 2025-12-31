@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
+import { useEffect, useMemo } from "react";
 
 type Props = {
   isOpen: boolean;
@@ -10,9 +10,7 @@ type Props = {
 };
 
 export default function VideoPopup({ isOpen, onClose, videoId }: Props) {
-  const src = useMemo(() => {
-    return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&rel=0`;
-  }, [videoId]);
+  const src = useMemo(() => `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&rel=0`, [videoId]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -42,20 +40,18 @@ export default function VideoPopup({ isOpen, onClose, videoId }: Props) {
           ×
         </button>
         <div className="inoma-modal__frame" style={{ width: "100%", aspectRatio: "16/9" }}>
-        <iframe
-          title="Video"
-          width="100%"
-          height="100%"
-          src={src}
-          allow="autoplay; encrypted-media; picture-in-picture"
-          allowFullScreen
-          style={{ border: 0, display: "block" }}
-        />
-      </div>
+          <iframe
+            title="Video"
+            width="100%"
+            height="100%"
+            src={src}
+            allow="autoplay; encrypted-media; picture-in-picture"
+            allowFullScreen
+            style={{ border: 0, display: "block" }}
+          />
+        </div>
       </div>
     </div>,
     document.body
   );
 }
-
-
