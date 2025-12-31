@@ -11,22 +11,33 @@ function hostFromUrl(url?: string) {
   }
 }
 
-// Prefer explicit media domain, otherwise infer from WP GraphQL endpoint (local dev friendly).
-const wpMediaHost = hostFromUrl(process.env.WP_MEDIA_DOMAIN) || hostFromUrl(process.env.WP_GRAPHQL_ENDPOINT);
+function hostsFromEnv(input?: string): string[] {
+  if (!input) return [];
+  // Support either a single URL/host OR a comma-separated list of hosts/urls.
+  return input
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .map((s) => hostFromUrl(s))
+    .filter((h): h is string => Boolean(h));
+}
+
+// Prefer explicit media domain(s), otherwise infer from WP GraphQL endpoint (local dev friendly).
+// NOTE: some WP setups serve media from a different host than the GraphQL endpoint, so we allow multiple.
+const wpMediaHosts = Array.from(
+  new Set([
+    ...hostsFromEnv(process.env.WP_MEDIA_DOMAIN),
+    hostFromUrl(process.env.WP_GRAPHQL_ENDPOINT),
+  ].filter((h): h is string => typeof h === "string" && h.length > 0))
+);
 
 const nextConfig: NextConfig = {
   images: {
-    remotePatterns: wpMediaHost
-      ? [
-        {
-          protocol: "https",
-          hostname: wpMediaHost,
-        },
-        {
-          protocol: "http",
-          hostname: wpMediaHost,
-        },
-      ]
+    remotePatterns: wpMediaHosts.length
+      ? wpMediaHosts.flatMap((hostname) => [
+          { protocol: "https", hostname },
+          { protocol: "http", hostname },
+        ])
       : [],
   },
   async headers() {
