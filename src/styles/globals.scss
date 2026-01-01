@@ -318,6 +318,30 @@ img {
     border-radius: 6px;
     background: #f4f6f8;
 }
+
+.td-portfolio-card-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(184, 233, 255, 0.92);
+    color: #062539;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.01em;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 10px 22px rgba(6, 37, 57, 0.14);
+    z-index: 2;
+}
+.td-portfolio-card-badge i {
+    color: #0277b5;
+    font-size: 12px;
+    transform: translateY(-1px);
+}
 .td-portfolio-card-thumb img {
     transform: none !important;
     transition: none !important;

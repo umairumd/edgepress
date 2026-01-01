@@ -120,7 +120,13 @@ const PortfolioArea = ({ items }: Props) => {
         };
         return portfolio_data
             .filter((items) => items.page === "portfolio_1")
-            .map((p) => ({ ...p, slug: "portfolio-details", categoryClasses: mapLegacyToNew(p.category) }));
+            .map((p) => ({
+                ...p,
+                slug: "portfolio-details",
+                categoryClasses: mapLegacyToNew(p.category),
+                featured: false,
+                date: undefined,
+            }));
     }, [items]);
 
     return (
@@ -154,6 +160,12 @@ const PortfolioArea = ({ items }: Props) => {
                                         }
                                         onLoadingComplete={relayout}
                                     />
+                                    {item.featured ? (
+                                        <span className="td-portfolio-card-badge" aria-label="Featured project">
+                                            <i className="fa-solid fa-star" aria-hidden="true"></i>
+                                            Featured
+                                        </span>
+                                    ) : null}
                                 </Link>
                                 <h3 className="td-portfolio-card-title">
                                     <Link href={`/portfolio/${item.slug ?? "details"}`}>{item.title}</Link>
