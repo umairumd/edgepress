@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { Category, Post } from "@/lib/wp";
+import Image from "next/image";
 
 type SidebarProps = {
+  featuredPosts?: Post[];
   recentPosts?: Post[];
   categories?: Category[];
   currentUrl?: string;
@@ -17,7 +19,8 @@ function formatDate(date?: string) {
   }
 }
 
-const Sidebar = ({ recentPosts, categories, currentUrl, shareTitle }: SidebarProps) => {
+const Sidebar = ({ featuredPosts, recentPosts, categories, currentUrl, shareTitle }: SidebarProps) => {
+  const hasFeatured = featuredPosts && featuredPosts.length > 0;
   const hasRecent = recentPosts && recentPosts.length > 0;
   const hasCats = categories && categories.length > 0;
   const url = currentUrl || "";
@@ -59,6 +62,39 @@ const Sidebar = ({ recentPosts, categories, currentUrl, shareTitle }: SidebarPro
           </div>
         </div>
 
+        {hasFeatured && (
+          <div className="td-blog-postbox-post td-blog-postbox-cetagory-list mb-60">
+            <h5 className="td-blog-postbox-cetagory-title mb-25">Featured Blogs</h5>
+            {featuredPosts!.slice(0, 2).map((item, idx) => {
+              const img = item.featuredImage?.url || "/assets/img/blog/sidebar/thumb.jpg";
+              const alt = item.featuredImage?.alt || item.title || "Featured blog";
+              return (
+                <div key={item.slug + idx}>
+                  <div className="td-blog-postbox-post-thumb d-flex align-items-center">
+                    <Link href={`/blog/${item.slug}`} aria-label={item.title} style={{ flex: "0 0 auto" }}>
+                      <Image
+                        src={img}
+                        alt={alt}
+                        width={100}
+                        height={110}
+                        style={{ borderRadius: "6px", objectFit: "cover" }}
+                        unoptimized={process.env.NODE_ENV !== "production" && typeof img === "string" && img.startsWith("http")}
+                      />
+                    </Link>
+                    <div className="td-blog-postbox-post-content">
+                      <span className="td-blog-postbox-post-date">{formatDate(item.date)}</span>
+                      <h5 className="td-blog-postbox-post-title">
+                        <Link href={`/blog/${item.slug}`}>{item.title}</Link>
+                      </h5>
+                    </div>
+                  </div>
+                  {idx < Math.min(featuredPosts!.length, 2) - 1 && <div className="td-blog-postbox-post-border mt-20 mb-20"></div>}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
         {hasCats && (
           <div className="td-blog-postbox-cetagory-list mb-60">
             <h5 className="td-blog-postbox-cetagory-title mb-25">Category</h5>
@@ -81,6 +117,20 @@ const Sidebar = ({ recentPosts, categories, currentUrl, shareTitle }: SidebarPro
             {recentPosts!.map((item, idx) => (
               <div key={item.slug + idx}>
                 <div className="td-blog-postbox-post-thumb d-flex align-items-center">
+                  <Link href={`/blog/${item.slug}`} aria-label={item.title} style={{ flex: "0 0 auto" }}>
+                    <Image
+                      src={item.featuredImage?.url ?? "/assets/img/blog/sidebar/thumb.jpg"}
+                      alt={item.featuredImage?.alt || item.title || "Blog"}
+                      width={100}
+                      height={110}
+                      style={{ borderRadius: "6px", objectFit: "cover" }}
+                      unoptimized={
+                        process.env.NODE_ENV !== "production" &&
+                        typeof item.featuredImage?.url === "string" &&
+                        item.featuredImage.url.startsWith("http")
+                      }
+                    />
+                  </Link>
                   <div className="td-blog-postbox-post-content">
                     <span className="td-blog-postbox-post-date">{formatDate(item.date)}</span>
                     <h5 className="td-blog-postbox-post-title"><Link href={`/blog/${item.slug}`}>{item.title}</Link></h5>

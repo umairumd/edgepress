@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getPost, getPosts, getRecentPosts, getCategories } from "@/lib/wp";
+import { getPost, getPosts, getRecentPosts, getCategories, getFeaturedPosts } from "@/lib/wp";
 import BlogSidebarArea from "@/components/pages/blog-sidebar/BlogSidebarArea";
 import BlogRelated from "@/components/pages/blog-sidebar/BlogRelated";
 import Cta from "@/components/common/Cta";
@@ -58,7 +58,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function BlogDetailsPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const [post, recentPosts, categories] = await Promise.all([getPost(slug), getRecentPosts(6), getCategories()]);
+  const [post, recentPosts, categories, featuredPosts] = await Promise.all([
+    getPost(slug),
+    getRecentPosts(6),
+    getCategories(),
+    getFeaturedPosts(2),
+  ]);
 
   if (!post) return notFound();
 
@@ -78,6 +83,7 @@ export default async function BlogDetailsPage({ params }: { params: Promise<{ sl
 
   const related = (recentPosts || []).filter((p) => p.slug !== slug).slice(0, 3);
   const sidebarRecent = (recentPosts || []).filter((p) => p.slug !== slug).slice(0, 3);
+  const sidebarFeatured = (featuredPosts || []).filter((p) => p.slug !== slug).slice(0, 2);
   const currentUrl = `${SITE_URL}/blog/${slug}`;
 
   return (
@@ -89,6 +95,7 @@ export default async function BlogDetailsPage({ params }: { params: Promise<{ sl
         category={post.category}
         author={post.author || "Inoma Digital"}
         featuredImage={post.featuredImage}
+        featuredPosts={sidebarFeatured}
         recentPosts={sidebarRecent}
         categories={categories}
         currentUrl={currentUrl}

@@ -17,6 +17,7 @@ type Props = {
         width?: number | null;
         height?: number | null;
       };
+  featuredPosts?: Post[];
   currentUrl?: string;
   recentPosts?: Post[];
   categories?: Category[];
@@ -41,6 +42,7 @@ const BlogSidebarArea = ({
   recentPosts,
   categories,
   featuredImage,
+  featuredPosts,
 }: Props) => {
   const img = typeof featuredImage === "string" ? { url: featuredImage } : featuredImage;
   const imgSrc = img?.url;
@@ -96,7 +98,7 @@ const BlogSidebarArea = ({
             </div>
           </div>
           <div className="col-lg-4">
-            <Sidebar recentPosts={recentPosts} categories={categories} currentUrl={currentUrl} shareTitle={title} />
+            <Sidebar featuredPosts={featuredPosts} recentPosts={recentPosts} categories={categories} currentUrl={currentUrl} shareTitle={title} />
           </div>
         </div>
       </div>
