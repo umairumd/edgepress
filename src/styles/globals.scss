@@ -742,9 +742,11 @@ img {
 
 /* Brands strip (Service page): keep Lighthouse sizing, but render at the original visual size */
 .td-brands-7-item .td-brand-logo {
-    max-height: 54px;
+    max-height: 78px;
     width: auto !important;
-    max-width: 75% !important;
+    max-width: 82% !important;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 /* Pricing bullets: teal checks for clearer scanning */
