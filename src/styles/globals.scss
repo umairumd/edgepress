@@ -742,7 +742,7 @@ img {
 
 /* Brands strip (Service page): keep Lighthouse sizing, but render at the original visual size */
 .td-brands-7-item .td-brand-logo {
-    height: 68px !important; /* upscale small intrinsic PNGs (balanced) */
+    height: 56px !important; /* upscale small intrinsic PNGs (balanced) */
     width: auto !important;
     max-width: 82% !important;
     display: inline-block;
@@ -751,7 +751,7 @@ img {
 
 /* Ensure next/image internal img can't collapse back to intrinsic size */
 .td-brands-7-item img {
-    height: 68px !important;
+    height: 56px !important;
     width: auto !important;
 }
 
