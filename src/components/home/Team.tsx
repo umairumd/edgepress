@@ -2,7 +2,6 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import Link from "next/link";
-import Image from "next/image";
 
 interface TeamMember {
     id: number;
@@ -90,14 +89,14 @@ const Team = () => {
                                     <div className="td-team-6-wrap">
                                         <div className="td-team-6-thumb mb-20">
                                             <Link href="/team">
-                                                <Image
+                                                <img
                                                     className="w-100"
                                                     src={item.thumb}
                                                     alt=""
                                                     width={307}
                                                     height={420}
-                                                    sizes="(max-width: 768px) 70vw, 307px"
-                                                    style={{ width: "100%", height: "auto" }}
+                                                    loading="lazy"
+                                                    decoding="async"
                                                 />
                                             </Link>
                                         </div>

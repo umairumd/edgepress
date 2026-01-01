@@ -4,7 +4,6 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import Link from "next/link";
 import type { Swiper as SwiperType } from "swiper";
-import Image from "next/image";
 
 const banner_slider: string[] = [
     "/assets/img/hero/hero-6/thumb.jpg",
@@ -176,15 +175,14 @@ const Hero = () => {
                             {banner_slider_loop.map((thumb, i) => (
                                 <SwiperSlide key={i} className="swiper-slide">
                                     <div className="td-hero-6-thumb">
-                                        <Image
+                                        <img
                                             src={thumb}
                                             alt=""
                                             width={dimsFor(thumb).w}
                                             height={dimsFor(thumb).h}
-                                            priority={i === 0}
+                                            loading={i === 0 ? "eager" : "lazy"}
                                             fetchPriority={i === 0 ? "high" : "auto"}
-                                            sizes="(max-width: 575px) 140px, (max-width: 991px) 160px, 196px"
-                                            style={{ width: "100%", height: "auto" }}
+                                            decoding="async"
                                         />
                                     </div>
                                 </SwiperSlide>
