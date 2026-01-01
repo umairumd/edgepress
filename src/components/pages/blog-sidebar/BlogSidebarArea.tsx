@@ -72,6 +72,7 @@ const BlogSidebarArea = ({
                     width={imgW}
                     height={imgH}
                     priority
+                    fetchPriority="high"
                     sizes="(max-width: 991px) 100vw, 66vw"
                     style={{ width: "100%", height: "auto" }}
                     unoptimized={process.env.NODE_ENV !== "production" && imgSrc.startsWith("http")}

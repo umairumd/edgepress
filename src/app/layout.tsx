@@ -46,6 +46,7 @@ export default function RootLayout({
         <link rel="stylesheet" href="/assets/css/bootstrap.min.css" />
         <link rel="stylesheet" href="/assets/css/animate.css" />
         <link rel="stylesheet" href="/assets/css/fontawesome-all.min.css" />
+        <link rel="stylesheet" href="/assets/css/fontawesome-display.css" />
         <link rel="stylesheet" href="/assets/css/defauls-spacing.css" />
         <link rel="stylesheet" href="/assets/css/main.css" />
         {/* preload removed to avoid unused preload warning */}

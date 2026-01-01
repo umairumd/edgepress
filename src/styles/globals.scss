@@ -664,6 +664,35 @@ img {
     }
 }
 
+/* Lighthouse A11y: underline copyright link (don't rely on color) */
+.td-footer-copyright p a {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* Lighthouse A11y: ensure mobile menu search button is a proper touch target */
+.tdmobile__search form button {
+    min-width: 44px;
+    min-height: 44px;
+}
+
+/* Lighthouse A11y: improve contrast on Service page pinned sections */
+.td-service-pin-item-panel.black-bg,
+.td-service-pin-item-panel.black-bg .td-service-pin-content-inner,
+.td-service-pin-item-panel.black-bg .td-service-pin-content-inner p,
+.td-service-pin-item-panel.black-bg .td-service-pin-content-inner li,
+.td-service-pin-item-panel.black-bg .td-service-pin-content-inner span {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+.td-service-pin-item-panel.black-bg .td-service-pin-title {
+    color: #ffffff !important;
+}
+
+/* Lighthouse A11y: improve contrast for the big experience number on /service */
+.td-service-main-expreance .expreance {
+    color: #062539 !important;
+}
+
 /* Portfolio page: make breadcrumb title a bit smaller (scoped) */
 .td-breadcrumb--portfolio .td-section-page-title.td-section-page-bigtitle {
     font-size: clamp(34px, 4.1vw, 58px) !important;

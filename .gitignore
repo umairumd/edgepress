@@ -47,3 +47,8 @@ extras/*.jpg
 extras/*.jpeg
 extras/*.png
 extras/*.webp
+
+# Lighthouse / performance report artifacts
+extras/lighthouse*/
+extras/lighthouse_render*/
+extras/lighthouse_render_preview*/

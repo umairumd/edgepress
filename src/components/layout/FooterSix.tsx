@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 
 interface FooterSixProps {
     style?: boolean;
@@ -14,7 +15,14 @@ const FooterSix = ({ style }: FooterSixProps = {}) => {
                         <div className="col-lg-3 col-md-6 col-sm-6">
                             <div className="td-footer-logo mb-30">
                                 <Link href="/">
-                                        <img src="/assets/img/logo/inoma-logo-geometry.png" alt="Inoma Digital" loading="lazy" decoding="async" />
+                                        <Image
+                                            src="/assets/img/logo/inoma-logo-geometry.png"
+                                            alt="Inoma Digital"
+                                            width={321}
+                                            height={503}
+                                            sizes="160px"
+                                            style={{ width: "160px", height: "auto" }}
+                                        />
                                 </Link>
                             </div>
                         </div>
@@ -54,8 +62,8 @@ const FooterSix = ({ style }: FooterSixProps = {}) => {
                                     </div>
                                 <div className="td-footer-form p-relative">
                                     <form onSubmit={(e) => e.preventDefault()}>
-                                        <input type="text" placeholder="example@gmail.com" suppressHydrationWarning />
-                                        <button type="submit">
+                                        <input type="email" placeholder="example@gmail.com" aria-label="Email address" suppressHydrationWarning />
+                                        <button type="submit" aria-label="Submit email">
                                             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M1 11L11 1" stroke="#1C1D1F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                                 <path d="M1 1H11V11" stroke="#1C1D1F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />

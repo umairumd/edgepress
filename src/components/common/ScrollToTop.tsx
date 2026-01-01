@@ -29,8 +29,9 @@ const ScrollToTop = () => {
          onClick={scrollTop}
          className={`scroll__top scroll-to-target ${sticky && showScroll ? "open" : ""}`}
          data-target="html"
+         aria-label="Scroll to top"
       >
-         <i className="fa-sharp fa-regular fa-arrow-up"></i>
+         <i className="fa-sharp fa-regular fa-arrow-up" aria-hidden="true"></i>
       </button>
    );
 };

@@ -61,11 +61,11 @@ const HeaderSix = ({ variant = "home" }: HeaderSixProps) => {
                                 <div className="logo">
                                     <Link className="logo-1" href="/">
                                         {/* logo-1 = shown on non-sticky (dark header on Home) */}
-                                        <img data-width="96" src="/assets/img/logo/inoma-logo-dark.png" alt="Inoma Digital" decoding="async" />
+                                        <img data-width="96" width={96} height={25} src="/assets/img/logo/inoma-logo-dark.png" alt="Inoma Digital" decoding="async" />
                                     </Link>
                                     <Link className="logo-2 d-none" href="/">
                                         {/* logo-2 = shown on sticky/white header */}
-                                        <img data-width="96" src="/assets/img/logo/inoma-logo-light.png" alt="Inoma Digital" decoding="async" />
+                                        <img data-width="96" width={96} height={25} src="/assets/img/logo/inoma-logo-light.png" alt="Inoma Digital" decoding="async" />
                                     </Link>
                                 </div>
                             </div>
@@ -88,6 +88,9 @@ const HeaderSix = ({ variant = "home" }: HeaderSixProps) => {
                                             onClick={() => setOffCanvas(true)}
                                             role="button"
                                             tabIndex={0}
+                                            aria-label="Open menu"
+                                            aria-controls="tdmobile-menu"
+                                            aria-expanded={offCanvas}
                                             onKeyDown={(e) => {
                                                 if (e.key === "Enter" || e.key === " ") setOffCanvas(true);
                                             }}

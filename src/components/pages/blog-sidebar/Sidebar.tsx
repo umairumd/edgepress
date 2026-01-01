@@ -38,7 +38,7 @@ const Sidebar = ({ featuredPosts, recentPosts, categories, currentUrl, shareTitl
     <div className="td-blog-sidebar-right">
       <div className="td-blog-postbox-widget">
         <div className="td-blog-postbox-info">
-          <h4 className="td-blog-postbox-info-title">Inoma Digital</h4>
+          <h2 className="td-blog-postbox-info-title">Inoma Digital</h2>
             <p>
               A digital agency built on systems, clarity, and long-term results. Helping businesses through strategy,
               design, technology, marketing and business growth.
@@ -64,7 +64,7 @@ const Sidebar = ({ featuredPosts, recentPosts, categories, currentUrl, shareTitl
 
         {hasFeatured && (
           <div className="td-blog-postbox-post td-blog-postbox-cetagory-list mb-60 td-blog-sidebar-featured-wrap">
-            <h5 className="td-blog-postbox-cetagory-title mb-25">Featured Blogs</h5>
+            <h3 className="td-blog-postbox-cetagory-title mb-25">Featured Blogs</h3>
             <div className="td-blog-sidebar-featured">
               {featuredPosts!.slice(0, 2).map((item) => {
                 const img = item.featuredImage?.url || "/assets/img/blog/sidebar/thumb.jpg";
@@ -83,7 +83,7 @@ const Sidebar = ({ featuredPosts, recentPosts, categories, currentUrl, shareTitl
                     </div>
                     <div className="td-blog-sidebar-featured-body">
                       <span className="td-blog-postbox-post-date">{formatDate(item.date)}</span>
-                      <h5 className="td-blog-sidebar-featured-title">{item.title}</h5>
+                      <h4 className="td-blog-sidebar-featured-title">{item.title}</h4>
                     </div>
                   </Link>
                 );
@@ -94,7 +94,7 @@ const Sidebar = ({ featuredPosts, recentPosts, categories, currentUrl, shareTitl
 
         {hasCats && (
           <div className="td-blog-postbox-cetagory-list mb-60">
-            <h5 className="td-blog-postbox-cetagory-title mb-25">Category</h5>
+            <h3 className="td-blog-postbox-cetagory-title mb-25">Category</h3>
             <ul>
               {categories!.map((cat) => (
                 <li key={cat.slug}>
@@ -110,7 +110,7 @@ const Sidebar = ({ featuredPosts, recentPosts, categories, currentUrl, shareTitl
 
         {hasRecent && (
           <div className="td-blog-postbox-post td-blog-postbox-cetagory-list mb-60">
-            <h5 className="td-blog-postbox-cetagory-title mb-25">Recent Blogs</h5>
+            <h3 className="td-blog-postbox-cetagory-title mb-25">Recent Blogs</h3>
             {recentPosts!.slice(0, 6).map((item, idx) => (
               <div key={item.slug + idx}>
                 <div className="td-blog-postbox-post-thumb d-flex align-items-center">
@@ -130,7 +130,7 @@ const Sidebar = ({ featuredPosts, recentPosts, categories, currentUrl, shareTitl
                   </Link>
                   <div className="td-blog-postbox-post-content">
                     <span className="td-blog-postbox-post-date">{formatDate(item.date)}</span>
-                    <h5 className="td-blog-postbox-post-title"><Link href={`/blog/${item.slug}`}>{item.title}</Link></h5>
+                    <h4 className="td-blog-postbox-post-title"><Link href={`/blog/${item.slug}`}>{item.title}</Link></h4>
                   </div>
                 </div>
                 {idx < Math.min(recentPosts!.length, 6) - 1 && <div className="td-blog-postbox-post-border mt-20 mb-20"></div>}

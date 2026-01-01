@@ -14,6 +14,7 @@ const ServiceArea = () => {
                                 width={1500}
                                 height={700}
                                 priority
+                                fetchPriority="high"
                                 sizes="(max-width: 992px) 100vw, 1200px"
                                 style={{ width: "100%", height: "auto" }}
                             />

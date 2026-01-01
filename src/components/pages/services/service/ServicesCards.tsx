@@ -78,7 +78,7 @@ export default function ServicesCards() {
                   </span>
                   <span className="number">{formatSerial(i + 1)}</span>
                 </span>
-                <h5 className="title mb-15">{item.title}</h5>
+                <h3 className="title mb-15">{item.title}</h3>
                 <p className="para">{item.desc}</p>
               </div>
             </div>

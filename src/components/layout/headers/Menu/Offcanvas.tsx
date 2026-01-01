@@ -11,17 +11,28 @@ const Offcanvas = ({ offCanvas, setOffCanvas }: OffcanvasProps) => {
     return (
         <div className={offCanvas ? "mobile-menu-visible" : ""}>
             <div className="tdmobile__menu td-menu-large">
-                <nav className="tdmobile__menu-box">
-                    <div onClick={() => setOffCanvas(false)} className="close-btn">
-                        <i className="fa-solid fa-xmark"></i>
-                    </div>
+                <nav id="tdmobile-menu" className="tdmobile__menu-box" aria-label="Mobile navigation">
+                    <button type="button" onClick={() => setOffCanvas(false)} className="close-btn" aria-label="Close menu">
+                        <i className="fa-solid fa-xmark" aria-hidden="true"></i>
+                    </button>
                     <div className="nav-logo">
-                        <Link href="/"><img data-width="96" src="/assets/img/logo/inoma-logo-light.png" alt="Inoma Digital" /></Link>
+                        <Link href="/">
+                            <img
+                                data-width="96"
+                                width={96}
+                                height={25}
+                                src="/assets/img/logo/inoma-logo-light.png"
+                                alt="Inoma Digital"
+                                decoding="async"
+                            />
+                        </Link>
                     </div>
                     <div className="tdmobile__search">
                         <form onSubmit={(e) => e.preventDefault()}>
-                            <input type="text" placeholder="Search here..." />
-                            <button><i className="fas fa-search"></i></button>
+                            <input type="text" placeholder="Search here..." aria-label="Search" />
+                            <button type="submit" aria-label="Search">
+                                <i className="fas fa-search" aria-hidden="true"></i>
+                            </button>
                         </form>
                     </div>
                     <div className="tdmobile__menu-outer">
@@ -38,11 +49,11 @@ const Offcanvas = ({ offCanvas, setOffCanvas }: OffcanvasProps) => {
                     </div>
                     <div className="social-links">
                         <ul className="list-wrap">
-                            <li><Link href="#"><i className="fab fa-facebook-f"></i></Link></li>
-                            <li><Link href="#"><i className="fab fa-twitter"></i></Link></li>
-                            <li><Link href="#"><i className="fab fa-instagram"></i></Link></li>
-                            <li><Link href="#"><i className="fab fa-linkedin-in"></i></Link></li>
-                            <li><Link href="#"><i className="fab fa-youtube"></i></Link></li>
+                            <li><Link href="#" aria-label="Facebook"><i className="fab fa-facebook-f" aria-hidden="true"></i></Link></li>
+                            <li><Link href="#" aria-label="Twitter"><i className="fab fa-twitter" aria-hidden="true"></i></Link></li>
+                            <li><Link href="#" aria-label="Instagram"><i className="fab fa-instagram" aria-hidden="true"></i></Link></li>
+                            <li><Link href="#" aria-label="LinkedIn"><i className="fab fa-linkedin-in" aria-hidden="true"></i></Link></li>
+                            <li><Link href="#" aria-label="YouTube"><i className="fab fa-youtube" aria-hidden="true"></i></Link></li>
                         </ul>
                     </div>
                 </nav>
