@@ -16,6 +16,10 @@ export const metadata: Metadata = {
     template: "%s | Inoma Digital",
   },
   description: "Digital marketing, design, and technology partner.",
+  icons: {
+    icon: [{ url: "/inoma-favicon.jpg", type: "image/jpeg" }],
+    apple: [{ url: "/inoma-favicon.jpg" }],
+  },
   alternates: {
     canonical: SITE_URL,
   },
@@ -41,6 +45,8 @@ export default function RootLayout({
   return (
     <html lang="en" data-scroll-behavior="smooth" className={fontVarsClassName}>
       <head>
+        <link rel="icon" href="/inoma-favicon.jpg" type="image/jpeg" />
+        <link rel="apple-touch-icon" href="/inoma-favicon.jpg" />
         {/* Static CSS from public folder */}
         <link rel="stylesheet" href="/assets/css/bootstrap.min.css" />
         <link rel="stylesheet" href="/assets/css/animate.css" />

@@ -5,7 +5,12 @@ const ServiceArea = () => {
                 <div className="row">
                     <div className="col-12">
                         <div className="td-service-main-bigthumb fix td-rounded-10">
-                            <img src="/assets/img/service/details/bg.jpg" alt="" />
+                            <img
+                                src="/assets/img/service/details/services-image.jpg"
+                                alt="Inoma Digital services"
+                                loading="lazy"
+                                decoding="async"
+                            />
                         </div>
                     </div>
                 </div>
