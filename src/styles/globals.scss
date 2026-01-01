@@ -620,9 +620,39 @@ img {
     height: 100%;
     flex: 1 1 auto;
     border-radius: 0; /* remove rounding so cards touch cleanly */
-    margin-left: -1px; /* avoid double borders horizontally */
-    margin-top: -1px; /* avoid double borders vertically when wrapping */
+    margin: 0;
+    /* Make borders deterministic so seams are exactly 1px (no double border / overlap artifacts) */
+    border: 1px solid rgba(6, 37, 57, 0.10);
     transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+/* Desktop (>=992px): 4 columns, 2 rows */
+@media (min-width: 992px) {
+    /* Remove left border except for first col in each row (1,5) */
+    .td-services-cards-area .row.gx-0 > :not(:nth-child(4n + 1)) .td-service-process-item {
+        border-left: 0;
+    }
+    /* Remove top border for second row (items 5-8) */
+    .td-services-cards-area .row.gx-0 > :nth-child(n + 5) .td-service-process-item {
+        border-top: 0;
+    }
+}
+
+/* Tablet (>=576px and <992px): 2 columns */
+@media (min-width: 576px) and (max-width: 991px) {
+    .td-services-cards-area .row.gx-0 > :not(:nth-child(2n + 1)) .td-service-process-item {
+        border-left: 0;
+    }
+    .td-services-cards-area .row.gx-0 > :nth-child(n + 3) .td-service-process-item {
+        border-top: 0;
+    }
+}
+
+/* Phones (<576px): 1 column */
+@media (max-width: 575px) {
+    .td-services-cards-area .row.gx-0 > :nth-child(n + 2) .td-service-process-item {
+        border-top: 0;
+    }
 }
 .td-services-cards-area .td-service-process-item:hover {
     transform: translateY(-2px);
