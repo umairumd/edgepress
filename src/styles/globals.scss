@@ -403,6 +403,59 @@ img {
     height: auto;
     border-radius: 6px;
 }
+
+/* WordPress content typography (Blog + Portfolio, etc.) */
+.td-wp-content {
+    font-size: 18px;
+    line-height: 1.75;
+}
+.td-wp-content p {
+    margin: 0 0 16px;
+}
+.td-wp-content p:last-child {
+    margin-bottom: 0;
+}
+.td-wp-content h2,
+.td-wp-content h3,
+.td-wp-content h4 {
+    margin: 22px 0 10px;
+    line-height: 1.25;
+    color: #062539;
+}
+/* Restore bullets/numbers (templates often set list-style: none globally) */
+.td-wp-content ul,
+.td-wp-content ol {
+    margin: 0 0 16px;
+    padding-left: 1.25em;
+    list-style-position: outside;
+}
+.td-wp-content ul {
+    list-style: disc;
+}
+.td-wp-content ol {
+    list-style: decimal;
+}
+.td-wp-content li {
+    margin: 0 0 8px;
+}
+.td-wp-content a {
+    color: #0277b5;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+.td-wp-content blockquote {
+    margin: 22px 0;
+    padding: 16px 18px;
+    border-left: 4px solid #b8e9ff;
+    background: rgba(184, 233, 255, 0.22);
+    border-radius: 8px;
+    color: rgba(6, 37, 57, 0.82);
+}
+.td-wp-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+}
 .td-portfolio-entry-image-wrap {
     width: 100%;
 }

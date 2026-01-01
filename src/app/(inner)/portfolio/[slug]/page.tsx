@@ -88,7 +88,7 @@ export default async function PortfolioDetailsPage({ params }: { params: Promise
                             </div>
 
                             {contentHtml ? (
-                                <div className="td-portfolio-entry-content mb-40" dangerouslySetInnerHTML={{ __html: contentHtml }} />
+                                <div className="td-portfolio-entry-content td-wp-content mb-40" dangerouslySetInnerHTML={{ __html: contentHtml }} />
                             ) : null}
 
                             {entryImage ? (

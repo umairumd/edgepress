@@ -45,7 +45,7 @@ const BlogSidebarArea = ({
               </div>
               <h3 className="td-blog-sidebar-title mb-20" dangerouslySetInnerHTML={{ __html: title }} />
               {contentHtml ? (
-                <div className="td-blog-sidebar-body" dangerouslySetInnerHTML={{ __html: contentHtml }} />
+                <div className="td-blog-sidebar-body td-wp-content" dangerouslySetInnerHTML={{ __html: contentHtml }} />
               ) : (
                 <p>No content available.</p>
               )}
