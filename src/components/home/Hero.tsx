@@ -4,6 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import Link from "next/link";
 import type { Swiper as SwiperType } from "swiper";
+import Image from "next/image";
 
 const banner_slider: string[] = [
     "/assets/img/hero/hero-6/thumb.jpg",
@@ -19,6 +20,11 @@ const banner_slider: string[] = [
 
 const Hero = () => {
     const swiperRef = useRef<SwiperType | null>(null);
+    const dimsFor = (src: string) => {
+        // Use real asset dimensions to avoid CLS.
+        if (src.endsWith("/thumb.jpg")) return { w: 304, h: 390 };
+        return { w: 196, h: 260 };
+    };
 
     // Swiper loop with slidesPerView:'auto' needs enough physical slides to stay stable on wide screens.
     const banner_slider_loop = useMemo(() => {
@@ -170,12 +176,15 @@ const Hero = () => {
                             {banner_slider_loop.map((thumb, i) => (
                                 <SwiperSlide key={i} className="swiper-slide">
                                     <div className="td-hero-6-thumb">
-                                        <img
+                                        <Image
                                             src={thumb}
                                             alt=""
-                                            loading={i === 0 ? "eager" : "lazy"}
+                                            width={dimsFor(thumb).w}
+                                            height={dimsFor(thumb).h}
+                                            priority={i === 0}
                                             fetchPriority={i === 0 ? "high" : "auto"}
-                                            decoding="async"
+                                            sizes="(max-width: 575px) 140px, (max-width: 991px) 160px, 196px"
+                                            style={{ width: "100%", height: "auto" }}
                                         />
                                     </div>
                                 </SwiperSlide>

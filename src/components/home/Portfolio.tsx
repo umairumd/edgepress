@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 interface DataType {
     id: number;
@@ -51,6 +52,11 @@ const formatSerial = (num: number): string => {
 };
 
 const Portfolio = () => {
+    const sizeFor = (src: string) => {
+        if (src.includes("thumb-3") || src.includes("thumb-4")) return { w: 562, h: 570 };
+        return { w: 450, h: 570 };
+    };
+
     return (
         <div className="td-portfolio-area pt-150 pb-115">
             <div className="container">
@@ -71,8 +77,16 @@ const Portfolio = () => {
                                 <h2 className="td-portfolio-6-transparent">{formatSerial(i + 1)}</h2>
                                 <div className="td-portfolio-6-thumb ml-110">
                                     <div className="roun fix mb-25 p-relative">
-                                        <img className="w-100" src={item.thumb} alt="" />
-                                        <Link href="/portfolio" className="td-portfolio-6-btn">
+                                        <Image
+                                            className="w-100"
+                                            src={item.thumb}
+                                            alt=""
+                                            width={sizeFor(item.thumb).w}
+                                            height={sizeFor(item.thumb).h}
+                                            sizes="(max-width: 991px) 100vw, 50vw"
+                                            style={{ height: "auto" }}
+                                        />
+                                        <Link href="/portfolio" className="td-portfolio-6-btn" aria-label="View portfolio">
                                             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M1 13L13 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                                 <path d="M1 1H13V13" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -81,7 +95,7 @@ const Portfolio = () => {
                                     </div>
                                     <div className="td-portfolio-6-content">
                                         <span className="tag">{item.tag}</span>
-                                        <h5 className="title"><Link href="/portfolio">{item.title}</Link></h5>
+                                        <h3 className="title"><Link href="/portfolio">{item.title}</Link></h3>
                                     </div>
                                 </div>
                             </div>

@@ -68,7 +68,7 @@ const Service = () => {
                                     </div>
                                     <div className="col-lg-2">
                                         <div className="td-service-6-btn text-lg-center mb-15">
-                                            <Link href="/service">
+                                            <Link href="/service" aria-label="View services">
                                                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M1 13L13 1" stroke="#062539" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                                     <path d="M1 1H13V13" stroke="#062539" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />

@@ -4,6 +4,7 @@ import { Autoplay, Thumbs } from 'swiper/modules';
 import type { Swiper as SwiperClass } from "swiper";
 import Link from 'next/link';
 import { useState } from 'react';
+import Image from "next/image";
 
 const avatar_data: string[] = [
     "/assets/img/testimonial/tes-6/01.png",
@@ -27,6 +28,18 @@ const brand_data: string[] = [
 
 // Ensure enough items for Swiper loop with slidesPerView:'auto' on wide screens (avoids console warnings)
 const brand_slider = brand_data.length < 24 ? [...brand_data, ...brand_data] : brand_data;
+
+const brandSizeFor = (src: string) => {
+    if (src.endsWith("/logo.png")) return { w: 78, h: 22 };
+    if (src.endsWith("/logo-2.png")) return { w: 100, h: 26 };
+    if (src.endsWith("/logo-3.png")) return { w: 94, h: 26 };
+    if (src.endsWith("/logo-4.png")) return { w: 78, h: 22 };
+    if (src.endsWith("/logo-5.png")) return { w: 112, h: 22 };
+    if (src.endsWith("/logo-6.png")) return { w: 110, h: 24 };
+    if (src.endsWith("/logo-7.png")) return { w: 111, h: 30 };
+    if (src.endsWith("/logo-8.png")) return { w: 94, h: 26 };
+    return { w: 100, h: 26 };
+};
 
 interface DataType {
     id: number;
@@ -108,7 +121,7 @@ const Testimonial = () => {
                                             <p className="mb-40">{item.desc}</p>
                                             <div className="td-testimonial-6-author">
                                                 <span className="position">{item.designation}</span>
-                                                <h6 className="name">{item.name}</h6>
+                                                <h4 className="name">{item.name}</h4>
                                             </div>
                                         </div>
                                     </SwiperSlide>
@@ -128,7 +141,7 @@ const Testimonial = () => {
                                 {avatar_data.map((avatar, i) => (
                                     <SwiperSlide key={i} className="swiper-slide">
                                         <div className="td-testimonial-bottom-thumb">
-                                            <img src={avatar} alt="" loading="lazy" decoding="async" />
+                                            <Image src={avatar} alt="" width={60} height={60} sizes="60px" />
                                         </div>
                                     </SwiperSlide>
                                 ))}
@@ -147,7 +160,16 @@ const Testimonial = () => {
                                 {brand_slider.map((brand, i) => (
                                     <SwiperSlide key={i} className="swiper-slide">
                                         <div className="brands-logo">
-                                            <Link href="#"><img src={brand} alt="" loading="lazy" decoding="async" /></Link>
+                                            <Link href="/portfolio" aria-label="View portfolio">
+                                                <Image
+                                                    src={brand}
+                                                    alt=""
+                                                    width={brandSizeFor(brand).w}
+                                                    height={brandSizeFor(brand).h}
+                                                    sizes="(max-width: 768px) 120px, 140px"
+                                                    style={{ width: "auto", height: "auto" }}
+                                                />
+                                            </Link>
                                         </div>
                                     </SwiperSlide>
                                 ))}

@@ -53,7 +53,7 @@ const Pricing = () => {
                                 <div className="td-pricing-6-top">
                                     <span className="package mb-35 d-inline-block">{item.title}</span>
                                     <p className="para mb-55">{item.desc}</p>
-                                    <h6 className="price mb-30">$ {item.price}/<span>mo</span></h6>
+                                    <h3 className="price mb-30">$ {item.price}/<span>mo</span></h3>
                                     <Link className={`price-btn ${item.active || ''}`} href="/contact">Get Started</Link>
                                 </div>
                                 <div className="td-pricing-6-list">
