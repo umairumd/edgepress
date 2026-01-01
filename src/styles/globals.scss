@@ -458,6 +458,12 @@ img {
     height: auto;
     border-radius: 6px;
 }
+
+/* Blog sidebar: category count badge hover should use brand light blue (not template green) */
+.td-blog-postbox-cetagory-list ul li a:hover .total {
+    background: #b8e9ff !important;
+    color: #062539 !important;
+}
 .td-portfolio-entry-image-wrap {
     width: 100%;
 }
