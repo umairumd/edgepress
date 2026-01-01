@@ -84,7 +84,7 @@ const Portfolio = () => {
                                             width={sizeFor(item.thumb).w}
                                             height={sizeFor(item.thumb).h}
                                             sizes="(max-width: 991px) 100vw, 50vw"
-                                            style={{ height: "auto" }}
+                                            style={{ width: "100%", height: "auto" }}
                                         />
                                         <Link href="/portfolio" className="td-portfolio-6-btn" aria-label="View portfolio">
                                             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">

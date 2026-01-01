@@ -97,7 +97,7 @@ const Team = () => {
                                                     width={307}
                                                     height={420}
                                                     sizes="(max-width: 768px) 70vw, 307px"
-                                                    style={{ height: "auto" }}
+                                                    style={{ width: "100%", height: "auto" }}
                                                 />
                                             </Link>
                                         </div>

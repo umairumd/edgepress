@@ -723,6 +723,15 @@ img {
     color: #062539 !important;
 }
 
+/* Home: keep next/image CLS fixes but preserve original responsive sizing (prevent intrinsic-size shrink) */
+.td-about-6-thumb > span,
+.td-chose-6-thumb > span,
+.td-team-6-thumb > span,
+.td-portfolio-6-thumb .roun > span {
+    display: block !important;
+    width: 100% !important;
+}
+
 /* Portfolio page: make breadcrumb title a bit smaller (scoped) */
 .td-breadcrumb--portfolio .td-section-page-title.td-section-page-bigtitle {
     font-size: clamp(34px, 4.1vw, 58px) !important;

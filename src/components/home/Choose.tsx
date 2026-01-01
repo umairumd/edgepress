@@ -22,7 +22,7 @@ const Choose = () => {
                                 width={645}
                                 height={320}
                                 sizes="(max-width: 991px) 100vw, 60vw"
-                                style={{ height: "auto" }}
+                                style={{ width: "100%", height: "auto" }}
                             />
                         </div>
                     </div>

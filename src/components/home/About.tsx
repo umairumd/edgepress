@@ -34,10 +34,11 @@ const About = () => {
                             <Image
                                 src="/assets/img/about/about-6/thumb.jpg"
                                 alt=""
+                                className="w-100"
                                 width={450}
                                 height={430}
                                 sizes="(max-width: 991px) 100vw, 450px"
-                                style={{ width: "auto", height: "auto" }}
+                                style={{ width: "100%", height: "auto" }}
                             />
                         </div>
                     </div>
