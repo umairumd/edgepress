@@ -725,11 +725,32 @@ img {
 
 /* Home: keep next/image CLS fixes but preserve original responsive sizing (prevent intrinsic-size shrink) */
 .td-about-6-thumb > span,
+.td-about-6-thumb a > span,
 .td-chose-6-thumb > span,
+.td-chose-6-thumb a > span,
 .td-team-6-thumb > span,
-.td-portfolio-6-thumb .roun > span {
+.td-team-6-thumb a > span,
+.td-portfolio-6-thumb .roun > span,
+.td-portfolio-6-thumb .roun a > span,
+.td-hero-6-thumb > span,
+.td-hero-6-thumb a > span,
+.brands-logo > span,
+.brands-logo a > span {
     display: block !important;
     width: 100% !important;
+}
+
+/* Ensure the actual <img> fills the wrapper for these home sections */
+.td-hero-6-thumb img,
+.td-team-6-thumb img {
+    width: 100% !important;
+    height: auto !important;
+    display: block;
+}
+.td-testimonial-6-brands-slider .brands-logo img {
+    width: 100% !important;
+    height: auto !important;
+    display: block;
 }
 
 /* Portfolio page: make breadcrumb title a bit smaller (scoped) */
