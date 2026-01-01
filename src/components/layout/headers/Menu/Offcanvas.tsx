@@ -19,8 +19,8 @@ const Offcanvas = ({ offCanvas, setOffCanvas }: OffcanvasProps) => {
                         <Link href="/">
                             <img
                                 data-width="96"
-                                width={96}
-                                height={25}
+                                width={666}
+                                height={175}
                                 src="/assets/img/logo/inoma-logo-light.png"
                                 alt="Inoma Digital"
                                 decoding="async"

@@ -725,6 +725,28 @@ img {
     }
 }
 
+/* Header/Offcanvas logo sizing (keep explicit width/height for Lighthouse, control display size via CSS) */
+.td-header__area .logo img {
+    height: 34px;
+    width: auto;
+}
+@media (max-width: 575px) {
+    .td-header__area .logo img {
+        height: 30px;
+    }
+}
+.tdmobile__menu-box .nav-logo img {
+    height: 30px;
+    width: auto;
+}
+
+/* Brands strip (Service page): keep Lighthouse sizing, but render at the original visual size */
+.td-brands-7-item .td-brand-logo {
+    max-height: 54px;
+    width: auto !important;
+    max-width: 75% !important;
+}
+
 /* Pricing bullets: teal checks for clearer scanning */
 .td-pricing-main-wrap .td-pricing-6-list ul li::before {
     width: 8px !important;

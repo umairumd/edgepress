@@ -41,6 +41,7 @@ const Brand = ({ style }: DataType) => {
                                     alt={`Client logo ${i + 1}`}
                                     width={sizeFor(brand).w}
                                     height={sizeFor(brand).h}
+                                    className="td-brand-logo"
                                     sizes="(max-width: 768px) 50vw, 25vw"
                                     style={{ width: "auto", height: "auto", maxWidth: "100%" }}
                                 />
