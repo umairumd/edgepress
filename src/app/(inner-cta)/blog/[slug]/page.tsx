@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPost, getPosts, getRecentPosts, getCategories } from "@/lib/wp";
 import BlogSidebarArea from "@/components/pages/blog-sidebar/BlogSidebarArea";
-import BlogHero from "@/components/pages/blog-sidebar/BlogHero";
 import BlogRelated from "@/components/pages/blog-sidebar/BlogRelated";
 import Cta from "@/components/common/Cta";
 import { getSiteUrl } from "@/lib/siteUrl";
@@ -83,20 +82,13 @@ export default async function BlogDetailsPage({ params }: { params: Promise<{ sl
 
   return (
     <main>
-      <BlogHero
-        title={post.title}
-        date={post.date}
-        author={post.author || "Inoma Digital"}
-        category={post.category}
-        featuredImage={post.featuredImage}
-      />
       <BlogSidebarArea
         contentHtml={post.content}
         title={post.title}
         date={post.date}
         category={post.category}
         author={post.author || "Inoma Digital"}
-        featuredImage={post.featuredImage?.url}
+        featuredImage={post.featuredImage}
         recentPosts={sidebarRecent}
         categories={categories}
         currentUrl={currentUrl}

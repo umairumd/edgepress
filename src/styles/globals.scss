@@ -465,20 +465,91 @@ img {
     color: #062539 !important;
 }
 
-/* Blog detail hero image: make it more minimal on desktop (shorter, cropped) */
-.td-blog-hero-media {
-    position: relative;
-    width: 100%;
-    max-height: 520px;
-    aspect-ratio: 21 / 9;
-    overflow: hidden;
-    background: #0b1d2a;
+/* Blog detail: modern minimal hero (title above, full image shown without cropping) */
+.td-blog-hero-minimal {
+    padding-top: 110px;
+    padding-bottom: 28px;
 }
-@media (max-width: 991px) {
-    .td-blog-hero-media {
-        max-height: none;
-        aspect-ratio: 16 / 9;
+@media (max-width: 575px) {
+    .td-blog-hero-minimal {
+        padding-top: 90px;
     }
+}
+
+.td-blog-hero-minimal-header {
+    max-width: 920px;
+    margin: 0 auto 18px;
+}
+
+.td-blog-hero-minimal-title {
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    font-size: clamp(36px, 4.3vw, 62px);
+    color: #062539;
+    margin: 0 0 14px;
+}
+
+.td-blog-hero-minimal-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 12px;
+    align-items: center;
+    color: rgba(6, 37, 57, 0.7);
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.td-blog-hero-minimal-meta .meta-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(184, 233, 255, 0.7);
+    color: #062539;
+    font-weight: 700;
+}
+
+.td-blog-hero-minimal-meta .meta-item {
+    display: inline-flex;
+    align-items: center;
+}
+
+.td-blog-hero-media {
+    max-width: 920px;
+    margin: 0 auto;
+    border-radius: 14px;
+    overflow: hidden;
+    background: linear-gradient(180deg, rgba(184, 233, 255, 0.35), rgba(184, 233, 255, 0.08));
+    border: 1px solid rgba(6, 37, 57, 0.08);
+    box-shadow: 0 18px 40px rgba(6, 37, 57, 0.08);
+}
+.td-blog-hero-media img {
+    display: block;
+}
+
+/* Blog detail: 2-column top layout (image left, sidebar right) */
+.td-blog-detail-layout .td-blog-sidebar-left-content {
+    margin-right: 0 !important; /* remove extra whitespace between left content and sidebar */
+}
+
+.td-blog-detail-title {
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    font-size: clamp(36px, 4.2vw, 62px);
+    color: #062539;
+}
+
+.td-blog-detail-media {
+    border-radius: 14px;
+    overflow: hidden;
+    background: linear-gradient(180deg, rgba(184, 233, 255, 0.35), rgba(184, 233, 255, 0.08));
+    border: 1px solid rgba(6, 37, 57, 0.08);
+    box-shadow: 0 18px 40px rgba(6, 37, 57, 0.08);
+}
+.td-blog-detail-media img {
+    display: block;
 }
 .td-portfolio-entry-image-wrap {
     width: 100%;

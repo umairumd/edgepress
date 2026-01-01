@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Sidebar from "./Sidebar";
 import { Category, Post } from "@/lib/wp";
+import Image from "next/image";
 
 type Props = {
   contentHtml?: string | null;
@@ -8,7 +9,14 @@ type Props = {
   date?: string;
   category?: string;
   author?: string;
-  featuredImage?: string;
+  featuredImage?:
+    | string
+    | {
+        url: string;
+        alt?: string | null;
+        width?: number | null;
+        height?: number | null;
+      };
   currentUrl?: string;
   recentPosts?: Post[];
   categories?: Category[];
@@ -32,20 +40,43 @@ const BlogSidebarArea = ({
   currentUrl,
   recentPosts,
   categories,
+  featuredImage,
 }: Props) => {
+  const img = typeof featuredImage === "string" ? { url: featuredImage } : featuredImage;
+  const imgSrc = img?.url;
+  const imgAlt = img?.alt || title || "Blog";
+  const imgW = img?.width || 1600;
+  const imgH = img?.height || 900;
+
   return (
-    <div className="td-blog-sidebar-area mb-100 pt-135">
+    <div className="td-blog-sidebar-area td-blog-detail-layout mb-100 pt-120">
       <div className="container">
         <div className="row">
           <div className="col-lg-8">
             <div className="td-blog-sidebar-left-content mr-70 mb-40">
-              <div className="td-blog-details-meta mb-25">
+              <div className="td-blog-details-meta mb-15">
                 {date && <span className="date mr-20">{formatDate(date)}</span>}
                 {category && <span className="category mr-20">{category}</span>}
               </div>
-              <h2 className="td-blog-sidebar-title mb-20">
-                <strong dangerouslySetInnerHTML={{ __html: title }} />
-              </h2>
+
+              <h1 className="td-blog-detail-title mb-25" dangerouslySetInnerHTML={{ __html: title }} />
+
+              {imgSrc ? (
+                <div className="td-blog-detail-media mb-35">
+                  <Image
+                    className="w-100"
+                    src={imgSrc}
+                    alt={imgAlt}
+                    width={imgW}
+                    height={imgH}
+                    priority
+                    sizes="(max-width: 991px) 100vw, 66vw"
+                    style={{ width: "100%", height: "auto" }}
+                    unoptimized={process.env.NODE_ENV !== "production" && imgSrc.startsWith("http")}
+                  />
+                </div>
+              ) : null}
+
               {contentHtml ? (
                 <div className="td-blog-sidebar-body td-wp-content" dangerouslySetInnerHTML={{ __html: contentHtml }} />
               ) : (
