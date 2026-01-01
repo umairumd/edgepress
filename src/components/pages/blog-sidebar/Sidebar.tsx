@@ -111,7 +111,7 @@ const Sidebar = ({ featuredPosts, recentPosts, categories, currentUrl, shareTitl
         {hasRecent && (
           <div className="td-blog-postbox-post td-blog-postbox-cetagory-list mb-60">
             <h5 className="td-blog-postbox-cetagory-title mb-25">Recent Blogs</h5>
-            {recentPosts!.map((item, idx) => (
+            {recentPosts!.slice(0, 6).map((item, idx) => (
               <div key={item.slug + idx}>
                 <div className="td-blog-postbox-post-thumb d-flex align-items-center">
                   <Link href={`/blog/${item.slug}`} aria-label={item.title} style={{ flex: "0 0 auto" }}>
@@ -133,7 +133,7 @@ const Sidebar = ({ featuredPosts, recentPosts, categories, currentUrl, shareTitl
                     <h5 className="td-blog-postbox-post-title"><Link href={`/blog/${item.slug}`}>{item.title}</Link></h5>
                   </div>
                 </div>
-                {idx < recentPosts!.length - 1 && <div className="td-blog-postbox-post-border mt-20 mb-20"></div>}
+                {idx < Math.min(recentPosts!.length, 6) - 1 && <div className="td-blog-postbox-post-border mt-20 mb-20"></div>}
               </div>
             ))}
           </div>

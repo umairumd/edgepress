@@ -60,7 +60,7 @@ export default async function BlogDetailsPage({ params }: { params: Promise<{ sl
   const { slug } = await params;
   const [post, recentPosts, categories, featuredPosts] = await Promise.all([
     getPost(slug),
-    getRecentPosts(6),
+    getRecentPosts(30),
     getCategories(),
     getFeaturedPosts(2),
   ]);
@@ -81,8 +81,16 @@ export default async function BlogDetailsPage({ params }: { params: Promise<{ sl
     description: stripHtml(post.excerpt),
   };
 
-  const related = (recentPosts || []).filter((p) => p.slug !== slug).slice(0, 3);
-  const sidebarRecent = (recentPosts || []).filter((p) => p.slug !== slug).slice(0, 3);
+  const candidates = (recentPosts || []).filter((p) => p.slug !== slug);
+
+  // Sidebar: hard cap to 6
+  const sidebarRecent = candidates.slice(0, 6);
+
+  // Related: prefer same category, then fill with others; hard cap to 3
+  const sameCat = post.category ? candidates.filter((p) => p.category === post.category) : [];
+  const other = candidates.filter((p) => !post.category || p.category !== post.category);
+  const related = [...sameCat, ...other].slice(0, 3);
+
   const sidebarFeatured = (featuredPosts || []).filter((p) => p.slug !== slug).slice(0, 2);
   const currentUrl = `${SITE_URL}/blog/${slug}`;
 
