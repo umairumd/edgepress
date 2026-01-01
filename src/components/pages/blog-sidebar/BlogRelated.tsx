@@ -51,7 +51,11 @@ const BlogRelated = ({ items, footerContent }: Props) => {
                                     />
                                 </div>
                                 <div className="td-blog-content">
-                                    <h3 className="td-blog-title mb-30"><Link href={`/blog/${item.slug}`}>{item.title}</Link></h3>
+                                    <h2 className="td-blog-title mb-30">
+                                        <Link href={`/blog/${item.slug}`}>
+                                            <strong>{item.title}</strong>
+                                        </Link>
+                                    </h2>
                                     <div className="td-blog-cetagory d-flex align-items-center">
                                         <span className="cetagory">{item.category ?? "Blog"}</span>
                                         <span className="td-border ml-20 mr-15 d-inline-block"></span>
