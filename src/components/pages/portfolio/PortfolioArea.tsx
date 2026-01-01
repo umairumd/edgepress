@@ -91,13 +91,24 @@ const PortfolioArea = ({ items }: Props) => {
                 return Array.from(new Set(mapped)).join(" ") || "case-studies";
             };
 
-            return items.map((item, idx) => ({
-                id: item.slug ?? `item-${idx}`,
-                img: item.featuredImage?.url ?? "/assets/img/portfolio/portfolio-6/thumb.jpg",
-                title: item.title,
-                categoryClasses: toFilterClasses(item),
-                slug: item.slug,
-            }));
+            return items
+                .map((item, idx) => ({
+                    id: item.slug ?? `item-${idx}`,
+                    img: item.featuredImage?.url ?? "/assets/img/portfolio/portfolio-6/thumb.jpg",
+                    title: item.title,
+                    categoryClasses: toFilterClasses(item),
+                    slug: item.slug,
+                    featured: Boolean(item.featured),
+                    date: item.date,
+                }))
+                .sort((a, b) => {
+                    const feat = Number(b.featured) - Number(a.featured);
+                    if (feat !== 0) return feat;
+                    const ad = a.date ? Date.parse(a.date) : 0;
+                    const bd = b.date ? Date.parse(b.date) : 0;
+                    if (bd !== ad) return bd - ad;
+                    return String(a.title || "").localeCompare(String(b.title || ""));
+                });
         }
         // Template fallback: map old categories to the new filter buckets
         const mapLegacyToNew = (legacy: string) => {

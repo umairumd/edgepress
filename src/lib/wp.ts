@@ -125,16 +125,22 @@ export type PortfolioItem = {
   categories?: Array<{ slug: string; name: string }>;
   featuredImage?: WPImage;
   entryImage?: WPImage;
+  featured?: boolean;
   seo?: YoastSeo;
 };
 
 const PORTFOLIO_TAX_FIELD = (process.env.WP_PORTFOLIO_TAX_FIELD || "").trim() || "portfolioCategories";
 const PORTFOLIO_ENTRY_FIELD = (process.env.WP_PORTFOLIO_ENTRY_FIELD || "").trim() || "portfolioEntryImage";
 const PORTFOLIO_ACF_GROUP_FIELD = (process.env.WP_PORTFOLIO_ACF_GROUP_FIELD || "").trim() || undefined;
+const PORTFOLIO_FEATURE_FIELD = (process.env.WP_PORTFOLIO_FEATURE_FIELD || "").trim() || "featured";
 
 const PORTFOLIO_ENTRY_FIELD_CANDIDATES = Array.from(
   // Prefer the most common WPGraphQL-for-ACF casing first to avoid avoidable GraphQL errors.
   new Set(["portfolioEntryImage", PORTFOLIO_ENTRY_FIELD, "portfolioentryimage"].filter(Boolean))
+);
+
+const PORTFOLIO_FEATURE_FIELD_CANDIDATES = Array.from(
+  new Set([PORTFOLIO_FEATURE_FIELD, "featured", "isFeatured", "isfeatured"].filter(Boolean))
 );
 
 function mapWpTerms(terms?: { nodes?: WpTermNode[] | null } | null): Array<{ slug: string; name: string }> | undefined {
@@ -169,6 +175,34 @@ function getPortfolioEntryImageNode(node: WpPortfolioNode): WpMediaNode | null |
     const edge = field as WpMediaEdge;
     if (edge && typeof edge === "object" && "node" in edge) return edge.node ?? undefined;
     return (field as WpMediaNode | null | undefined) ?? undefined;
+  }
+  return undefined;
+}
+
+function coerceBoolean(value: unknown): boolean | undefined {
+  if (value === true) return true;
+  if (value === false) return false;
+  if (typeof value === "number") return value !== 0;
+  if (typeof value === "string") {
+    const v = value.trim().toLowerCase();
+    if (["1", "true", "yes", "on"].includes(v)) return true;
+    if (["0", "false", "no", "off"].includes(v)) return false;
+  }
+  return undefined;
+}
+
+function getPortfolioFeaturedFlag(node: WpPortfolioNode): boolean | undefined {
+  if (PORTFOLIO_ACF_GROUP_FIELD) {
+    const group = node?.[PORTFOLIO_ACF_GROUP_FIELD] as Record<string, unknown> | null | undefined;
+    for (const key of PORTFOLIO_FEATURE_FIELD_CANDIDATES) {
+      const v = coerceBoolean(group?.[key]);
+      if (v !== undefined) return v;
+    }
+    return undefined;
+  }
+  for (const key of PORTFOLIO_FEATURE_FIELD_CANDIDATES) {
+    const v = coerceBoolean(node?.[key]);
+    if (v !== undefined) return v;
   }
   return undefined;
 }
@@ -422,14 +456,15 @@ export async function getCategories(): Promise<Category[]> {
 
 export async function getPortfolioItems(limit = 12): Promise<PortfolioItem[]> {
   const taxSelection = `${PORTFOLIO_TAX_FIELD} { nodes { slug name } }`;
-  const buildQueryFull = (entryField: string, shape: "edge" | "direct") => {
+  const buildQueryFull = (entryField: string, featureField: string, shape: "edge" | "direct") => {
     const entrySelection =
       shape === "edge"
         ? `${entryField} { node { sourceUrl altText mediaDetails { width height } } }`
         : `${entryField} { sourceUrl altText mediaDetails { width height } }`;
+    const featureSelection = featureField ? `${featureField}` : "";
     const entryFieldSelection = PORTFOLIO_ACF_GROUP_FIELD
-      ? `${PORTFOLIO_ACF_GROUP_FIELD} { ${entrySelection} }`
-      : entrySelection;
+      ? `${PORTFOLIO_ACF_GROUP_FIELD} { ${entrySelection} ${featureSelection} }`
+      : `${entrySelection} ${featureSelection}`;
     return `
       query GetPortfolioItems($limit: Int!) {
         portfolioItems(first: $limit, where: {orderby: {field: DATE, order: DESC}}) {
@@ -462,9 +497,12 @@ export async function getPortfolioItems(limit = 12): Promise<PortfolioItem[]> {
   // Try a few likely field names for the entry image (WPGraphQL for ACF often camelCases).
   let raw: WPGraphQlResponse<{ portfolioItems?: { nodes: WpPortfolioNode[] } }> | null = null;
   for (const candidate of PORTFOLIO_ENTRY_FIELD_CANDIDATES) {
-    raw = await wpFetchRaw<{ portfolioItems?: { nodes: WpPortfolioNode[] } }>(buildQueryFull(candidate, "edge"), { limit });
-    if (raw && !raw.errors) break;
-    raw = await wpFetchRaw<{ portfolioItems?: { nodes: WpPortfolioNode[] } }>(buildQueryFull(candidate, "direct"), { limit });
+    for (const featureCandidate of PORTFOLIO_FEATURE_FIELD_CANDIDATES) {
+      raw = await wpFetchRaw<{ portfolioItems?: { nodes: WpPortfolioNode[] } }>(buildQueryFull(candidate, featureCandidate, "edge"), { limit });
+      if (raw && !raw.errors) break;
+      raw = await wpFetchRaw<{ portfolioItems?: { nodes: WpPortfolioNode[] } }>(buildQueryFull(candidate, featureCandidate, "direct"), { limit });
+      if (raw && !raw.errors) break;
+    }
     if (raw && !raw.errors) break;
   }
 
@@ -482,6 +520,7 @@ export async function getPortfolioItems(limit = 12): Promise<PortfolioItem[]> {
       date: node.date ?? undefined,
       featuredImage: mapWpImage(node.featuredImage?.node),
       entryImage: mapWpImage(getPortfolioEntryImageNode(node)),
+      featured: getPortfolioFeaturedFlag(node) ?? false,
       categories,
       // Keep a simple string category for backwards-compat UI. Prefer first term name.
       category: categories?.[0]?.name ?? undefined,
@@ -498,9 +537,10 @@ export async function getPortfolioItem(slug: string): Promise<PortfolioItem | nu
       shape === "edge"
         ? `${entryField} { node { sourceUrl altText mediaDetails { width height } } }`
         : `${entryField} { sourceUrl altText mediaDetails { width height } }`;
+    const featureSelection = PORTFOLIO_FEATURE_FIELD ? `${PORTFOLIO_FEATURE_FIELD}` : "";
     return PORTFOLIO_ACF_GROUP_FIELD
-      ? `${PORTFOLIO_ACF_GROUP_FIELD} { ${entrySelection} }`
-      : entrySelection;
+      ? `${PORTFOLIO_ACF_GROUP_FIELD} { ${entrySelection} ${featureSelection} }`
+      : `${entrySelection} ${featureSelection}`;
   };
 
   const buildQueryWithSeo = (entryField: string, shape: "edge" | "direct") => `
@@ -584,6 +624,7 @@ export async function getPortfolioItem(slug: string): Promise<PortfolioItem | nu
     date: item.date ?? undefined,
     featuredImage: mapWpImage(item.featuredImage?.node),
     entryImage: mapWpImage(getPortfolioEntryImageNode(item)),
+    featured: getPortfolioFeaturedFlag(item) ?? false,
     categories,
     category: categories?.[0]?.name ?? undefined,
     seo: item.seo

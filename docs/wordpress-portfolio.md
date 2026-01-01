@@ -31,6 +31,17 @@ Create an ACF Field Group assigned to **Portfolio Items** and add:
 
 Upload your long “portfolio entry image” (tall JPG/PNG/WebP) to this field.
 
+## 4b) (Optional) Feature items so they appear at the top
+If you plan to have lots of portfolio items, you can mark some as **Featured** and the Next.js `/portfolio` page will show them first.
+
+### Create the ACF field
+In the same ACF Field Group (assigned to Portfolio Items), add:
+- **Field Type**: True / False
+- **Field Name**: `featured`
+- **Default**: Off
+
+When you toggle `featured` ON for a portfolio item, it will be sorted above non-featured items (non-featured items are then sorted by newest date).
+
 ## 5) Confirm GraphQL field names (important)
 In WPGraphQL IDE (GraphiQL), run an introspection-style query to confirm the exact field names. This code assumes:
 - Taxonomy field: `portfolioCategories { nodes { slug name } }`
@@ -40,12 +51,14 @@ If your schema uses different names, you can configure them via env vars in Next
 - `WP_PORTFOLIO_TAX_FIELD` (default: `portfolioCategories`)
 - `WP_PORTFOLIO_ENTRY_FIELD` (default: `portfolioEntryImage`)
 - `WP_PORTFOLIO_ACF_GROUP_FIELD` (optional; if your ACF fields are nested under a group field)
+- `WP_PORTFOLIO_FEATURE_FIELD` (default: `featured`)
 
 Example:
 ```bash
 WP_PORTFOLIO_TAX_FIELD=portfolioCategories
 WP_PORTFOLIO_ENTRY_FIELD=portfolioEntryImage
 WP_PORTFOLIO_ACF_GROUP_FIELD=acfFields
+WP_PORTFOLIO_FEATURE_FIELD=featured
 ```
 
 
