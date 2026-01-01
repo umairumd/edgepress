@@ -65,33 +65,30 @@ const Sidebar = ({ featuredPosts, recentPosts, categories, currentUrl, shareTitl
         {hasFeatured && (
           <div className="td-blog-postbox-post td-blog-postbox-cetagory-list mb-60">
             <h5 className="td-blog-postbox-cetagory-title mb-25">Featured Blogs</h5>
-            {featuredPosts!.slice(0, 2).map((item, idx) => {
-              const img = item.featuredImage?.url || "/assets/img/blog/sidebar/thumb.jpg";
-              const alt = item.featuredImage?.alt || item.title || "Featured blog";
-              return (
-                <div key={item.slug + idx}>
-                  <div className="td-blog-postbox-post-thumb d-flex align-items-center">
-                    <Link href={`/blog/${item.slug}`} aria-label={item.title} style={{ flex: "0 0 auto" }}>
+            <div className="td-blog-sidebar-featured">
+              {featuredPosts!.slice(0, 2).map((item) => {
+                const img = item.featuredImage?.url || "/assets/img/blog/sidebar/thumb.jpg";
+                const alt = item.featuredImage?.alt || item.title || "Featured blog";
+                return (
+                  <Link key={item.slug} href={`/blog/${item.slug}`} className="td-blog-sidebar-featured-card" aria-label={item.title}>
+                    <div className="td-blog-sidebar-featured-thumb">
                       <Image
                         src={img}
                         alt={alt}
-                        width={100}
-                        height={110}
-                        style={{ borderRadius: "6px", objectFit: "cover" }}
+                        fill
+                        sizes="(max-width: 991px) 100vw, 360px"
+                        style={{ objectFit: "cover" }}
                         unoptimized={process.env.NODE_ENV !== "production" && typeof img === "string" && img.startsWith("http")}
                       />
-                    </Link>
-                    <div className="td-blog-postbox-post-content">
-                      <span className="td-blog-postbox-post-date">{formatDate(item.date)}</span>
-                      <h5 className="td-blog-postbox-post-title">
-                        <Link href={`/blog/${item.slug}`}>{item.title}</Link>
-                      </h5>
                     </div>
-                  </div>
-                  {idx < Math.min(featuredPosts!.length, 2) - 1 && <div className="td-blog-postbox-post-border mt-20 mb-20"></div>}
-                </div>
-              );
-            })}
+                    <div className="td-blog-sidebar-featured-body">
+                      <span className="td-blog-postbox-post-date">{formatDate(item.date)}</span>
+                      <h5 className="td-blog-sidebar-featured-title">{item.title}</h5>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
         )}
 

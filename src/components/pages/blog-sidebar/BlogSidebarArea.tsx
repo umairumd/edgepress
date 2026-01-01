@@ -58,7 +58,7 @@ const BlogSidebarArea = ({
             <div className="td-blog-sidebar-left-content mr-70 mb-40">
               <div className="td-blog-details-meta mb-15">
                 {date && <span className="date mr-20">{formatDate(date)}</span>}
-                {category && <span className="category mr-20">{category}</span>}
+                {category && <span className="category td-blog-detail-category-pill mr-20">{category}</span>}
               </div>
 
               <h1 className="td-blog-detail-title mb-25" dangerouslySetInnerHTML={{ __html: title }} />

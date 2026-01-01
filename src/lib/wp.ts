@@ -142,6 +142,10 @@ const POST_FEATURE_FIELD_CANDIDATES = Array.from(
   new Set([POST_FEATURE_FIELD, "featuredBlog", "featured", "isFeatured", "isfeatured"].filter(Boolean))
 );
 
+const POST_ACF_GROUP_FIELD_CANDIDATES = Array.from(
+  new Set([POST_ACF_GROUP_FIELD, "postFields", "blogFields", "acfFields", "acf"].filter(Boolean))
+);
+
 const PORTFOLIO_ENTRY_FIELD_CANDIDATES = Array.from(
   // Prefer the most common WPGraphQL-for-ACF casing first to avoid avoidable GraphQL errors.
   new Set(["portfolioEntryImage", PORTFOLIO_ENTRY_FIELD, "portfolioentryimage"].filter(Boolean))
@@ -217,13 +221,14 @@ function getPortfolioFeaturedFlag(node: WpPortfolioNode): boolean | undefined {
 
 function getPostFeaturedFlag(node: WpPostNode): boolean | undefined {
   const base = node as unknown as Record<string, unknown>;
-  if (POST_ACF_GROUP_FIELD) {
-    const group = base?.[POST_ACF_GROUP_FIELD] as Record<string, unknown> | null | undefined;
+  for (const groupKey of POST_ACF_GROUP_FIELD_CANDIDATES) {
+    if (!groupKey) continue;
+    const group = base?.[groupKey] as Record<string, unknown> | null | undefined;
+    if (!group) continue;
     for (const key of POST_FEATURE_FIELD_CANDIDATES) {
       const v = coerceBoolean(group?.[key]);
       if (v !== undefined) return v;
     }
-    return undefined;
   }
   for (const key of POST_FEATURE_FIELD_CANDIDATES) {
     const v = coerceBoolean(base?.[key]);
@@ -321,23 +326,26 @@ export async function getPosts(limit = 12): Promise<Post[]> {
     featuredImage { node { sourceUrl altText mediaDetails { width height } } }
   `;
 
-  const wrapFeature = (field: string) => (POST_ACF_GROUP_FIELD ? `${POST_ACF_GROUP_FIELD} { ${field} }` : `${field}`);
+  const wrapFeature = (group: string | undefined, field: string) => (group ? `${group} { ${field} }` : `${field}`);
 
   // Try to include a "featured" ACF field if it exists; otherwise fall back to the base query.
   let nodes: WpPostNode[] | undefined;
-  for (const candidate of POST_FEATURE_FIELD_CANDIDATES) {
-    const queryWithFeature = `
-      query GetPosts($limit: Int!) {
-        posts(first: $limit, where: {orderby: {field: DATE, order: DESC}}) {
-          nodes { ${baseSelection} ${wrapFeature(candidate)} }
+  for (const group of [undefined, ...POST_ACF_GROUP_FIELD_CANDIDATES]) {
+    for (const candidate of POST_FEATURE_FIELD_CANDIDATES) {
+      const queryWithFeature = `
+        query GetPosts($limit: Int!) {
+          posts(first: $limit, where: {orderby: {field: DATE, order: DESC}}) {
+            nodes { ${baseSelection} ${wrapFeature(group, candidate)} }
+          }
         }
+      `;
+      const raw = await wpFetchRaw<{ posts?: { nodes?: WpPostNode[] } }>(queryWithFeature, { limit });
+      if (raw && !raw.errors && raw.data?.posts?.nodes) {
+        nodes = raw.data.posts.nodes;
+        break;
       }
-    `;
-    const raw = await wpFetchRaw<{ posts?: { nodes?: WpPostNode[] } }>(queryWithFeature, { limit });
-    if (raw?.data?.posts?.nodes) {
-      nodes = raw.data.posts.nodes;
-      break;
     }
+    if (nodes) break;
   }
 
   if (!nodes) {
@@ -451,22 +459,25 @@ export async function getRecentPosts(limit = 5): Promise<Post[]> {
     featuredImage { node { sourceUrl altText mediaDetails { width height } } }
   `;
 
-  const wrapFeature = (field: string) => (POST_ACF_GROUP_FIELD ? `${POST_ACF_GROUP_FIELD} { ${field} }` : `${field}`);
+  const wrapFeature = (group: string | undefined, field: string) => (group ? `${group} { ${field} }` : `${field}`);
 
   let nodes: WpPostNode[] | undefined;
-  for (const candidate of POST_FEATURE_FIELD_CANDIDATES) {
-    const queryWithFeature = `
-      query GetRecentPosts($limit: Int!) {
-        posts(first: $limit, where: {orderby: {field: DATE, order: DESC}}) {
-          nodes { ${baseSelection} ${wrapFeature(candidate)} }
+  for (const group of [undefined, ...POST_ACF_GROUP_FIELD_CANDIDATES]) {
+    for (const candidate of POST_FEATURE_FIELD_CANDIDATES) {
+      const queryWithFeature = `
+        query GetRecentPosts($limit: Int!) {
+          posts(first: $limit, where: {orderby: {field: DATE, order: DESC}}) {
+            nodes { ${baseSelection} ${wrapFeature(group, candidate)} }
+          }
         }
+      `;
+      const raw = await wpFetchRaw<{ posts?: { nodes?: WpPostNode[] } }>(queryWithFeature, { limit });
+      if (raw && !raw.errors && raw.data?.posts?.nodes) {
+        nodes = raw.data.posts.nodes;
+        break;
       }
-    `;
-    const raw = await wpFetchRaw<{ posts?: { nodes?: WpPostNode[] } }>(queryWithFeature, { limit });
-    if (raw?.data?.posts?.nodes) {
-      nodes = raw.data.posts.nodes;
-      break;
     }
+    if (nodes) break;
   }
 
   if (!nodes) {

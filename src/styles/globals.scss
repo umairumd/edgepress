@@ -541,6 +541,17 @@ img {
     color: #062539;
 }
 
+.td-blog-detail-category-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(184, 233, 255, 0.75);
+    color: #062539 !important;
+    font-weight: 700;
+    border: 1px solid rgba(6, 37, 57, 0.08);
+}
+
 .td-blog-detail-media {
     border-radius: 14px;
     overflow: hidden;
@@ -550,6 +561,41 @@ img {
 }
 .td-blog-detail-media img {
     display: block;
+}
+
+/* Blog sidebar: Featured Blogs cards (big thumbnail above title) */
+.td-blog-sidebar-featured {
+    display: grid;
+    gap: 16px;
+}
+.td-blog-sidebar-featured-card {
+    display: block;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(6, 37, 57, 0.08);
+    background: #fff;
+    text-decoration: none;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.td-blog-sidebar-featured-card:hover {
+    box-shadow: 0 14px 34px rgba(6, 37, 57, 0.12);
+    transform: translateY(-2px);
+}
+.td-blog-sidebar-featured-thumb {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #f4f6f8;
+}
+.td-blog-sidebar-featured-body {
+    padding: 14px 14px 16px;
+}
+.td-blog-sidebar-featured-title {
+    margin: 8px 0 0;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 1.25;
+    color: #062539;
 }
 .td-portfolio-entry-image-wrap {
     width: 100%;
