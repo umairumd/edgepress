@@ -426,17 +426,19 @@ img {
 .td-wp-content ul,
 .td-wp-content ol {
     margin: 0 0 16px;
-    padding-left: 1.25em;
-    list-style-position: outside;
+    padding-left: 1.25em !important;
+    list-style-position: outside !important;
 }
 .td-wp-content ul {
-    list-style: disc;
+    list-style: disc !important;
 }
 .td-wp-content ol {
-    list-style: decimal;
+    list-style: decimal !important;
 }
 .td-wp-content li {
     margin: 0 0 8px;
+    list-style: inherit !important;
+    display: list-item !important;
 }
 .td-wp-content a {
     color: #0277b5;
