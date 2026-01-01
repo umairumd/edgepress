@@ -37,17 +37,17 @@ const BlogHero = ({ featuredImage, title }: Props) => {
     return (
         <div className="td-blog-hero-area">
             <div className="container-fluid p-0">
-                <Image
-                    className="w-100"
-                    src={src}
-                    alt={alt}
-                    width={width}
-                    height={height}
-                    priority
-                    sizes="100vw"
-                    style={{ width: "100%", height: "auto" }}
-                    unoptimized={process.env.NODE_ENV !== "production" && typeof src === "string" && src.startsWith("http")}
-                />
+                <div className="td-blog-hero-media">
+                    <Image
+                        src={src}
+                        alt={alt}
+                        fill
+                        priority
+                        sizes="100vw"
+                        style={{ objectFit: "cover" }}
+                        unoptimized={process.env.NODE_ENV !== "production" && typeof src === "string" && src.startsWith("http")}
+                    />
+                </div>
             </div>
         </div>
     )

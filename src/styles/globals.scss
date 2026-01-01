@@ -464,6 +464,22 @@ img {
     background: #b8e9ff !important;
     color: #062539 !important;
 }
+
+/* Blog detail hero image: make it more minimal on desktop (shorter, cropped) */
+.td-blog-hero-media {
+    position: relative;
+    width: 100%;
+    max-height: 520px;
+    aspect-ratio: 21 / 9;
+    overflow: hidden;
+    background: #0b1d2a;
+}
+@media (max-width: 991px) {
+    .td-blog-hero-media {
+        max-height: none;
+        aspect-ratio: 16 / 9;
+    }
+}
 .td-portfolio-entry-image-wrap {
     width: 100%;
 }
