@@ -8,6 +8,7 @@ export const metadata: Metadata = {
     title: "Contact",
     description:
         "Reach out to Inoma Digital. Book a strategy call or contact us directly to discuss your goals and the best next steps.",
+    alternates: { canonical: "/contact" },
 };
 
 export default function ContactPage() {

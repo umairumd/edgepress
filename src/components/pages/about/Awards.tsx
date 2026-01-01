@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const Awards = () => {
     const highlights = [
         "8+ years of hands-on digital experience",
@@ -29,9 +31,12 @@ const Awards = () => {
                 <div className="row">
                     <div className="col-lg-6 wow fadeInLeft" data-wow-delay=".5s" data-wow-duration="1s">
                         <div className="td-awards-5-thumb text-center pt-0 mb-30">
-                            <img
+                            <Image
                                 src="/assets/img/awards/awards-5/inoma-pattern2.jpg"
                                 alt=""
+                                width={550}
+                                height={550}
+                                sizes="(max-width: 992px) 70vw, 385px"
                                 style={{ width: "70%", height: "auto" }}
                             />
                         </div>

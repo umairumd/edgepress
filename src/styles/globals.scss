@@ -537,7 +537,7 @@ img {
     font-weight: 700;
     letter-spacing: -0.03em;
     line-height: 1.05;
-    font-size: clamp(36px, 4.2vw, 62px);
+    font-size: clamp(26px, 3.1vw, 46px);
     color: #062539;
 }
 
@@ -604,8 +604,83 @@ img {
         display: none !important;
     }
 }
+
+/* Services page: match ServiceProcess card visuals, add only a very subtle hover */
+.td-services-cards-area .row.gx-0 {
+    --bs-gutter-x: 0;
+    --bs-gutter-y: 0;
+}
+.td-services-cards-area .row.gx-0 > [class*="col-"] {
+    padding: 0 !important;
+    display: flex;
+}
+
+.td-services-cards-area .td-service-process-item {
+    width: 100%;
+    height: 100%;
+    flex: 1 1 auto;
+    border-radius: 0; /* remove rounding so cards touch cleanly */
+    margin-left: -1px; /* avoid double borders horizontally */
+    margin-top: -1px; /* avoid double borders vertically when wrapping */
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+.td-services-cards-area .td-service-process-item:hover {
+    transform: translateY(-2px);
+    background: #fff !important; /* keep white on hover */
+    box-shadow: 0 12px 28px rgba(6, 37, 57, 0.08);
+}
+.td-services-cards-area .td-services-cards-icon {
+    font-size: 52px; /* ~30% bigger */
+    line-height: 1;
+    color: #1c1d1f;
+}
+
+/* Blog listing: typography-first hero (no hero image) */
+.td-blog-listing-hero {
+    background: #fff;
+}
+.td-blog-listing-title {
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.06;
+    padding-bottom: 0.08em; /* avoid descender clipping */
+    color: #1c1d1f;
+    font-size: clamp(42px, 5.4vw, 96px);
+}
+.td-blog-listing-title span {
+    font-family: var(--td-ff-dm);
+    font-style: italic;
+    font-weight: 400;
+}
+.td-blog-listing-sub {
+    max-width: 980px;
+    font-size: 18px;
+    line-height: 1.7;
+    color: rgba(28, 29, 31, 0.68);
+}
+@media (max-width: 575px) {
+    .td-blog-listing-sub {
+        font-size: 16px;
+    }
+}
+
+/* Portfolio page: make breadcrumb title a bit smaller (scoped) */
+.td-breadcrumb--portfolio .td-section-page-title.td-section-page-bigtitle {
+    font-size: clamp(34px, 4.1vw, 58px) !important;
+    line-height: 1.08;
+}
+
+/* Portfolio page: reduce gap between hero text and category filters */
+.td-breadcrumb-area.td-breadcrumb--portfolio {
+    margin-bottom: 50px !important; /* overrides mb-75 */
+}
+.td-breadcrumb--portfolio .td-about-main-wrapper {
+    padding-bottom: 20px !important; /* overrides pb-40 */
+}
 .td-portfolio-entry-image-wrap {
     width: 100%;
+    border-radius: 14px;
+    overflow: hidden;
 }
 @media (max-width: 575px) {
     .td-portfolio-entry-image-wrap {
@@ -613,6 +688,7 @@ img {
         max-width: 100vw;
         margin-left: 50%;
         transform: translateX(-50%);
+        border-radius: 0;
     }
     .td-portfolio-entry-image {
         border-radius: 0 !important;
@@ -1200,10 +1276,18 @@ img {
 .td-awards-about-wrap .td-awards-5-btn {
     background: #0277b5 !important;
     color: #fff !important;
+    border-radius: 999px !important; /* fully round pill */
 }
 .td-awards-about-wrap .td-awards-5-btn:hover {
     background: #062539 !important;
     color: #fff !important;
+}
+
+/* About: Key Highlights title clipping fix (template line-height: 1 can cut descenders) */
+.td-awards-about-wrap .td-testimonial-title {
+    line-height: 1.08 !important;
+    padding-bottom: 0.08em; /* protects descenders like y/g */
+    overflow: visible !important;
 }
 
 /* About: Testimonials accent (light blue tint + high contrast UI) */

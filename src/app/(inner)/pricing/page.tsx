@@ -7,6 +7,7 @@ export const metadata: Metadata = {
     title: "Pricing",
     description:
         "Choose an outcome-based package built as a complete growth system — designed for visibility, demand generation, and long-term scale.",
+    alternates: { canonical: "/pricing" },
 };
 
 export default function PricingPage() {

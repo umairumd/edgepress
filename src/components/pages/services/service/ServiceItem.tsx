@@ -1,12 +1,8 @@
 "use client";
 import { useCallback, useEffect, useRef } from "react";
-import gsap from "gsap";
-import ScrollTrigger from "gsap/ScrollTrigger";
 import type { JSX } from "react";
 import Link from "next/link";
 import Image from "next/image";
-
-gsap.registerPlugin(ScrollTrigger);
 
 interface DataType {
     id: number;
@@ -131,12 +127,14 @@ const service_data: DataType[] = [
 
 const ServiceItem = () => {
     const rafRef = useRef<number | null>(null);
+    const scrollTriggerRef = useRef<{ refresh?: () => void } | null>(null);
+
     const refreshTriggers = useCallback(() => {
         if (typeof window === "undefined") return;
         if (rafRef.current) cancelAnimationFrame(rafRef.current);
         rafRef.current = requestAnimationFrame(() => {
             try {
-                ScrollTrigger.refresh();
+                scrollTriggerRef.current?.refresh?.();
             } catch {
                 // ignore
             }
@@ -145,32 +143,51 @@ const ServiceItem = () => {
 
     useEffect(() => {
         if (typeof window !== "undefined") {
-            const mm = gsap.matchMedia();
+            let cancelled = false;
+            let mm: { add?: (query: string, setup: () => void) => void; revert?: () => void } | null = null;
 
-            mm.add("(min-width: 991px)", () => {
-                const panels = document.querySelectorAll(".td-service-pin-item-panel");
+            (async () => {
+                const gsapMod = await import("gsap");
+                const gsap = gsapMod.default;
+                const stMod = await import("gsap/ScrollTrigger");
+                const ScrollTrigger = stMod.default;
+                gsap.registerPlugin(ScrollTrigger);
+                scrollTriggerRef.current = ScrollTrigger;
 
-                panels.forEach((panel) => {
-                    gsap.to(panel, {
-                        scrollTrigger: {
-                            trigger: panel,
-                            start: "top top",
-                            end: "bottom 100%",
-                            pin: true,
-                            pinSpacing: false,
-                            scrub: true,
-                            markers: false,
-                            endTrigger: ".td-service-pin-items",
-                        },
+                if (cancelled) return;
+
+                mm = gsap.matchMedia();
+                mm.add?.("(min-width: 991px)", () => {
+                    const panels = document.querySelectorAll(".td-service-pin-item-panel");
+
+                    panels.forEach((panel) => {
+                        gsap.to(panel, {
+                            scrollTrigger: {
+                                trigger: panel,
+                                start: "top top",
+                                end: "bottom 100%",
+                                pin: true,
+                                pinSpacing: false,
+                                scrub: true,
+                                markers: false,
+                                endTrigger: ".td-service-pin-items",
+                            },
+                        });
                     });
+                    // Fonts/images may load after this runs; refresh once.
+                    refreshTriggers();
                 });
-                // In local dev, fonts/images may load after this runs; refresh once.
-                refreshTriggers();
+
+                // One more refresh shortly after mount for stability.
+                setTimeout(() => refreshTriggers(), 50);
+            })().catch(() => {
+                // ignore dynamic import failures
             });
 
             return () => {
+                cancelled = true;
                 if (rafRef.current) cancelAnimationFrame(rafRef.current);
-                mm.revert();
+                mm?.revert?.();
             };
         }
     }, [refreshTriggers]);
@@ -210,11 +227,11 @@ const ServiceItem = () => {
                                             ))}
                                         </ul>
                                         <div className="td-btn-group td-btn-group-border pt-50">
-                                            <Link className="td-btn-circle" href={`/service/${item.slug}`}>
+                                            <Link className="td-btn-circle" href="/contact" aria-label="Reach out">
                                                 <i className="fa-solid fa-arrow-right"></i>
                                             </Link>
-                                            <Link className="td-btn-2 td-btn-primary" href={`/service/${item.slug}`}>VIEW DETAILS</Link>
-                                            <Link className="td-btn-circle" href={`/service/${item.slug}`}>
+                                            <Link className="td-btn-2 td-btn-primary" href="/contact">REACH OUT</Link>
+                                            <Link className="td-btn-circle" href="/contact" aria-label="Reach out">
                                                 <i className="fa-solid fa-arrow-right"></i>
                                             </Link>
                                         </div>

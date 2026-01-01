@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const ServiceDetailsArea = () => {
     return (
         <div className="td-service-area td-breadcrumb-spacing pb-45">
@@ -7,7 +9,17 @@ const ServiceDetailsArea = () => {
                         <div className="td-breadcrumb-wrap ">
                             <h2 className="td-section-page-title mb-35 wow fadeInLeft" data-wow-delay=".5s" data-wow-duration="1s">Web and product <span>development </span></h2>
                             <div className="td-service-hero-thumb-2 fix td-rounded-10 pt-105 mb-30">
-                                <img data-speed=".9" className="td-rounded-10" src="/assets/img/service/hero/thumb-2.jpg" alt="" />
+                                <Image
+                                    data-speed=".9"
+                                    className="td-rounded-10"
+                                    src="/assets/img/service/hero/thumb-2.jpg"
+                                    alt="Service detail hero image"
+                                    width={563}
+                                    height={690}
+                                    priority
+                                    sizes="(max-width: 992px) 100vw, 40vw"
+                                    style={{ height: "auto" }}
+                                />
                             </div>
                         </div>
                     </div>
@@ -33,7 +45,17 @@ const ServiceDetailsArea = () => {
                                 </div>
                             </div>
                             <div className="td-service-hero-thumb fix td-rounded-10 pt-200">
-                                <img data-speed=".9" className="td-rounded-10" src="/assets/img/service/hero/thumb.jpg" alt="" />
+                                <Image
+                                    data-speed=".9"
+                                    className="td-rounded-10"
+                                    src="/assets/img/service/hero/thumb.jpg"
+                                    alt="Service detail hero image"
+                                    width={645}
+                                    height={430}
+                                    priority
+                                    sizes="(max-width: 992px) 100vw, 40vw"
+                                    style={{ height: "auto" }}
+                                />
                             </div>
                         </div>
                     </div>

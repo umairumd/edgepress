@@ -1,3 +1,4 @@
+import "swiper/swiper-bundle.css";
 import HeaderSix from "@/components/layout/HeaderSix";
 import FooterSix from "@/components/layout/FooterSix";
 

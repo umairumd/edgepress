@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const ContactBranch = () => {
     return (
@@ -18,7 +19,15 @@ const ContactBranch = () => {
                                 </div>
                                 <div className="col-lg-3 col-md-6 col-sm-6">
                                     <div className="td-contact-branch-thumb mb-20">
-                                        <img className="w-100 td-rounded-10" src="/assets/img/contact/pakistan.jpg" alt="Okara Office" />
+                                        <Image
+                                            className="w-100 td-rounded-10"
+                                            src="/assets/img/contact/pakistan.jpg"
+                                            alt="Okara Office"
+                                            width={320}
+                                            height={242}
+                                            sizes="(max-width: 992px) 100vw, 25vw"
+                                            style={{ height: "auto" }}
+                                        />
                                     </div>
                                 </div>
                                 <div className="col-lg-3 col-md-6 col-sm-6">
@@ -43,7 +52,15 @@ const ContactBranch = () => {
                                 </div>
                                 <div className="col-lg-3 col-md-6 col-sm-6">
                                     <div className="td-contact-branch-thumb mb-20">
-                                        <img className="w-100 td-rounded-10" src="/assets/img/contact/uae.jpg" alt="Dubai Office" />
+                                        <Image
+                                            className="w-100 td-rounded-10"
+                                            src="/assets/img/contact/uae.jpg"
+                                            alt="Dubai Office"
+                                            width={320}
+                                            height={242}
+                                            sizes="(max-width: 992px) 100vw, 25vw"
+                                            style={{ height: "auto" }}
+                                        />
                                     </div>
                                 </div>
                                 <div className="col-lg-3 col-md-6 col-sm-6">

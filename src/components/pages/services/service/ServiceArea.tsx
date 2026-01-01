@@ -1,3 +1,6 @@
+import ServicesCards from "./ServicesCards";
+import Image from "next/image";
+
 const ServiceArea = () => {
     return (
         <div className="td-service-main-area pb-125">
@@ -5,15 +8,19 @@ const ServiceArea = () => {
                 <div className="row">
                     <div className="col-12">
                         <div className="td-service-main-bigthumb fix td-rounded-10">
-                            <img
+                            <Image
                                 src="/assets/img/service/details/services-image.jpg"
                                 alt="Inoma Digital services"
-                                loading="lazy"
-                                decoding="async"
+                                width={1500}
+                                height={700}
+                                priority
+                                sizes="(max-width: 992px) 100vw, 1200px"
+                                style={{ width: "100%", height: "auto" }}
                             />
                         </div>
                     </div>
                 </div>
+                <ServicesCards />
                 <div className="row justify-content-center">
                     <div className="col-lg-9">
                         <div className="td-service-main-content text-center pt-140 mb-60">

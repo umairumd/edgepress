@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import Image from "next/image";
 
 const ContactMap = () => {
     const [isLoaded, setIsLoaded] = useState(false);
@@ -13,7 +14,15 @@ const ContactMap = () => {
                     <div className="col-12">
                         <div className="td-contact-map p-relative">
                             <div className="td-contact-map-wrap">
-                                <img className="mb-60" src="/assets/img/logo/inoma-logo-for-dark.png" alt="Inoma Digital" />
+                                <Image
+                                    className="mb-60"
+                                    src="/assets/img/logo/inoma-logo-for-dark.png"
+                                    alt="Inoma Digital"
+                                    width={666}
+                                    height={175}
+                                    sizes="(max-width: 768px) 220px, 280px"
+                                    style={{ height: "auto" }}
+                                />
                                 <h6 className="mb-25">Contact Info</h6>
                                 <div className="td-contact-info-item d-flex align-items-center mb-10">
                                     <i className="fa-solid fa-phone mr-10" aria-hidden="true"></i>

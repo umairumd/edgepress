@@ -8,6 +8,7 @@ export const metadata: Metadata = {
     title: "Services",
     description:
         "Explore Inoma Digital services: strategy, design, development, marketing, SEO, and more — all aligned to measurable growth outcomes.",
+    alternates: { canonical: "/service" },
 };
 
 export default function ServicePage() {

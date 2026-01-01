@@ -178,11 +178,11 @@ const PortfolioArea = ({ items }: Props) => {
                     <div className="col-12">
                         <div className="d-flex justify-content-center mt-50">
                             <div className="td-btn-group">
-                                <Link className="td-btn-circle" href="https://www.behance.net/inoma" target="_blank" rel="noopener noreferrer" aria-label="View Behance Portfolio">
+                                <Link className="td-btn-circle" href="https://www.behance.net/inoma" target="_blank" rel="noopener noreferrer" aria-label="Behance Portfolio">
                                     <i className="fa-brands fa-behance"></i>
                                 </Link>
-                                <Link className="td-btn-2 td-btn-primary" href="https://www.behance.net/inoma" target="_blank" rel="noopener noreferrer">View Behance Portfolio</Link>
-                                <Link className="td-btn-circle" href="https://www.behance.net/inoma" target="_blank" rel="noopener noreferrer" aria-label="View Behance Portfolio">
+                                <Link className="td-btn-2 td-btn-primary" href="https://www.behance.net/inoma" target="_blank" rel="noopener noreferrer">Behance Portfolio</Link>
+                                <Link className="td-btn-circle" href="https://www.behance.net/inoma" target="_blank" rel="noopener noreferrer" aria-label="Behance Portfolio">
                                     <i className="fa-solid fa-arrow-right"></i>
                                 </Link>
                             </div>

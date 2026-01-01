@@ -8,6 +8,7 @@ import Awards from "@/components/pages/about/Awards";
 export const metadata: Metadata = {
     title: "About",
     description: "Learn about Inoma Digital — a strategy-led growth and creative partner helping brands design, build, and grow with clarity.",
+    alternates: { canonical: "/about" },
 };
 
 export default function AboutPage() {

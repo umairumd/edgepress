@@ -7,6 +7,7 @@ import Cta from "@/components/common/Cta";
 export const metadata: Metadata = {
   title: "Team",
   description: "Meet the people behind Inoma Digital — a strategy-led team focused on delivering measurable growth.",
+  alternates: { canonical: "/team" },
 };
 
 export default function TeamPage() {

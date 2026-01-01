@@ -28,7 +28,7 @@ const BlogArea = ({ posts }: BlogAreaProps) => {
             : [];
 
     return (
-        <div className="td-blog-area pt-140 pb-100">
+        <div className="td-blog-area pt-0 pb-100">
             <div className="container">
                 {!items.length ? (
                     <div className="row">

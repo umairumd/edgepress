@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import "react-toastify/dist/ReactToastify.css";
-import "swiper/swiper-bundle.css";
 import "@/styles/globals.scss";
 import LayoutWrapper from "@/components/common/LayoutWrapper";
 import { fontVarsClassName } from "./fonts";
@@ -19,9 +17,6 @@ export const metadata: Metadata = {
   icons: {
     icon: [{ url: "/inoma-favicon.jpg", type: "image/jpeg" }],
     apple: [{ url: "/inoma-favicon.jpg" }],
-  },
-  alternates: {
-    canonical: SITE_URL,
   },
   openGraph: {
     title: "Inoma Digital",

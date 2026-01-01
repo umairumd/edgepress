@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const AboutArea = () => {
     return (
@@ -17,7 +18,17 @@ const AboutArea = () => {
                     </div>
                     <div className="col-lg-5">
                         <div className="td-about-main-thumb mb-40 fix td-rounded-10 wow fadeInLeft" data-wow-delay=".5s" data-wow-duration="1s">
-                            <img data-speed=".9" className="w-100 td-rounded-10" src="/assets/img/about/main/thumb.jpg" alt="" />
+                            <Image
+                                data-speed=".9"
+                                className="w-100 td-rounded-10"
+                                src="/assets/img/about/main/thumb.jpg"
+                                alt="About Inoma Digital"
+                                width={650}
+                                height={650}
+                                priority
+                                sizes="(max-width: 992px) 100vw, 40vw"
+                                style={{ height: "auto" }}
+                            />
                         </div>
                     </div>
                     <div className="col-lg-7">

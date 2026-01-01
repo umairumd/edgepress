@@ -1,7 +1,6 @@
 "use client";
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
-import { ToastContainer } from "react-toastify";
 import dynamic from "next/dynamic";
 import ScrollToTop from "./ScrollToTop";
 import { VideoProvider } from "@/modals/VideoContext";
@@ -32,7 +31,6 @@ const LayoutWrapper = ({ children }: LayoutWrapperProps) => {
       {enableDesktopFx && <DesktopAnimations />}
       <ScrollToTop />
       {enableDesktopFx && <CustomCursor />}
-      <ToastContainer position="top-center" />
     </VideoProvider>
   );
 };
