@@ -342,6 +342,43 @@ img {
     font-weight: 600;
     letter-spacing: -0.03em;
 }
+
+.td-portfolio-entry-content {
+    font-size: 18px;
+    line-height: 1.75;
+    color: rgba(6, 37, 57, 0.78);
+}
+.td-portfolio-entry-content p {
+    margin: 0 0 16px;
+}
+.td-portfolio-entry-content p:last-child {
+    margin-bottom: 0;
+}
+.td-portfolio-entry-content h2,
+.td-portfolio-entry-content h3,
+.td-portfolio-entry-content h4 {
+    color: #062539;
+    margin: 22px 0 10px;
+    line-height: 1.25;
+}
+.td-portfolio-entry-content ul,
+.td-portfolio-entry-content ol {
+    padding-left: 1.2em;
+    margin: 0 0 16px;
+}
+.td-portfolio-entry-content li {
+    margin: 0 0 8px;
+}
+.td-portfolio-entry-content a {
+    color: #0277b5;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+.td-portfolio-entry-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+}
 .td-portfolio-entry-image-wrap {
     width: 100%;
 }

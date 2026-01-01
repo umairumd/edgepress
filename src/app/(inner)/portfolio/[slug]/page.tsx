@@ -65,6 +65,7 @@ export default async function PortfolioDetailsPage({ params }: { params: Promise
     const entryAlt = item.entryImage?.alt || item.featuredImage?.alt || stripHtml(item.title);
     const entryWidth = item.entryImage?.width || item.featuredImage?.width || 1600;
     const entryHeight = item.entryImage?.height || item.featuredImage?.height || 4000;
+    const contentHtml = (item.content || "").trim();
 
     const structuredData = {
         "@context": "https://schema.org",
@@ -85,6 +86,10 @@ export default async function PortfolioDetailsPage({ params }: { params: Promise
                             <div className="td-portfolio-entry-header mb-40">
                                 <h1 className="td-portfolio-entry-title" dangerouslySetInnerHTML={{ __html: item.title }} />
                             </div>
+
+                            {contentHtml ? (
+                                <div className="td-portfolio-entry-content mb-40" dangerouslySetInnerHTML={{ __html: contentHtml }} />
+                            ) : null}
 
                             {entryImage ? (
                                 <div className="td-portfolio-entry-image-wrap">
