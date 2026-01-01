@@ -43,7 +43,9 @@ const BlogSidebarArea = ({
                 {date && <span className="date mr-20">{formatDate(date)}</span>}
                 {category && <span className="category mr-20">{category}</span>}
               </div>
-              <h3 className="td-blog-sidebar-title mb-20" dangerouslySetInnerHTML={{ __html: title }} />
+              <h2 className="td-blog-sidebar-title mb-20">
+                <strong dangerouslySetInnerHTML={{ __html: title }} />
+              </h2>
               {contentHtml ? (
                 <div className="td-blog-sidebar-body td-wp-content" dangerouslySetInnerHTML={{ __html: contentHtml }} />
               ) : (
