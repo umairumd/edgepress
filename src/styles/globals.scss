@@ -597,6 +597,13 @@ img {
     line-height: 1.25;
     color: #062539;
 }
+
+/* Hide Featured Blogs sidebar block on phones */
+@media (max-width: 767px) {
+    .td-blog-sidebar-featured-wrap {
+        display: none !important;
+    }
+}
 .td-portfolio-entry-image-wrap {
     width: 100%;
 }

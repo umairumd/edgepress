@@ -63,7 +63,7 @@ const Sidebar = ({ featuredPosts, recentPosts, categories, currentUrl, shareTitl
         </div>
 
         {hasFeatured && (
-          <div className="td-blog-postbox-post td-blog-postbox-cetagory-list mb-60">
+          <div className="td-blog-postbox-post td-blog-postbox-cetagory-list mb-60 td-blog-sidebar-featured-wrap">
             <h5 className="td-blog-postbox-cetagory-title mb-25">Featured Blogs</h5>
             <div className="td-blog-sidebar-featured">
               {featuredPosts!.slice(0, 2).map((item) => {
