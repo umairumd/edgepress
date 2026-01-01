@@ -36,7 +36,10 @@ const Sidebar = ({ recentPosts, categories, currentUrl, shareTitle }: SidebarPro
       <div className="td-blog-postbox-widget">
         <div className="td-blog-postbox-info">
           <h4 className="td-blog-postbox-info-title">Inoma Digital</h4>
-          <p>We design, build, and grow digital experiences.</p>
+            <p>
+              A digital agency built on systems, clarity, and long-term results. Helping businesses through strategy,
+              design, technology, marketing and business growth.
+            </p>
           <div
             className="td-blog-postbox-info-social"
             style={{ display: "flex", gap: "14px", flexWrap: "wrap", alignItems: "center", marginBottom: "30px" }}
