@@ -771,6 +771,17 @@ img {
     object-fit: cover;
     display: block;
 }
+
+/* Home portfolio grid: reduce extreme desktop stagger margins so vertical gaps are consistent */
+@media (min-width: 992px) {
+    .td-portfolio-area .td-portfolio-6-thumb-wrap.mt-90,
+    .td-portfolio-area .td-portfolio-6-thumb-wrap.spacing,
+    .td-portfolio-area .td-portfolio-6-thumb-wrap.item-3,
+    .td-portfolio-area .td-portfolio-6-thumb-wrap.item-4,
+    .td-portfolio-area .td-portfolio-6-thumb-wrap.item-5 {
+        margin-top: 0 !important;
+    }
+}
 .td-testimonial-6-brands-slider .brands-logo img {
     width: 100% !important;
     height: auto !important;
