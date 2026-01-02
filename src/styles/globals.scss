@@ -1094,6 +1094,16 @@ img {
     background: #b8e9ff !important;
 }
 
+/* Home services list hover “bar” fill should be theme color (#0277b5) */
+.td-service-6-area .td-service-6-item::before {
+    background: #0277b5 !important;
+}
+
+/* Make the arrow inherit link color (pairs with Service.tsx currentColor strokes) */
+.td-service-6-area .td-service-6-btn a {
+    color: var(--td-heading-ink);
+}
+
 .td-section-6-subtitle::before {
     background: #b8e9ff !important;
 }
