@@ -63,12 +63,14 @@ const Portfolio = () => {
                 <div className="row">
                     <div className="col-lg-4">
                         <div className="td-portfolio-6-subtitle mb-20">
-                            <span className="td-section-6-subtitle">WHO WE ARE</span>
+                            <span className="td-section-6-subtitle">PORTFOLIO</span>
                         </div>
                     </div>
                     <div className="col-lg-8">
                         <div className="td-portfolio-6-title-wrap mb-50 ml-80">
-                            <h2 className="td-section-6-bigtitle td-text-opacity">WE&apos;VE DONE PERFECT WORKS</h2>
+                            <h2 className="td-section-6-bigtitle td-text-opacity" style={{ fontFamily: "var(--td-ff-heading)" }}>
+                                SOME OF OUR WORKS
+                            </h2>
                         </div>
                     </div>
                     {project_data.map((item, i) => (
