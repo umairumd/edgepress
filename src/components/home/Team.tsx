@@ -89,15 +89,18 @@ const Team = () => {
                                     <div className="td-team-6-wrap">
                                         <div className="td-team-6-thumb mb-20">
                                             <Link href="/team">
-                                                <img
-                                                    className="w-100"
-                                                    src={item.thumb}
-                                                    alt=""
-                                                    width={307}
-                                                    height={420}
-                                                    loading="lazy"
-                                                    decoding="async"
-                                                />
+                                                <picture>
+                                                    <source srcSet={item.thumb.replace(/\.jpg$/i, ".webp")} type="image/webp" />
+                                                    <img
+                                                        className="w-100"
+                                                        src={item.thumb}
+                                                        alt=""
+                                                        width={307}
+                                                        height={420}
+                                                        loading="lazy"
+                                                        decoding="async"
+                                                    />
+                                                </picture>
                                             </Link>
                                         </div>
                                         <div className="td-team-6-content">

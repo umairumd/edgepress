@@ -33,6 +33,7 @@ const wpMediaHosts = Array.from(
 
 const nextConfig: NextConfig = {
   images: {
+    formats: ["image/avif", "image/webp"],
     remotePatterns: wpMediaHosts.length
       ? wpMediaHosts.flatMap((hostname) => [
           { protocol: "https", hostname },
