@@ -106,7 +106,21 @@ const Hero = () => {
     };
 
     return (
-        <div className="td-hero-area td-hero-6-spacing include-bg" style={{ backgroundImage: `url(/assets/img/hero/hero-6/bg.jpg)` }}>
+        <div className="td-hero-area td-hero-6-spacing p-relative">
+            {/* LCP background image: keep it discoverable in HTML + high priority (instead of CSS background-image). */}
+            <picture>
+                <source srcSet="/assets/img/hero/hero-6/bg.webp" type="image/webp" />
+                <img
+                    className="td-hero-6-bg-img"
+                    src="/assets/img/hero/hero-6/bg.jpg"
+                    alt=""
+                    width={1920}
+                    height={1324}
+                    loading="eager"
+                    fetchPriority="high"
+                    decoding="async"
+                />
+            </picture>
             <div className="container">
                 <div className="td-hero-6-top pb-45 p-relative z-index-1">
                     <div className="td-hero-6-line">

@@ -1601,6 +1601,20 @@ main.td-has-cta-footer + footer .td-footer-area {
     }
 }
 
+// Home hero background image as real <img> (for LCP discovery) but visually identical to background-size: cover
+.td-hero-area.td-hero-6-spacing {
+    overflow: hidden;
+}
+
+.td-hero-6-bg-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+}
+
 // Home hero tags: reduce spacing between items (template uses space-around which spreads too much with 5 items)
 .td-hero-6-tag ul {
     justify-content: center !important;
