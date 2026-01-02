@@ -802,6 +802,25 @@ img {
     display: block;
 }
 
+/* Home: Clients Feedback avatar "pill" should be horizontal + centered on mobile */
+@media (max-width: 767px) {
+    .td-testimonial-6-thumb-active {
+        float: none !important;
+        margin: 24px auto 0 !important;
+        width: auto !important; /* override inline width: 110px */
+        display: flex;
+        justify-content: center;
+    }
+    .td-testimonial-6-thumb-active .swiper-wrapper {
+        flex-direction: row !important;
+        width: auto !important;
+        padding: 14px 16px !important;
+        gap: 14px !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+}
+
 /* Portfolio page: make breadcrumb title a bit smaller (scoped) */
 .td-breadcrumb--portfolio .td-section-page-title.td-section-page-bigtitle {
     font-size: clamp(34px, 4.1vw, 58px) !important;
