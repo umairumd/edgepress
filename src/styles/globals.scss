@@ -784,8 +784,11 @@ img {
 @media (min-width: 992px) {
     /* template: spacing=340px, item-4=750px, item-5=-355px — these create uneven vertical gaps */
     .td-portfolio-area .td-portfolio-6-thumb-wrap.spacing { margin-top: 240px !important; }
-    .td-portfolio-area .td-portfolio-6-thumb-wrap.item-4 { margin-top: 560px !important; }
+    /* item-4 was still creating a visibly larger vertical gap */
+    .td-portfolio-area .td-portfolio-6-thumb-wrap.item-4 { margin-top: 430px !important; }
     .td-portfolio-area .td-portfolio-6-thumb-wrap.item-5 { margin-top: -260px !important; }
+    /* item-3 negative right margin makes its card appear larger (aspect-ratio scales with width) */
+    .td-portfolio-area .td-portfolio-6-thumb-wrap.item-3 { margin-right: 0 !important; }
 }
 .td-testimonial-6-brands-slider .brands-logo img {
     width: 100% !important;
