@@ -80,7 +80,7 @@ const Service = () => {
                             </div>
                         ))}
                         <div className="d-flex justify-content-center mt-50">
-                            <Link className="td-btn-2 td-btn-primary" href="/service">
+                            <Link className="td-btn-12 td-home-services-cta" href="/service">
                                 Explore All Services
                             </Link>
                         </div>
