@@ -759,6 +759,18 @@ img {
     height: auto !important;
     display: block;
 }
+
+/* Home portfolio thumbs: enforce 4:3 cover crop without changing layout positioning */
+.td-portfolio-6-thumb .roun {
+    aspect-ratio: 4 / 3;
+    width: 100%;
+}
+.td-portfolio-6-thumb .roun img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
+    display: block;
+}
 .td-testimonial-6-brands-slider .brands-logo img {
     width: 100% !important;
     height: auto !important;
