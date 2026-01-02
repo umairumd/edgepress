@@ -30,7 +30,7 @@ const Choose = () => {
                             <div className="td-chose-3-list mb-35">
                                 <h3 className="mb-20 td-home-value-title">
                                     <i className="fa-solid fa-bullseye td-home-value-icon" aria-hidden="true"></i>
-                                    We drive measurable outcomes.
+                                    Measurable Outcomes
                                 </h3>
                                 <p>
                                     Every decision we make is tied to business goals from visibility and leads to conversions and retention. We focus on what moves the needle, not vanity metrics.
@@ -39,7 +39,7 @@ const Choose = () => {
                             <div className="td-chose-3-list  mb-35">
                                 <h3 className="mb-20 td-home-value-title">
                                     <i className="fa-solid fa-handshake td-home-value-icon" aria-hidden="true"></i>
-                                    We work as strategic partners.
+                                    Strategic Partners
                                 </h3>
                                 <p>
                                     We collaborate closely with our clients, bringing structure, logic, and clarity to every engagement. No guesswork. No disconnected execution.
@@ -48,7 +48,7 @@ const Choose = () => {
                             <div className="td-chose-3-list">
                                 <h3 className="mb-20 td-home-value-title">
                                     <i className="fa-solid fa-gears td-home-value-icon" aria-hidden="true"></i>
-                                    Built on operational discipline.
+                                    Operational Discipline
                                 </h3>
                                 <p>
                                     With defined processes, clear ownership, and experienced leadership, we ensure consistent delivery across strategy, design, development, and marketing.
