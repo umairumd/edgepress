@@ -760,6 +760,20 @@ img {
     display: block;
 }
 
+/* Home "Choose" value blocks: icon before heading */
+.td-home-value-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.td-home-value-icon {
+    color: #0277b5;
+    font-size: 18px;
+    line-height: 1;
+    flex: 0 0 auto;
+    transform: translateY(-1px);
+}
+
 /* Home portfolio thumbs: enforce 4:3 cover crop without changing layout positioning */
 .td-portfolio-6-thumb .roun {
     aspect-ratio: 4 / 3;

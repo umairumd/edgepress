@@ -8,7 +8,7 @@ const Choose = () => {
                     <div className="col-lg-7">
                         <div className="td-chose-6-title-wrap">
                             <h2 className="td-section-6-title mb-70 td-text-opacity">
-                                BUILT TO REPLACE CHAOS WITH CLARITY.
+                            BUILT FOR BUSINESSES THAT THINK LONG-TERM.
                             </h2>
                         </div>
                     </div>
@@ -28,19 +28,28 @@ const Choose = () => {
                     <div className="col-xl-5 col-lg-6">
                         <div className="td-chose-3-list-wrap td-chose-6-list-wrap mr-110 mb-30 wow fadeInRight" data-wow-delay=".4s" data-wow-duration="1s">
                             <div className="td-chose-3-list mb-35">
-                                <h3 className="mb-20">We drive measurable outcomes.</h3>
+                                <h3 className="mb-20 td-home-value-title">
+                                    <i className="fa-solid fa-bullseye td-home-value-icon" aria-hidden="true"></i>
+                                    We drive measurable outcomes.
+                                </h3>
                                 <p>
-                                    Every decision we make is tied to business goals — from visibility and leads to conversions and retention. We focus on what moves the needle, not vanity metrics.
+                                    Every decision we make is tied to business goals from visibility and leads to conversions and retention. We focus on what moves the needle, not vanity metrics.
                                 </p>
                             </div>
                             <div className="td-chose-3-list  mb-35">
-                                <h3 className="mb-20">We work as strategic partners.</h3>
+                                <h3 className="mb-20 td-home-value-title">
+                                    <i className="fa-solid fa-handshake td-home-value-icon" aria-hidden="true"></i>
+                                    We work as strategic partners.
+                                </h3>
                                 <p>
                                     We collaborate closely with our clients, bringing structure, logic, and clarity to every engagement. No guesswork. No disconnected execution.
                                 </p>
                             </div>
                             <div className="td-chose-3-list">
-                                <h3 className="mb-20">Built on operational discipline.</h3>
+                                <h3 className="mb-20 td-home-value-title">
+                                    <i className="fa-solid fa-gears td-home-value-icon" aria-hidden="true"></i>
+                                    Built on operational discipline.
+                                </h3>
                                 <p>
                                     With defined processes, clear ownership, and experienced leadership, we ensure consistent delivery across strategy, design, development, and marketing.
                                 </p>
