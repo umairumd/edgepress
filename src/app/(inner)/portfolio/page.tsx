@@ -19,9 +19,12 @@ export default async function PortfolioPage() {
           
                 title={
                     <>
-                        Our Work &{" "}
-                        <span style={{ fontFamily: "var(--td-ff-dm)", fontStyle: "italic", fontWeight: 400 }}>
-                            Case Studies
+                        Where Strategy Meets{" "}
+                        <span
+                            className="td-accent-blue"
+                            style={{ fontFamily: "var(--td-ff-dm)", fontStyle: "italic", fontWeight: 400 }}
+                        >
+                            Execution
                         </span>
                     </>
                 }
