@@ -807,13 +807,14 @@ img {
     .td-testimonial-6-thumb-active {
         float: none !important;
         margin: 24px auto 0 !important;
-        width: auto !important; /* override inline width: 110px */
-        display: flex;
+        width: fit-content !important; /* shrink-wrap pill to avatars */
+        max-width: calc(100vw - 32px);
+        display: inline-flex;
         justify-content: center;
     }
     .td-testimonial-6-thumb-active .swiper-wrapper {
         flex-direction: row !important;
-        width: auto !important;
+        width: fit-content !important;
         padding: 14px 16px !important;
         gap: 14px !important;
         justify-content: center !important;
