@@ -52,11 +52,6 @@ const formatSerial = (num: number): string => {
 };
 
 const Portfolio = () => {
-    const sizeFor = (src: string) => {
-        if (src.includes("thumb-3") || src.includes("thumb-4")) return { w: 562, h: 570 };
-        return { w: 450, h: 570 };
-    };
-
     return (
         <div className="td-portfolio-area pt-150 pb-115">
             <div className="container">
@@ -80,13 +75,11 @@ const Portfolio = () => {
                                 <div className="td-portfolio-6-thumb ml-110">
                                     <div className="roun fix mb-25 p-relative">
                                         <Image
-                                            className="w-100"
                                             src={item.thumb}
                                             alt=""
-                                            width={sizeFor(item.thumb).w}
-                                            height={sizeFor(item.thumb).h}
+                                            fill
                                             sizes="(max-width: 991px) 100vw, 50vw"
-                                            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                                            style={{ objectFit: "cover" }}
                                         />
                                         <Link href="/portfolio" className="td-portfolio-6-btn" aria-label="View portfolio">
                                             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">

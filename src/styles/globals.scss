@@ -765,6 +765,14 @@ img {
     aspect-ratio: 4 / 3;
     width: 100%;
 }
+/* Make next/image fill the 4:3 wrapper consistently */
+.td-portfolio-6-thumb .roun > span {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    position: absolute !important;
+    inset: 0 !important;
+}
 .td-portfolio-6-thumb .roun img {
     width: 100% !important;
     height: 100% !important;
