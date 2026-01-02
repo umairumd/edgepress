@@ -59,21 +59,22 @@ const About = () => {
                                     sizes="177px"
                                     style={{ height: "auto" }}
                                 />
-                                <p className="mb-25">Driven by a passion for innovation, we specialize in<br />
-                                    delivering top-quality design solutions</p>
+                                <p className="mb-25">
+                                    Built by experienced founders and executed by an in-house team across strategy, design, development, and marketing.
+                                </p>
                             </div>
                             <div className="td-about-6-author-count">
                                 <div className="row">
                                     <div className="col-lg-6 col-md-6 col-sm-6">
                                         <div className="td-about-6-author-single">
-                                            <h2 className="mb-10">98%</h2>
+                                            <h2 className="mb-10">96%</h2>
                                             <p>Clients Satisfied and<br /> Repeating</p>
                                         </div>
                                     </div>
                                     <div className="col-lg-6 col-md-6 col-sm-6">
                                         <div className="td-about-6-author-single">
-                                            <h2 className="mb-10">125+</h2>
-                                            <p>Projects Completed in<br /> 24 Countries</p>
+                                            <h2 className="mb-10">625+</h2>
+                                            <p>Projects Completed in<br /> Worldwide</p>
                                         </div>
                                     </div>
                                 </div>
