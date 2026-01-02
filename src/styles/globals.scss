@@ -667,10 +667,14 @@ img {
     z-index: 2;
 }
 .td-services-cards-area .td-services-cards-icon {
-    font-size: 116px; /* 2x larger */
+    font-size: 58px; /* slightly larger */
     line-height: 1;
-    color: #0277b5;
-    opacity: 0.3;
+    color: #1c1d1f;
+}
+
+/* Flip colors for service grid: brand blue titles + black icons */
+.td-services-cards-area .td-service-process-item .title {
+    color: #0277b5 !important;
 }
 
 /* Blog listing: typography-first hero (no hero image) */
