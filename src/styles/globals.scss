@@ -782,6 +782,12 @@ img {
 
 /* Home portfolio grid: keep the original staggered layout, but reduce the biggest desktop offsets */
 @media (min-width: 992px) {
+    /* Keep thumbnail boxes the same size across items (some wrappers use extra margins that otherwise change width/height). */
+    .td-portfolio-area .td-portfolio-6-thumb {
+        width: 450px;
+        max-width: 100%;
+    }
+
     /* template: spacing=340px, item-4=750px, item-5=-355px — these create uneven vertical gaps */
     .td-portfolio-area .td-portfolio-6-thumb-wrap.spacing { margin-top: 240px !important; }
     /* item-4 was still creating a visibly larger vertical gap */
