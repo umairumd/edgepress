@@ -669,12 +669,8 @@ img {
 .td-services-cards-area .td-services-cards-icon {
     font-size: 58px; /* slightly larger */
     line-height: 1;
-    color: #1c1d1f;
-}
-
-/* Flip colors for service grid: brand blue titles + black icons */
-.td-services-cards-area .td-service-process-item .title {
-    color: #0277b5 !important;
+    /* Match the template “number” grey */
+    color: var(--td-grey-1);
 }
 
 /* Blog listing: typography-first hero (no hero image) */
