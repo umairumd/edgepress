@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import MobileMenu from "./MobileMenu";
 
 interface OffcanvasProps {
@@ -17,13 +18,13 @@ const Offcanvas = ({ offCanvas, setOffCanvas }: OffcanvasProps) => {
                     </button>
                     <div className="nav-logo">
                         <Link href="/">
-                            <img
-                                data-width="96"
-                                width={666}
-                                height={175}
+                            <Image
                                 src="/assets/img/logo/inoma-logo-light.png"
                                 alt="Inoma Digital"
-                                decoding="async"
+                                width={245}
+                                height={64}
+                                sizes="170px"
+                                style={{ width: "auto", height: "auto" }}
                             />
                         </Link>
                     </div>

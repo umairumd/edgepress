@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import NavMenu from "./headers/Menu/NavMenu";
 import Offcanvas from "./headers/Menu/Offcanvas";
@@ -61,11 +62,29 @@ const HeaderSix = ({ variant = "home" }: HeaderSixProps) => {
                                 <div className="logo">
                                     <Link className="logo-1" href="/">
                                         {/* logo-1 = shown on non-sticky (dark header on Home) */}
-                                        <img data-width="96" width={666} height={175} src="/assets/img/logo/inoma-logo-dark.png" alt="Inoma Digital" decoding="async" />
+                                        <Image
+                                            src="/assets/img/logo/inoma-logo-dark.png"
+                                            alt="Inoma Digital"
+                                            width={245}
+                                            height={64}
+                                            priority
+                                            fetchPriority="high"
+                                            sizes="(max-width: 991px) 140px, 170px"
+                                            style={{ width: "auto", height: "auto" }}
+                                        />
                                     </Link>
                                     <Link className="logo-2 d-none" href="/">
                                         {/* logo-2 = shown on sticky/white header */}
-                                        <img data-width="96" width={666} height={175} src="/assets/img/logo/inoma-logo-light.png" alt="Inoma Digital" decoding="async" />
+                                        <Image
+                                            src="/assets/img/logo/inoma-logo-light.png"
+                                            alt="Inoma Digital"
+                                            width={245}
+                                            height={64}
+                                            priority
+                                            fetchPriority="high"
+                                            sizes="(max-width: 991px) 140px, 170px"
+                                            style={{ width: "auto", height: "auto" }}
+                                        />
                                     </Link>
                                 </div>
                             </div>

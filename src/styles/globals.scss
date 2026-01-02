@@ -800,6 +800,19 @@ img {
     width: auto;
 }
 
+/* Next/Image wraps logos in a span; ensure it behaves like the old <img> for sizing rules */
+.td-header-6-wrapper .logo > span,
+.tdmobile__menu .nav-logo > span {
+    display: inline-block !important;
+    max-width: 170px !important;
+}
+@media (max-width: 991px) {
+    .td-header-6-wrapper .logo > span,
+    .tdmobile__menu .nav-logo > span {
+        max-width: 140px !important;
+    }
+}
+
 /* Brands strip (Service page): keep Lighthouse sizing, but render at the original visual size */
 .td-brands-7-item .td-brand-logo {
     height: 56px !important; /* upscale small intrinsic PNGs (balanced) */
@@ -1603,16 +1616,23 @@ main.td-has-cta-footer + footer .td-footer-area {
 
 // Home hero background image as real <img> (for LCP discovery) but visually identical to background-size: cover
 .td-hero-area.td-hero-6-spacing {
-    overflow: hidden;
+    // Ensure the absolute bg image is positioned relative to the hero (don’t rely on utility classes being present).
+    position: relative !important;
+    z-index: 0;
+    // Avoid any white “gap” on slow mobile loads before the image paints.
+    background-color: #000;
 }
 
 .td-hero-6-bg-img {
     position: absolute;
     inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 0;
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    // Always behind hero content/slider across breakpoints.
+    z-index: -1;
+    pointer-events: none;
 }
 
 // Home hero tags: reduce spacing between items (template uses space-around which spreads too much with 5 items)
