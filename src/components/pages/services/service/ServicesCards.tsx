@@ -14,19 +14,19 @@ const cards: ServiceCard[] = [
     id: 1,
     title: "Business Strategy",
     desc: "Clarity-first planning for measurable growth.",
-    icon: <i className="fa-solid fa-chart-line" aria-hidden="true" />,
+    icon: <i className="fa-solid fa-chess-knight" aria-hidden="true" />,
   },
   {
     id: 2,
     title: "UI / UX Design",
     desc: "User-first design that improves conversion.",
-    icon: <i className="fa-solid fa-pen-ruler" aria-hidden="true" />,
+    icon: <i className="fa-solid fa-compass-drafting" aria-hidden="true" />,
   },
   {
     id: 3,
     title: "Web Development",
     desc: "Fast, scalable sites built to perform.",
-    icon: <i className="fa-solid fa-code" aria-hidden="true" />,
+    icon: <i className="fa-solid fa-database" aria-hidden="true" />,
   },
   {
     id: 4,
@@ -50,7 +50,7 @@ const cards: ServiceCard[] = [
     id: 7,
     title: "SEO Services",
     desc: "Sustainable traffic that compounds.",
-    icon: <i className="fa-solid fa-magnifying-glass" aria-hidden="true" />,
+    icon: <i className="fa-solid fa-magnifying-glass-chart" aria-hidden="true" />,
   },
   {
     id: 8,
