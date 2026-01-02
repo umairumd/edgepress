@@ -609,8 +609,8 @@ img {
 
 /* Services page: match ServiceProcess card visuals, add only a very subtle hover */
 .td-services-cards-area {
-    background: #b8e9ff;
-    padding-bottom: 80px;
+    background: transparent;
+    padding-bottom: 0;
 }
 .td-services-cards-area .row.gx-0 {
     --bs-gutter-x: 0;
@@ -627,6 +627,7 @@ img {
     flex: 1 1 auto;
     border-radius: 0; /* remove rounding so cards touch cleanly */
     margin: 0;
+    background: #b8e9ff;
     /* Make borders deterministic so seams are exactly 1px (no double border / overlap artifacts) */
     border: 1px solid rgba(6, 37, 57, 0.10);
     transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
