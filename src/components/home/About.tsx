@@ -20,9 +20,9 @@ const About = () => {
                                 
                                 Digital Execution
                             </h2>
-                            <p className="td-section-6-text">Some definitions of marketing highlight marketing&apos;s ability to produce value to shareholders
-                                of the firm as well. In this context, marketing can be defined as &quot;the management
-                                that seeks to maximise returns to shareholders</p>
+                            <p className="td-section-6-text">
+                                Inoma Digital is a full-service digital agency helping businesses build, market, and scale with clarity. We bring strategy, design, development, and marketing together under one system — so everything works toward real business outcomes.
+                            </p>
                         </div>
                     </div>
                     <div className="col-lg-6">
