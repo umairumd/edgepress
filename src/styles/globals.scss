@@ -1104,6 +1104,18 @@ img {
     color: var(--td-heading-ink);
 }
 
+/* Home Services: "Explore All Services" button should use light blue theme */
+.td-service-6-area .td-btn-2 {
+    background: #b8e9ff !important;
+    border-color: #b8e9ff !important;
+    color: #1c1d1f !important;
+}
+.td-service-6-area .td-btn-2:hover {
+    background: #0277b5 !important;
+    border-color: #0277b5 !important;
+    color: #fff !important;
+}
+
 .td-section-6-subtitle::before {
     background: #b8e9ff !important;
 }
