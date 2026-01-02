@@ -784,7 +784,7 @@ img {
 @media (min-width: 992px) {
     /* Keep thumbnail boxes the same size across items (some wrappers use extra margins that otherwise change width/height). */
     .td-portfolio-area .td-portfolio-6-thumb {
-        width: 520px; /* ~15% bigger than 450px */
+        width: 495px; /* ~5% smaller than 520px */
         max-width: 100%;
     }
 
