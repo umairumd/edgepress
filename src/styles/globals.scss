@@ -18,6 +18,8 @@ html, body {
     --td-ff-rethink: var(--font-rethink-sans), serif !important;
     --td-ff-bellefair: var(--font-bellefair), serif !important;
     --td-ff-roboto: var(--font-roboto), serif !important;
+    /* User request: site-wide heading ink should be near-black (not blue) */
+    --td-heading-ink: #1c1d1f;
 }
 
 // Ensure images don't cause overflow
@@ -93,7 +95,7 @@ img {
 }
 .td-contact-map-skeleton__title {
     font-weight: 700;
-    color: #062539;
+    color: var(--td-heading-ink);
     margin-bottom: 8px;
 }
 .td-contact-map-skeleton__link {
@@ -177,7 +179,7 @@ img {
     font-style: normal !important;
     font-weight: 600 !important;
     font-size: 36px !important;
-    color: #062539 !important;
+    color: var(--td-heading-ink) !important;
     letter-spacing: 0 !important;
     text-transform: none !important;
 }
@@ -381,7 +383,7 @@ img {
 .td-portfolio-entry-content h2,
 .td-portfolio-entry-content h3,
 .td-portfolio-entry-content h4 {
-    color: #062539;
+    color: var(--td-heading-ink);
     margin: 22px 0 10px;
     line-height: 1.25;
 }
@@ -420,7 +422,7 @@ img {
 .td-wp-content h4 {
     margin: 22px 0 10px;
     line-height: 1.25;
-    color: #062539;
+    color: var(--td-heading-ink);
 }
 /* Restore bullets/numbers (templates often set list-style: none globally) */
 .td-wp-content ul,
@@ -486,7 +488,7 @@ img {
     letter-spacing: -0.03em;
     line-height: 1.05;
     font-size: clamp(36px, 4.3vw, 62px);
-    color: #062539;
+    color: var(--td-heading-ink);
     margin: 0 0 14px;
 }
 
@@ -538,7 +540,7 @@ img {
     letter-spacing: -0.03em;
     line-height: 1.05;
     font-size: clamp(26px, 3.1vw, 46px);
-    color: #062539;
+    color: var(--td-heading-ink);
 }
 
 .td-blog-detail-category-pill {
@@ -595,7 +597,7 @@ img {
     font-weight: 700;
     font-size: 18px;
     line-height: 1.25;
-    color: #062539;
+    color: var(--td-heading-ink);
 }
 
 /* Hide Featured Blogs sidebar block on phones */
