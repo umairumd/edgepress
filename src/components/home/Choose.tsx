@@ -38,7 +38,7 @@ const Choose = () => {
                             </div>
                             <div className="td-chose-3-list  mb-35">
                                 <h3 className="mb-20 td-home-value-title">
-                                    <i className="fa-solid fa-handshake td-home-value-icon" aria-hidden="true"></i>
+                                    <i className="fa-solid fa-people-group td-home-value-icon" aria-hidden="true"></i>
                                     Strategic Partners
                                 </h3>
                                 <p>
