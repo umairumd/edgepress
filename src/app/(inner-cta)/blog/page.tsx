@@ -22,9 +22,9 @@ export default async function BlogPage() {
             <div className="col-lg-10">
               <div className="td-about-main-wrapper pb-40">
                 <h1 className="td-section-page-title td-title-anim mb-20">
-                  Insights on Growth,
+                  Insights On
                   <br />
-                  <span style={{ fontFamily: "var(--td-ff-dm)", fontStyle: "italic", fontWeight: 400 }}> Strategy & Digital Execution</span>
+                  <span style={{ fontFamily: "var(--td-ff-dm)", fontStyle: "italic", fontWeight: 400 }}>Strategy & Execution</span>
                 </h1>
                 <p className="td-about-body mb-0">
                   Practical articles on marketing, design, development, and business strategy written to help founders and teams make better decisions, not chase trends.
