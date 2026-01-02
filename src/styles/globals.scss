@@ -1048,6 +1048,11 @@ img {
     margin: 20px 0;
 }
 
+/* Footer background: keep original dark-blue theme while headings site-wide use #1c1d1f */
+.td-footer-area.td-footer-6-wrap {
+    --td-theme-3: #062539;
+}
+
 /* Color overrides */
 :root {
     /* Template uses --td-theme-3 for many headings/titles; user wants headings back to near-black */
