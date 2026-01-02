@@ -769,18 +769,28 @@ img {
     max-width: 100%;
     padding: 8px 14px;
     border-radius: 999px;
-    border: 1px solid rgba(2, 119, 181, 0.18);
+    border: none;
     background: rgba(184, 233, 255, 0.22);
     box-shadow: 0 6px 14px rgba(6, 37, 57, 0.05);
     line-height: 1.1;
 }
 .td-home-value-icon {
     color: #0277b5;
-    /* Smaller + cleaner (no white chip) */
-    font-size: clamp(18px, 2.4vw, 26px);
+    /* Slightly smaller + consistent sizing across icons */
+    font-size: 22px;
     line-height: 1;
     flex: 0 0 auto;
     transform: translateY(-0.5px);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25em; /* consistent visual footprint */
+}
+
+@media (max-width: 575px) {
+    .td-home-value-icon {
+        font-size: 20px;
+    }
 }
 
 /* Prevent awkward wrapping on desktop; allow wrap on small screens */

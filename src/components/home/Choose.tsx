@@ -29,7 +29,7 @@ const Choose = () => {
                         <div className="td-chose-3-list-wrap td-chose-6-list-wrap mr-110 mb-30 wow fadeInRight" data-wow-delay=".4s" data-wow-duration="1s">
                             <div className="td-chose-3-list mb-35">
                                 <h3 className="mb-20 td-home-value-title">
-                                    <i className="fa-solid fa-bullseye td-home-value-icon" aria-hidden="true"></i>
+                                    <i className="fa-solid fa-fw fa-bullseye td-home-value-icon" aria-hidden="true"></i>
                                     Measurable Outcomes
                                 </h3>
                                 <p>
@@ -38,7 +38,7 @@ const Choose = () => {
                             </div>
                             <div className="td-chose-3-list  mb-35">
                                 <h3 className="mb-20 td-home-value-title">
-                                    <i className="fa-solid fa-users td-home-value-icon" aria-hidden="true"></i>
+                                    <i className="fa-solid fa-fw fa-users td-home-value-icon" aria-hidden="true"></i>
                                     Strategic Partners
                                 </h3>
                                 <p>
@@ -47,7 +47,7 @@ const Choose = () => {
                             </div>
                             <div className="td-chose-3-list">
                                 <h3 className="mb-20 td-home-value-title">
-                                    <i className="fa-solid fa-gears td-home-value-icon" aria-hidden="true"></i>
+                                    <i className="fa-solid fa-fw fa-gears td-home-value-icon" aria-hidden="true"></i>
                                     Operational Discipline
                                 </h3>
                                 <p>
