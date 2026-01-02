@@ -13,25 +13,27 @@ interface DataType {
 const counter_data: DataType[] = [
     {
         id: 1,
-        count: 25,
-        count_text: "k",
-        title: (<>Happy<br /> customers</>),
+        count: 625,
+        count_text: "+",
+        title: (<>Projects<br /> Delivered</>),
     },
     {
         id: 2,
-        count: 11,
-        count_text: "k",
-        title: (<>Projects<br /> completed</>),
+        count: 90,
+        count_text: "%",
+        title: (<>Client Retention<br /> Rate</>),
     },
     {
         id: 3,
-        count: 20,
-        title: (<>Awards <br /> achievement</>),
+        count: 25,
+        count_text: "+",
+        title: (<>Industries<br /> Served</>),
     },
     {
         id: 4,
-        count: 25,
-        title: (<>Years of <br /> experience</>),
+        count: 8,
+        count_text: "+",
+        title: (<>Years of<br /> Experience</>),
     },
 ];
 
@@ -47,18 +49,15 @@ const Counter = () => {
                 <div className="row align-items-end mb-70">
                     <div className="col-lg-8">
                         <div className="td-service-6-title-wrap mb-30">
-                            <span className="td-section-6-subtitle mb-20 d-inline-block">AWESOME FUNFACT</span>
-                            <h2 className="td-section-6-bigtitle td-text-opacity">WHAT WE<br /> ARE ACHIEVE</h2>
+                            <span className="td-section-6-subtitle mb-20 d-inline-block">OUR TRACK RECORD</span>
+                            <h2 className="td-section-6-bigtitle td-text-opacity">WHAT WE&apos;VE<br /> BUILT SO FAR</h2>
                         </div>
                     </div>
                     <div className="col-lg-4">
                         <div className="td-service-6-title-text mr-80 mb-35">
-                            <p className="td-section-6-text mb-30">We&apos;re a digital production studio
-                                fueled by passion and innovation. </p>
-                            <p className="td-section-6-text">Our mission is to revolutionize
-                                creative work for companies with
-                                style and substance. work intersect in
-                                a meaningful way lifestyle, and our own</p>
+                            <p className="td-section-6-text mb-0">
+                                Our progress is measured by consistency, long-term client relationships, and work that compounds over time. Every number here reflects real execution, real businesses, and real outcomes.
+                            </p>
                         </div>
                     </div>
                 </div>
