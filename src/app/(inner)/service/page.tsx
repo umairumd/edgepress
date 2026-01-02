@@ -16,7 +16,7 @@ export default function ServicePage() {
         <main>
             <BreadcrumbTwo
                 sub_title="STRATEGY-DRIVEN PARTNER"
-                title={<>Experience <br /> The <span>Best Service </span></>}
+                title={<>Experience <br /> the <span className="td-accent-blue">Best Service </span></>}
                 desc="We deliver a complete range of digital services designed to support long-term business growth. Our approach combines strategy, creativity, and execution to help brands build a strong presence, attract the right audience, and scale with confidence. Every service we offer is aligned with measurable outcomes and real business needs."
             />
             <ServiceArea />
