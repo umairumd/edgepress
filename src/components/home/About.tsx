@@ -12,7 +12,10 @@ const About = () => {
                     </div>
                     <div className="col-lg-7">
                         <div className="td-about-6-title-wrap mb-50">
-                            <h2 className="td-section-6-title mb-20 td-text-opacity">
+                            <h2
+                                className="td-section-6-title mb-20 td-text-opacity"
+                                style={{ fontFamily: "var(--td-ff-heading)" }}
+                            >
                                 Where Business Strategy Meets
                                 
                                 Digital Execution
