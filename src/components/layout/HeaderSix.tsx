@@ -32,7 +32,7 @@ const HeaderSix = ({ variant = "home" }: HeaderSixProps) => {
             ro?.disconnect();
             window.removeEventListener("resize", measure);
         };
-    }, [sticky]);
+    }, []);
 
     const wrapperClassName = useMemo(() => {
         const base = [

@@ -1,28 +1,38 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import UseSticky from "@/hooks/UseSticky";
 
 const ScrollToTop = () => {
 
    const { sticky }: { sticky: boolean } = UseSticky();
    const [showScroll, setShowScroll] = useState(false);
-
-   const checkScrollTop = useCallback(() => {
-      if (window.pageYOffset > 400 && !showScroll) {
-         setShowScroll(true);
-      } else if (window.pageYOffset <= 400 && showScroll) {
-         setShowScroll(false);
-      }
-   }, [showScroll]);
+   const rafRef = useRef<number | null>(null);
 
    const scrollTop = () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
    };
 
    useEffect(() => {
-      window.addEventListener("scroll", checkScrollTop);
-      return () => window.removeEventListener("scroll", checkScrollTop);
-   }, [checkScrollTop]);
+      const onScroll = () => {
+         if (rafRef.current != null) return;
+         rafRef.current = requestAnimationFrame(() => {
+            rafRef.current = null;
+            const y = window.pageYOffset;
+            setShowScroll((prev) => {
+               const next = y > 400;
+               return prev === next ? prev : next;
+            });
+         });
+      };
+
+      window.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+      return () => {
+         window.removeEventListener("scroll", onScroll as EventListener);
+         if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
+         rafRef.current = null;
+      };
+   }, []);
 
    return (
       <button

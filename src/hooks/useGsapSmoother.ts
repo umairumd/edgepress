@@ -18,9 +18,22 @@ const useGsapSmoother = () => {
       if (wrapper && content) {
          // Enable CSS smooth scrolling as a free alternative
          document.documentElement.style.scrollBehavior = "smooth";
-         
-         // Use GSAP ScrollTrigger for scroll-based animations
-         ScrollTrigger.refresh();
+
+         // Avoid immediate forced reflow during initial load; refresh on next frame / when idle.
+         const refresh = () => {
+            try {
+               if (ScrollTrigger.getAll().length) ScrollTrigger.refresh();
+            } catch {
+               // ignore
+            }
+         };
+         requestAnimationFrame(() => {
+            // Prefer idle time so it doesn't compete with LCP work.
+            const ric = (window as unknown as { requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => void })
+               .requestIdleCallback;
+            if (typeof ric === "function") ric(refresh, { timeout: 1500 });
+            else setTimeout(refresh, 0);
+         });
       }
 
       // Handle scroll-to-bottom button if it exists

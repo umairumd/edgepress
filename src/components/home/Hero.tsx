@@ -19,10 +19,27 @@ const banner_slider: string[] = [
 
 const Hero = () => {
     const swiperRef = useRef<SwiperType | null>(null);
+    const rafUpdateRef = useRef<number | null>(null);
     const dimsFor = (src: string) => {
         // Use real asset dimensions to avoid CLS.
         if (src.endsWith("/thumb.jpg")) return { w: 304, h: 390 };
         return { w: 196, h: 260 };
+    };
+
+    const scheduleSwiperUpdate = () => {
+        if (typeof window === "undefined") return;
+        if (rafUpdateRef.current != null) return;
+        rafUpdateRef.current = window.requestAnimationFrame(() => {
+            rafUpdateRef.current = null;
+            const s = swiperRef.current;
+            if (!s || s.destroyed) return;
+            try {
+                s.update();
+                if (s.params.loop) (s as unknown as { loopFix?: () => void }).loopFix?.();
+            } catch {
+                // ignore
+            }
+        });
     };
 
     // Swiper loop with slidesPerView:'auto' needs enough physical slides to stay stable on wide screens.
@@ -34,25 +51,11 @@ const Hero = () => {
     }, []);
 
     useEffect(() => {
-        // Force a post-mount update — avoids intermittent "blank slider" when widths are 0 at init.
-        const tick = () => {
-            const s = swiperRef.current;
-            if (!s || s.destroyed) return;
-            try {
-                s.update();
-                if (s.params.loop) (s as unknown as { loopFix?: () => void }).loopFix?.();
-            } catch {
-                // ignore
-            }
-        };
-
-        const raf = requestAnimationFrame(tick);
-        const t1 = window.setTimeout(tick, 100);
-        const t2 = window.setTimeout(tick, 350);
+        // One post-mount tick helps Swiper measure after first paint, but avoid repeated forced reflows.
+        scheduleSwiperUpdate();
         return () => {
-            cancelAnimationFrame(raf);
-            window.clearTimeout(t1);
-            window.clearTimeout(t2);
+            if (rafUpdateRef.current != null) cancelAnimationFrame(rafUpdateRef.current);
+            rafUpdateRef.current = null;
         };
     }, []);
 
@@ -77,31 +80,16 @@ const Hero = () => {
             swiperRef.current = swiper;
             try {
                 swiper.wrapperEl.classList.add("slide-transition");
-                swiper.update();
-                (swiper as unknown as { loopFix?: () => void }).loopFix?.();
+                scheduleSwiperUpdate();
             } catch {
                 // ignore
             }
         },
         onResize: () => {
-            const s = swiperRef.current;
-            if (!s || s.destroyed) return;
-            try {
-                s.update();
-                (s as unknown as { loopFix?: () => void }).loopFix?.();
-            } catch {
-                // ignore
-            }
+            scheduleSwiperUpdate();
         },
         onImagesReady: () => {
-            const s = swiperRef.current;
-            if (!s || s.destroyed) return;
-            try {
-                s.update();
-                (s as unknown as { loopFix?: () => void }).loopFix?.();
-            } catch {
-                // ignore
-            }
+            scheduleSwiperUpdate();
         },
     };
 
@@ -174,16 +162,6 @@ const Hero = () => {
                         <Swiper
                             {...setting}
                             modules={[Autoplay]}
-                            onSwiper={(swiper) => {
-                                swiperRef.current = swiper;
-                                try {
-                                    swiper.wrapperEl.classList.add("slide-transition");
-                                    swiper.update();
-                                    (swiper as unknown as { loopFix?: () => void }).loopFix?.();
-                                } catch {
-                                    // ignore
-                                }
-                            }}
                             className="swiper-container td-hero-6-slider"
                         >
                             {banner_slider_loop.map((thumb, i) => (

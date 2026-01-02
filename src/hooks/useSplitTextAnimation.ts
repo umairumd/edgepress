@@ -51,7 +51,14 @@ const useSplitTextAnimation = (
          });
       });
 
-      ScrollTrigger.refresh();
+      // Defer refresh to avoid forced reflow in the same task as DOM mutations (SplitType inserts spans).
+      requestAnimationFrame(() => {
+         try {
+            ScrollTrigger.refresh();
+         } catch {
+            // ignore
+         }
+      });
 
       return () => {
          splits.forEach((split) => split.revert());
