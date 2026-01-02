@@ -38,7 +38,7 @@ const Service = () => {
                     <div className="col-lg-8">
                         <div className="td-service-6-title-wrap mb-30">
                             <span className="td-section-6-subtitle mb-20 d-inline-block">OUR SERVICES</span>
-                            <h2 className="td-section-6-bigtitle td-text-opacity">EXPLORE<br /> OUR SERVICE</h2>
+                            <h2 className="td-section-6-bigtitle td-text-opacity">EXPLORE<br /> OUR SERVICES</h2>
                         </div>
                     </div>
                     <div className="col-lg-4">

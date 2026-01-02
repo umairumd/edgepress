@@ -22,13 +22,8 @@ export default async function BlogPage() {
             <div className="col-lg-10">
               <div className="td-about-main-wrapper pb-40">
                 <h1 className="td-section-page-title td-title-anim mb-20">
-                   Insights &{" "}
-                   <span
-                     className="td-accent-blue"
-                     style={{ fontFamily: "var(--td-ff-dm)", fontStyle: "italic", fontWeight: 400 }}
-                   >
-                     Strategies
-                   </span>
+                  Insights on Growth,<br />
+                  Strategy &amp; Digital Execution
                 </h1>
                 <p className="td-about-body mb-0">
                   Practical articles on marketing, design, development, and business strategy written to help founders and teams make better decisions, not chase trends.

@@ -9,7 +9,7 @@ const Pricing = () => {
                     <div className="col-xxl-8 col-xl-9 col-lg-10">
                         <div className="td-pricing-6-title-wrap text-center mb-65">
                             <span className="td-section-6-subtitle d-inline-block mb-15">OUR SUITABLE PRICING PLANS</span>
-                            <h2 className="td-section-6-bigtitle td-text-opacity">CUSTOMIZABLE PRICING OPTIONS</h2>
+                            <h2 className="td-section-6-bigtitle td-text-opacity">SCALE WITH CONFIDENCE</h2>
                         </div>
                     </div>
                 </div>
