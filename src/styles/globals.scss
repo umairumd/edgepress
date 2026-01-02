@@ -1050,7 +1050,8 @@ img {
 
 /* Color overrides */
 :root {
-    --td-theme-3: #062539 !important; /* replace #063231 */
+    /* Template uses --td-theme-3 for many headings/titles; user wants headings back to near-black */
+    --td-theme-3: #1c1d1f !important;
     --td-common-green-2: #b8e9ff !important; /* replace #8bea7c */
 }
 
@@ -1064,7 +1065,7 @@ img {
 /* Gradients that used rgb(6,50,49) */
 .td-text-opacity > div,
 .td-text-invert > div {
-    background-image: linear-gradient(to right, #062539 50%, rgb(168, 169, 169) 50%) !important;
+    background-image: linear-gradient(to right, var(--td-heading-ink) 50%, rgb(168, 169, 169) 50%) !important;
 }
 
 /* Service hover title color (#aff172 -> #b8e9ff) */
