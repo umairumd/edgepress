@@ -608,6 +608,10 @@ img {
 }
 
 /* Services page: match ServiceProcess card visuals, add only a very subtle hover */
+.td-services-cards-area {
+    background: #b8e9ff;
+    padding-bottom: 80px;
+}
 .td-services-cards-area .row.gx-0 {
     --bs-gutter-x: 0;
     --bs-gutter-y: 0;
@@ -669,8 +673,7 @@ img {
 .td-services-cards-area .td-services-cards-icon {
     font-size: 58px; /* slightly larger */
     line-height: 1;
-    /* Match the template “number” grey */
-    color: var(--td-grey-1);
+    color: #1c1d1f;
 }
 
 /* Blog listing: typography-first hero (no hero image) */
