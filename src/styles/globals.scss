@@ -660,6 +660,11 @@ img {
     transform: translateY(-2px);
     background: #fff !important; /* keep white on hover */
     box-shadow: 0 12px 28px rgba(6, 37, 57, 0.08);
+    /* Keep a visible 1px stroke on all sides even where we removed border-top to avoid double borders */
+    outline: 1px solid rgba(6, 37, 57, 0.14);
+    outline-offset: -1px;
+    position: relative;
+    z-index: 2;
 }
 .td-services-cards-area .td-services-cards-icon {
     font-size: 52px; /* ~30% bigger */
