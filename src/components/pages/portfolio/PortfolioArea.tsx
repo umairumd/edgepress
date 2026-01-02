@@ -1,7 +1,6 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import portfolio_data from "@/data/PortfolioData";
 import { PortfolioItem } from "@/lib/wp";
 import Image from "next/image";
 import type Isotope from "isotope-layout";
@@ -110,70 +109,68 @@ const PortfolioArea = ({ items }: Props) => {
                     return String(a.title || "").localeCompare(String(b.title || ""));
                 });
         }
-        // Template fallback: map old categories to the new filter buckets
-        const mapLegacyToNew = (legacy: string) => {
-            const l = legacy || "";
-            if (l.includes("prof3")) return "logos";
-            if (l.includes("prof2")) return "websites";
-            if (l.includes("prof1")) return "case-studies";
-            return "case-studies";
-        };
-        return portfolio_data
-            .filter((items) => items.page === "portfolio_1")
-            .map((p) => ({
-                ...p,
-                slug: "portfolio-details",
-                categoryClasses: mapLegacyToNew(p.category),
-                featured: false,
-                date: undefined,
-            }));
+        // If WP returns no items, show an empty state (no template/demo fallback).
+        return [];
     }, [items]);
 
     return (
         <div className="td-portfolio-filter-area pb-160">
             <div className="container">
-                <div className="row">
-                    <div className="col-lg-12 mb-50">
-                        <div className="td-portfolio-filter-btn text-center masonary-menu">
-                            <button className={`${selectedFilter === "*" ? "is-checked active" : ""}`} onClick={handleFilterKeyChange("*")}> SHOW ALL </button>
-                            <button className={`${selectedFilter === "case-studies" ? "is-checked active" : ""}`} onClick={handleFilterKeyChange("case-studies")}> CASE STUDIES </button>
-                            <button className={`${selectedFilter === "websites" ? "is-checked active" : ""}`} onClick={handleFilterKeyChange("websites")}> WEBSITES </button>
-                            <button className={`${selectedFilter === "logos" ? "is-checked active" : ""}`} onClick={handleFilterKeyChange("logos")}> LOGOS </button>
-                        </div>
-                    </div>
-                </div>
-                <div className="grid row">
-                    {filteredData.map((item) => (
-                        <div key={item.id} className={`col-md-6 grid-item ${item.categoryClasses} mb-30`}>
-                            <div className="td-portfolio-card">
-                                <Link className="td-portfolio-card-thumb" href={`/portfolio/${item.slug ?? "details"}`}>
-                                    <Image
-                                        src={item.img}
-                                        alt={typeof item.title === "string" ? item.title : "Project"}
-                                        fill
-                                        sizes="(max-width: 768px) 100vw, 50vw"
-                                        style={{ objectFit: "cover" }}
-                                        unoptimized={
-                                            process.env.NODE_ENV !== "production" &&
-                                            typeof item.img === "string" &&
-                                            item.img.startsWith("http")
-                                        }
-                                        onLoadingComplete={relayout}
-                                    />
-                                    {item.featured ? (
-                                        <span className="td-portfolio-card-badge" aria-label="Featured project">
-                                            <i className="fa-solid fa-star" aria-hidden="true"></i>
-                                            Featured
-                                        </span>
-                                    ) : null}
-                                </Link>
-                                <h3 className="td-portfolio-card-title">
-                                    <Link href={`/portfolio/${item.slug ?? "details"}`}>{item.title}</Link>
-                                </h3>
+                {filteredData.length > 0 ? (
+                    <>
+                        <div className="row">
+                            <div className="col-lg-12 mb-50">
+                                <div className="td-portfolio-filter-btn text-center masonary-menu">
+                                    <button className={`${selectedFilter === "*" ? "is-checked active" : ""}`} onClick={handleFilterKeyChange("*")}> SHOW ALL </button>
+                                    <button className={`${selectedFilter === "case-studies" ? "is-checked active" : ""}`} onClick={handleFilterKeyChange("case-studies")}> CASE STUDIES </button>
+                                    <button className={`${selectedFilter === "websites" ? "is-checked active" : ""}`} onClick={handleFilterKeyChange("websites")}> WEBSITES </button>
+                                    <button className={`${selectedFilter === "logos" ? "is-checked active" : ""}`} onClick={handleFilterKeyChange("logos")}> LOGOS </button>
+                                </div>
                             </div>
                         </div>
-                    ))}
-                </div>
+                        <div className="grid row">
+                            {filteredData.map((item) => (
+                                <div key={item.id} className={`col-md-6 grid-item ${item.categoryClasses} mb-30`}>
+                                    <div className="td-portfolio-card">
+                                        <Link className="td-portfolio-card-thumb" href={`/portfolio/${item.slug ?? "details"}`}>
+                                            <Image
+                                                src={item.img}
+                                                alt={typeof item.title === "string" ? item.title : "Project"}
+                                                fill
+                                                sizes="(max-width: 768px) 100vw, 50vw"
+                                                style={{ objectFit: "cover" }}
+                                                unoptimized={
+                                                    process.env.NODE_ENV !== "production" &&
+                                                    typeof item.img === "string" &&
+                                                    item.img.startsWith("http")
+                                                }
+                                                onLoadingComplete={relayout}
+                                            />
+                                            {item.featured ? (
+                                                <span className="td-portfolio-card-badge" aria-label="Featured project">
+                                                    <i className="fa-solid fa-star" aria-hidden="true"></i>
+                                                    Featured
+                                                </span>
+                                            ) : null}
+                                        </Link>
+                                        <h3 className="td-portfolio-card-title">
+                                            <Link href={`/portfolio/${item.slug ?? "details"}`}>{item.title}</Link>
+                                        </h3>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </>
+                ) : (
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="text-center pt-60 pb-60">
+                                <h3 className="mb-10">No portfolio projects yet</h3>
+                                <p className="mb-0">Please check back soon.</p>
+                            </div>
+                        </div>
+                    </div>
+                )}
                 <div className="row">
                     <div className="col-12">
                         <div className="d-flex justify-content-center mt-50">
