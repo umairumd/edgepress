@@ -50,7 +50,7 @@ const cards: ServiceCard[] = [
     id: 7,
     title: "SEO Services",
     desc: "Sustainable traffic that compounds.",
-    icon: <i className="fa-solid fa-magnifying-glass-chart" aria-hidden="true" />,
+    icon: <i className="fa-solid fa-magnifying-glass" aria-hidden="true" />,
   },
   {
     id: 8,
