@@ -762,11 +762,58 @@ export async function getPortfolioItem(slug: string): Promise<PortfolioItem | nu
 }
 
 /**
- * Fetch hero slider images from ACF Options page.
- * Requires WPGraphQL + WPGraphQL for ACF plugins with an Options page containing a Gallery field.
+ * Fetch hero slider images from WordPress.
+ * Supports two approaches:
+ * 1. Hero Slides CPT (heroSlides) - each post's featured image is a slide
+ * 2. ACF Options page with gallery field (requires ACF Pro)
  */
 export async function getHeroSlides(): Promise<WPImage[]> {
-  // Try multiple possible field names for the hero slides gallery
+  // Approach 1: Try Hero Slides Custom Post Type first (works with ACF Free)
+  const cptCandidates = ["heroSlides", "hero_slides", "heroSlide", "hero_slide"];
+  
+  for (const cptName of cptCandidates) {
+    const cptQuery = `
+      query GetHeroSlides {
+        ${cptName}(first: 15, where: {orderby: {field: MENU_ORDER, order: ASC}}) {
+          nodes {
+            featuredImage {
+              node {
+                sourceUrl
+                altText
+                mediaDetails {
+                  width
+                  height
+                }
+              }
+            }
+          }
+        }
+      }
+    `;
+
+    type CptNode = {
+      featuredImage?: {
+        node?: WpMediaNode | null;
+      } | null;
+    };
+
+    const raw = await wpFetchRaw<Record<string, { nodes?: CptNode[] } | null>>(cptQuery);
+    
+    if (raw && !raw.errors && raw.data) {
+      const cptData = raw.data[cptName];
+      const nodes = cptData?.nodes;
+      
+      if (Array.isArray(nodes) && nodes.length > 0) {
+        const images = nodes
+          .map((node) => mapWpImage(node.featuredImage?.node))
+          .filter((img): img is WPImage => !!img?.url);
+        
+        if (images.length > 0) return images;
+      }
+    }
+  }
+
+  // Approach 2: Try ACF Options page (requires ACF Pro)
   const HERO_SLIDES_FIELD_CANDIDATES = ["heroSlides", "heroSlider", "hero_slides", "hero_slider"];
   const ACF_OPTIONS_FIELD_CANDIDATES = ["acfOptionsHeroSettings", "acfOptionsHero", "acfOptionsSiteSettings", "acfOptions"];
 
@@ -779,7 +826,6 @@ export async function getHeroSlides(): Promise<WPImage[]> {
     } | null;
   };
 
-  // Try each combination of options field and gallery field
   for (const optionsField of ACF_OPTIONS_FIELD_CANDIDATES) {
     for (const galleryField of HERO_SLIDES_FIELD_CANDIDATES) {
       const query = `
@@ -799,7 +845,6 @@ export async function getHeroSlides(): Promise<WPImage[]> {
 
       const raw = await wpFetchRaw<Record<string, Record<string, GalleryImage[] | null> | null>>(query);
       
-      // Check if we got valid data (no errors and has the gallery)
       if (raw && !raw.errors && raw.data) {
         const optionsData = raw.data[optionsField];
         const gallery = optionsData?.[galleryField];
