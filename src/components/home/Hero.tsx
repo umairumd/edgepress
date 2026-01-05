@@ -73,9 +73,11 @@ const Hero = ({ slides }: HeroProps) => {
         }));
     }, [slides]);
 
-    // Swiper loop with slidesPerView:'auto' needs enough physical slides to stay stable on wide screens.
+    // Swiper loop with slidesPerView:'auto' needs MANY more slides than visible.
+    // With 208px slides + 30px gap on a 1920px screen, ~8 are visible.
+    // Swiper loop needs at least 2x visible slides, but we go 5x for safety.
     const slidesLoop = useMemo(() => {
-        const minSlides = 24;
+        const minSlides = 48; // 5-6x what's visible on wide screens
         const out: typeof slideData = [];
         while (out.length < minSlides) out.push(...slideData);
         return out;
@@ -92,6 +94,7 @@ const Hero = ({ slides }: HeroProps) => {
 
     const setting = {
         loop: true,
+        loopAdditionalSlides: 12, // Extra buffer slides for seamless loop
         slidesPerView: 'auto' as const,
         spaceBetween: 30,
         centeredSlides: false,
@@ -105,7 +108,9 @@ const Hero = ({ slides }: HeroProps) => {
             delay: 0,
             disableOnInteraction: false,
             pauseOnMouseEnter: false,
-            waitForTransition: false,
+            waitForTransition: true, // Wait for transition to complete before next slide
+            stopOnLastSlide: false,
+            reverseDirection: false,
         },
         onInit: (swiper: SwiperType) => {
             swiperRef.current = swiper;
@@ -121,6 +126,12 @@ const Hero = ({ slides }: HeroProps) => {
         },
         onImagesReady: () => {
             scheduleSwiperUpdate();
+        },
+        // Ensure autoplay restarts after loop fix
+        onSlideChangeTransitionEnd: (swiper: SwiperType) => {
+            if (swiper.autoplay && !swiper.autoplay.running) {
+                swiper.autoplay.start();
+            }
         },
     };
 
