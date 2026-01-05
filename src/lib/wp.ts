@@ -763,12 +763,62 @@ export async function getPortfolioItem(slug: string): Promise<PortfolioItem | nu
 
 /**
  * Fetch hero slider images from WordPress.
- * Supports two approaches:
- * 1. Hero Slides CPT (heroSlides) - each post's featured image is a slide
- * 2. ACF Options page with gallery field (requires ACF Pro)
+ * Supports multiple approaches (in order of priority):
+ * 1. Page with ACF Gallery field (ACF Free) - page slug: "homepage-settings" or "hero-settings"
+ * 2. Hero Slides CPT - each post's featured image is a slide
+ * 3. ACF Options page with gallery field (ACF Pro)
  */
 export async function getHeroSlides(): Promise<WPImage[]> {
-  // Approach 1: Try Hero Slides Custom Post Type first (works with ACF Free)
+  type GalleryImage = {
+    sourceUrl?: string | null;
+    altText?: string | null;
+    mediaDetails?: {
+      width?: number | null;
+      height?: number | null;
+    } | null;
+  };
+
+  // Approach 1: Page with ACF Gallery field (ACF Free - RECOMMENDED)
+  const pageSlugs = ["homepage-settings", "hero-settings", "site-settings", "home-settings"];
+  const galleryFieldNames = ["heroSlides", "heroSlider", "hero_slides", "hero_slider", "sliderImages", "slider_images"];
+
+  for (const slug of pageSlugs) {
+    for (const fieldName of galleryFieldNames) {
+      const pageQuery = `
+        query GetHeroSlidesFromPage {
+          page(id: "${slug}", idType: URI) {
+            ${fieldName} {
+              sourceUrl
+              altText
+              mediaDetails {
+                width
+                height
+              }
+            }
+          }
+        }
+      `;
+
+      const raw = await wpFetchRaw<{ page?: Record<string, GalleryImage[] | null> | null }>(pageQuery);
+      
+      if (raw && !raw.errors && raw.data?.page) {
+        const gallery = raw.data.page[fieldName];
+        
+        if (Array.isArray(gallery) && gallery.length > 0) {
+          return gallery
+            .filter((img): img is GalleryImage => !!img?.sourceUrl)
+            .map((img) => ({
+              url: normalizeWpMediaUrl(img.sourceUrl!)!,
+              alt: img.altText ?? undefined,
+              width: img.mediaDetails?.width ?? null,
+              height: img.mediaDetails?.height ?? null,
+            }));
+        }
+      }
+    }
+  }
+
+  // Approach 2: Hero Slides Custom Post Type
   const cptCandidates = ["heroSlides", "hero_slides", "heroSlide", "hero_slide"];
   
   for (const cptName of cptCandidates) {
@@ -813,21 +863,11 @@ export async function getHeroSlides(): Promise<WPImage[]> {
     }
   }
 
-  // Approach 2: Try ACF Options page (requires ACF Pro)
-  const HERO_SLIDES_FIELD_CANDIDATES = ["heroSlides", "heroSlider", "hero_slides", "hero_slider"];
+  // Approach 3: ACF Options page (requires ACF Pro)
   const ACF_OPTIONS_FIELD_CANDIDATES = ["acfOptionsHeroSettings", "acfOptionsHero", "acfOptionsSiteSettings", "acfOptions"];
 
-  type GalleryImage = {
-    sourceUrl?: string | null;
-    altText?: string | null;
-    mediaDetails?: {
-      width?: number | null;
-      height?: number | null;
-    } | null;
-  };
-
   for (const optionsField of ACF_OPTIONS_FIELD_CANDIDATES) {
-    for (const galleryField of HERO_SLIDES_FIELD_CANDIDATES) {
+    for (const galleryField of galleryFieldNames) {
       const query = `
         query GetHeroSlides {
           ${optionsField} {
