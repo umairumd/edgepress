@@ -4,6 +4,9 @@ import { getPortfolioItem, getPortfolioItems } from "@/lib/wp";
 import Image from "next/image";
 import { getSiteUrl } from "@/lib/siteUrl";
 import Cta from "@/components/common/Cta";
+import parse, { Element } from "html-react-parser";
+import PortfolioLongImage from "@/components/pages/portfolio-details/PortfolioLongImage";
+import PortfolioFocusMode from "@/components/pages/portfolio-details/PortfolioFocusMode";
 
 const SITE_URL = getSiteUrl();
 export const revalidate = 300;
@@ -14,7 +17,8 @@ function stripHtml(html?: string) {
 }
 
 export async function generateStaticParams() {
-    const items = await getPortfolioItems(30);
+    // Fetch enough slugs so new items aren't silently omitted from static params.
+    const items = await getPortfolioItems(200);
     return items.map((p) => ({ slug: p.slug }));
 }
 
@@ -61,11 +65,66 @@ export default async function PortfolioDetailsPage({ params }: { params: Promise
     if (!item) return notFound();
     const isDev = process.env.NODE_ENV !== "production";
 
+    const toLikelyOriginalUrl = (url: string) => {
+        try {
+            const u = new URL(url);
+            u.pathname = u.pathname
+                .replace(/-\d+x\d+(?=\.(?:png|jpe?g|webp|gif)$)/i, "")
+                .replace(/-scaled(?=\.(?:png|jpe?g|webp|gif)$)/i, "")
+                .replace(/-rotated(?=\.(?:png|jpe?g|webp|gif)$)/i, "");
+            return u.toString();
+        } catch {
+            return url
+                .replace(/-\d+x\d+(?=\.(?:png|jpe?g|webp|gif)$)/i, "")
+                .replace(/-scaled(?=\.(?:png|jpe?g|webp|gif)$)/i, "")
+                .replace(/-rotated(?=\.(?:png|jpe?g|webp|gif)$)/i, "");
+        }
+    };
+
     const entryImage = item.entryImage?.url || item.featuredImage?.url;
     const entryAlt = item.entryImage?.alt || item.featuredImage?.alt || stripHtml(item.title);
     const entryWidth = item.entryImage?.width || item.featuredImage?.width || 1600;
     const entryHeight = item.entryImage?.height || item.featuredImage?.height || 4000;
     const contentHtml = (item.content || "").trim();
+    const contentHasImages = /<img\b/i.test(contentHtml);
+
+    const content = contentHtml
+        ? parse(contentHtml, {
+            replace: (node) => {
+                if (node instanceof Element && node.name === "img") {
+                    const attribs = node.attribs || {};
+                    const rawSrc =
+                        attribs["data-orig-file"] ||
+                        attribs["data-large-file"] ||
+                        attribs["data-full-url"] ||
+                        attribs["data-src"] ||
+                        attribs["src"] ||
+                        "";
+                    if (!rawSrc) return undefined;
+                    const src = toLikelyOriginalUrl(rawSrc);
+                    const alt = attribs["alt"] || "";
+                    const wAttr = attribs["width"] ? parseInt(attribs["width"], 10) : NaN;
+                    const hAttr = attribs["height"] ? parseInt(attribs["height"], 10) : NaN;
+                    const w = Number.isFinite(wAttr) ? wAttr : undefined;
+                    const h = Number.isFinite(hAttr) ? hAttr : undefined;
+
+                    const ratio = w && h ? h / w : undefined;
+                    const isLong = (ratio && ratio >= 2.2) || (h && h >= 2200) || !h || !w;
+
+                    // For portfolio case studies, prefer the optimized slice renderer.
+                    // If the image isn't actually long, the slice endpoint will stop after the first slice.
+                    // If WP reports a small "thumbnail-ish" height (like 1024), don't trust it.
+                    // Let the component load slices until the slice API returns 416 (end of image).
+                    const trustHeight = Boolean(h && h >= 2200);
+                    if (isLong) return <PortfolioLongImage src={src} alt={alt} width={w} height={trustHeight ? h : undefined} />;
+
+                    return <PortfolioLongImage src={src} alt={alt} width={w} height={h} sliceHeight={900} />;
+                }
+                // Preserve everything else as-is
+                return undefined;
+            },
+        })
+        : null;
 
     const structuredData = {
         "@context": "https://schema.org",
@@ -79,6 +138,7 @@ export default async function PortfolioDetailsPage({ params }: { params: Promise
 
     return (
         <main className="td-has-cta-footer">
+            <PortfolioFocusMode />
             <div className="td-portfolio-entry-area pb-120 pt-120">
                 <div className="container">
                     <div className="row">
@@ -87,11 +147,14 @@ export default async function PortfolioDetailsPage({ params }: { params: Promise
                                 <h1 className="td-portfolio-entry-title" dangerouslySetInnerHTML={{ __html: item.title }} />
                             </div>
 
-                            {contentHtml ? (
-                                <div className="td-portfolio-entry-content td-wp-content mb-40" dangerouslySetInnerHTML={{ __html: contentHtml }} />
+                            <div id="td-portfolio-focus-anchor" aria-hidden="true" />
+                            {content ? (
+                                <div className="td-portfolio-entry-content td-wp-content mb-40">{content}</div>
                             ) : null}
 
-                            {entryImage ? (
+                            {/* If the WP content already contains the long screenshot/gallery images,
+                                don't render the featured image again at the bottom. */}
+                            {!contentHasImages && entryImage ? (
                                 <div className="td-portfolio-entry-image-wrap">
                                     <Image
                                         className="w-100 td-portfolio-entry-image"
@@ -99,15 +162,16 @@ export default async function PortfolioDetailsPage({ params }: { params: Promise
                                         alt={entryAlt}
                                         width={entryWidth}
                                         height={entryHeight}
-                                        sizes="100vw"
+                                        sizes="(max-width: 1200px) 100vw, 1200px"
                                         style={{ height: "auto" }}
+                                        quality={100}
                                         priority
                                         unoptimized={isDev && entryImage.startsWith("http")}
                                     />
                                 </div>
-                            ) : (
+                            ) : !contentHtml ? (
                                 <p>Project image coming soon.</p>
-                            )}
+                            ) : null}
                         </div>
                     </div>
                 </div>

@@ -1,9 +1,11 @@
 "use client";
 import { useEffect, useMemo, useRef } from "react";
+import Image from "next/image";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import Link from "next/link";
 import type { Swiper as SwiperType } from "swiper";
+import heroBg from "../../../extras/bg.jpg";
 
 const banner_slider: string[] = [
     "/assets/img/hero/hero-6/thumb.jpg",
@@ -96,19 +98,16 @@ const Hero = () => {
     return (
         <div className="td-hero-area td-hero-6-spacing p-relative">
             {/* LCP background image: keep it discoverable in HTML + high priority (instead of CSS background-image). */}
-            <picture>
-                <source srcSet="/assets/img/hero/hero-6/bg.webp" type="image/webp" />
-                <img
-                    className="td-hero-6-bg-img"
-                    src="/assets/img/hero/hero-6/bg.jpg"
-                    alt=""
-                    width={1920}
-                    height={1324}
-                    loading="eager"
-                    fetchPriority="high"
-                    decoding="async"
-                />
-            </picture>
+            <Image
+                className="td-hero-6-bg-img"
+                src={heroBg}
+                alt=""
+                fill
+                priority
+                fetchPriority="high"
+                sizes="100vw"
+                style={{ objectFit: "cover" }}
+            />
             <div className="container">
                 <div className="td-hero-6-top pb-45 p-relative z-index-1">
                     <div className="td-hero-6-line">

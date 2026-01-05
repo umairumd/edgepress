@@ -8,14 +8,21 @@ import Testimonial from "@/components/home/Testimonial";
 import Choose from "@/components/home/Choose";
 import Team from "@/components/home/Team";
 import Counter from "@/components/home/Counter";
+import { getFeaturedPortfolios } from "@/lib/wp";
 
-export default function HomePage() {
+// Revalidate homepage every hour to pick up new featured portfolios
+export const revalidate = 3600;
+
+export default async function HomePage() {
+    // Fetch featured portfolios at build time (ISR)
+    const featuredPortfolios = await getFeaturedPortfolios(5);
+
     return (
         <main>
             <Hero />
             <About />
             <Service />
-            <Portfolio />
+            <Portfolio items={featuredPortfolios} />
             <VideoArea />
             <Pricing />
             <Testimonial />

@@ -38,7 +38,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-scroll-behavior="smooth" className={fontVarsClassName}>
+    <html
+      lang="en"
+      data-scroll-behavior="smooth"
+      className={fontVarsClassName}
+      suppressHydrationWarning
+    >
       <head>
         <link rel="icon" href="/inoma-favicon.jpg" type="image/jpeg" />
         <link rel="apple-touch-icon" href="/inoma-favicon.jpg" />
@@ -71,7 +76,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         <LayoutWrapper>
           {children}
         </LayoutWrapper>

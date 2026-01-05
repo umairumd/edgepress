@@ -510,6 +510,13 @@ export async function getFeaturedPosts(limit = 2): Promise<Post[]> {
   return (all || []).filter((p) => p.featured).slice(0, limit);
 }
 
+export async function getFeaturedPortfolios(limit = 5): Promise<PortfolioItem[]> {
+  // Fetch all portfolios and filter for featured ones.
+  // This approach maximizes WPGraphQL compatibility (no custom where clauses needed).
+  const all = await getPortfolioItems(100);
+  return (all || []).filter((p) => p.featured).slice(0, limit);
+}
+
 export type Category = { slug: string; name: string; count?: number };
 
 export async function getCategories(): Promise<Category[]> {
@@ -537,7 +544,7 @@ export async function getCategories(): Promise<Category[]> {
   }));
 }
 
-export async function getPortfolioItems(limit = 12): Promise<PortfolioItem[]> {
+export async function getPortfolioItems(limit = 200): Promise<PortfolioItem[]> {
   const taxSelection = `${PORTFOLIO_TAX_FIELD} { nodes { slug name } }`;
   const buildQueryFull = (entryField: string, featureField: string, shape: "edge" | "direct") => {
     const entrySelection =
@@ -549,8 +556,9 @@ export async function getPortfolioItems(limit = 12): Promise<PortfolioItem[]> {
       ? `${PORTFOLIO_ACF_GROUP_FIELD} { ${entrySelection} ${featureSelection} }`
       : `${entrySelection} ${featureSelection}`;
     return `
-      query GetPortfolioItems($limit: Int!) {
-        portfolioItems(first: $limit, where: {orderby: {field: DATE, order: DESC}}) {
+      query GetPortfolioItems($first: Int!, $after: String) {
+        portfolioItems(first: $first, after: $after, where: {orderby: {field: DATE, order: DESC}}) {
+          pageInfo { hasNextPage endCursor }
           nodes {
             slug
             title
@@ -565,8 +573,9 @@ export async function getPortfolioItems(limit = 12): Promise<PortfolioItem[]> {
   };
 
   const queryBase = `
-    query GetPortfolioItems($limit: Int!) {
-      portfolioItems(first: $limit, where: {orderby: {field: DATE, order: DESC}}) {
+    query GetPortfolioItems($first: Int!, $after: String) {
+      portfolioItems(first: $first, after: $after, where: {orderby: {field: DATE, order: DESC}}) {
+        pageInfo { hasNextPage endCursor }
         nodes {
           slug
           title
@@ -578,22 +587,48 @@ export async function getPortfolioItems(limit = 12): Promise<PortfolioItem[]> {
   `;
 
   // Try a few likely field names for the entry image (WPGraphQL for ACF often camelCases).
-  let raw: WPGraphQlResponse<{ portfolioItems?: { nodes: WpPortfolioNode[] } }> | null = null;
+  type PortfolioItemsConnection = { nodes?: WpPortfolioNode[]; pageInfo?: { hasNextPage?: boolean; endCursor?: string | null } };
+  let raw: WPGraphQlResponse<{ portfolioItems?: PortfolioItemsConnection }> | null = null;
+  let chosenQuery: string | null = null;
   for (const candidate of PORTFOLIO_ENTRY_FIELD_CANDIDATES) {
     for (const featureCandidate of PORTFOLIO_FEATURE_FIELD_CANDIDATES) {
-      raw = await wpFetchRaw<{ portfolioItems?: { nodes: WpPortfolioNode[] } }>(buildQueryFull(candidate, featureCandidate, "edge"), { limit });
-      if (raw && !raw.errors) break;
-      raw = await wpFetchRaw<{ portfolioItems?: { nodes: WpPortfolioNode[] } }>(buildQueryFull(candidate, featureCandidate, "direct"), { limit });
-      if (raw && !raw.errors) break;
+      const qEdge = buildQueryFull(candidate, featureCandidate, "edge");
+      raw = await wpFetchRaw<{ portfolioItems?: PortfolioItemsConnection }>(qEdge, { first: Math.min(limit, 50), after: null });
+      if (raw && !raw.errors) {
+        chosenQuery = qEdge;
+        break;
+      }
+      const qDirect = buildQueryFull(candidate, featureCandidate, "direct");
+      raw = await wpFetchRaw<{ portfolioItems?: PortfolioItemsConnection }>(qDirect, { first: Math.min(limit, 50), after: null });
+      if (raw && !raw.errors) {
+        chosenQuery = qDirect;
+        break;
+      }
     }
     if (raw && !raw.errors) break;
   }
 
-  const fallback = raw?.errors
-    ? await wpFetch<{ portfolioItems?: { nodes: WpPortfolioNode[] } }>(queryBase, { limit })
-    : raw?.data;
-  const nodes = fallback?.portfolioItems?.nodes;
-  if (!nodes?.length) return [];
+  // Pagination: gather all items up to `limit` (default 200) so Portfolio page shows everything.
+  const out: WpPortfolioNode[] = [];
+  let after: string | null | undefined = null;
+  let hasNextPage = true;
+  const first = Math.min(Math.max(limit, 1), 50);
+
+  // If our dynamic query selection failed, fall back to a minimal query but still paginate.
+  if (!chosenQuery) chosenQuery = queryBase;
+
+  while (hasNextPage && out.length < limit) {
+    const data = await wpFetch<{ portfolioItems?: PortfolioItemsConnection }>(chosenQuery, { first, after });
+    const conn = data?.portfolioItems;
+    const nodes = conn?.nodes ?? [];
+    out.push(...nodes);
+    hasNextPage = Boolean(conn?.pageInfo?.hasNextPage);
+    after = conn?.pageInfo?.endCursor ?? null;
+    if (!after) break;
+  }
+
+  const nodes = out.slice(0, limit);
+  if (!nodes.length) return [];
 
   return nodes.map((node) => {
     const categories = mapWpTerms(getPortfolioTaxonomyConnection(node));

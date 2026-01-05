@@ -10,10 +10,29 @@ const CustomCursor = () => {
          ".mouse-follower .cursor-dot"
       ) as HTMLElement;
 
+      // Initialize cursor at center of viewport (hidden until first mouse move)
+      if (follower && dot) {
+         const centerX = window.innerWidth / 2;
+         const centerY = window.innerHeight / 2;
+         follower.style.left = `${centerX}px`;
+         follower.style.top = `${centerY}px`;
+         follower.style.opacity = "0";
+         dot.style.left = `${centerX}px`;
+         dot.style.top = `${centerY}px`;
+         dot.style.opacity = "0";
+      }
+
+      let hasMovedMouse = false;
       const moveHandler = (e: MouseEvent) => {
          const { clientX, clientY } = e;
 
          if (follower && dot) {
+            // Show cursor on first mouse move
+            if (!hasMovedMouse) {
+               hasMovedMouse = true;
+               follower.style.opacity = "1";
+               dot.style.opacity = "1";
+            }
             follower.style.left = `${clientX}px`;
             follower.style.top = `${clientY}px`;
 

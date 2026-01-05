@@ -93,7 +93,8 @@ const PortfolioArea = ({ items }: Props) => {
             return items
                 .map((item, idx) => ({
                     id: item.slug ?? `item-${idx}`,
-                    img: item.featuredImage?.url ?? "/assets/img/portfolio/portfolio-6/thumb.jpg",
+                    // Portfolio thumbnails should come from WordPress only (no local/template fallbacks).
+                    img: item.featuredImage?.url ?? null,
                     title: item.title,
                     categoryClasses: toFilterClasses(item),
                     slug: item.slug,
@@ -133,19 +134,23 @@ const PortfolioArea = ({ items }: Props) => {
                                 <div key={item.id} className={`col-md-6 grid-item ${item.categoryClasses} mb-30`}>
                                     <div className="td-portfolio-card">
                                         <Link className="td-portfolio-card-thumb" href={`/portfolio/${item.slug ?? "details"}`}>
-                                            <Image
-                                                src={item.img}
-                                                alt={typeof item.title === "string" ? item.title : "Project"}
-                                                fill
-                                                sizes="(max-width: 768px) 100vw, 50vw"
-                                                style={{ objectFit: "cover" }}
-                                                unoptimized={
-                                                    process.env.NODE_ENV !== "production" &&
-                                                    typeof item.img === "string" &&
-                                                    item.img.startsWith("http")
-                                                }
-                                                onLoadingComplete={relayout}
-                                            />
+                                            {item.img ? (
+                                                <Image
+                                                    src={item.img}
+                                                    alt={typeof item.title === "string" ? item.title : "Project"}
+                                                    fill
+                                                    sizes="(max-width: 768px) 100vw, 50vw"
+                                                    style={{ objectFit: "cover" }}
+                                                    unoptimized={
+                                                        process.env.NODE_ENV !== "production" &&
+                                                        typeof item.img === "string" &&
+                                                        item.img.startsWith("http")
+                                                    }
+                                                    onLoadingComplete={relayout}
+                                                />
+                                            ) : (
+                                                <div className="td-portfolio-card-thumb-placeholder" aria-label="No featured image" />
+                                            )}
                                             {item.featured ? (
                                                 <span className="td-portfolio-card-badge" aria-label="Featured project">
                                                     <i className="fa-solid fa-star" aria-hidden="true"></i>

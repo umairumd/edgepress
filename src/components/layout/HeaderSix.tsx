@@ -1,10 +1,11 @@
 "use client";
 import Link from "next/link";
-import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import NavMenu from "./headers/Menu/NavMenu";
 import Offcanvas from "./headers/Menu/Offcanvas";
 import UseSticky from "@/hooks/UseSticky";
+import logoDark from "../../../extras/inoma-logo.png";
+import logoLight from "../../../extras/inoma-logo-for-dark.png";
 
 type HeaderSixProps = {
     /** Home keeps dark-at-top + white-when-sticky; Default uses Home-sticky styling on all non-home pages. */
@@ -13,16 +14,40 @@ type HeaderSixProps = {
 
 const HeaderSix = ({ variant = "home" }: HeaderSixProps) => {
 
-    const { sticky } = UseSticky();
+    const { sticky, hidden } = UseSticky();
     const [offCanvas, setOffCanvas] = useState<boolean>(false);
     const headerRef = useRef<HTMLDivElement>(null);
     const [headerHeight, setHeaderHeight] = useState<number>(0);
+    // Track previous sticky state to detect mounting
+    const prevStickyRef = useRef<boolean>(false);
+    const [mounting, setMounting] = useState<boolean>(false);
+
+    // When sticky first becomes true, disable transitions briefly to prevent flicker
+    useEffect(() => {
+        if (sticky && !prevStickyRef.current) {
+            // Just became sticky - disable transitions for a longer duration
+            setMounting(true);
+            // Use setTimeout (50ms) instead of double RAF for more reliable timing
+            const timer = setTimeout(() => {
+                setMounting(false);
+            }, 50);
+            return () => clearTimeout(timer);
+        }
+        prevStickyRef.current = sticky;
+    }, [sticky]);
 
     useEffect(() => {
         const el = headerRef.current;
         if (!el) return;
 
-        const measure = () => setHeaderHeight(el.offsetHeight);
+        const measure = () => {
+            const h = el.offsetHeight;
+            setHeaderHeight(h);
+            // Expose header height globally so hero decorations (a sibling) can align to it.
+            if (typeof document !== "undefined") {
+                document.documentElement.style.setProperty("--td-header-h", `${h}px`);
+            }
+        };
         measure();
 
         // Keep spacer accurate across breakpoints + sticky state (reduces mobile drift/jank).
@@ -32,29 +57,47 @@ const HeaderSix = ({ variant = "home" }: HeaderSixProps) => {
         return () => {
             ro?.disconnect();
             window.removeEventListener("resize", measure);
+            if (typeof document !== "undefined") {
+                document.documentElement.style.removeProperty("--td-header-h");
+            }
         };
     }, []);
 
     const wrapperClassName = useMemo(() => {
+        // IMPORTANT: avoid template `.header-sticky` class entirely to prevent flashes
+        // from `public/assets/css/main.css` (it forces white bg + animation).
+        // Strategy: td-sticky is hidden by default; only add td-sticky-show to reveal.
+        // td-sticky-mounting disables transitions during initial mount to prevent flicker.
         const base = [
             "td-header__area",
             "td-header-sticky-white",
             "td-header-spacing",
             "td-header-6-wrapper",
             variant === "default" ? "td-header-default" : null,
-            sticky ? "header-sticky" : "p-relative",
+            sticky ? "td-sticky" : "p-relative",
+            sticky && mounting ? "td-sticky-mounting" : null,
+            sticky && !hidden && !mounting ? "td-sticky-show" : null,
             "z-index-1",
         ]
             .filter(Boolean)
             .join(" ");
         return base;
-    }, [sticky, variant]);
+    }, [sticky, hidden, variant, mounting]);
 
     return (
         <>
             <header>
-                {/* Spacer prevents layout jump when header becomes fixed; keep it stable for better mobile behavior. */}
-                <div style={{ height: sticky && headerHeight > 0 ? `${headerHeight}px` : 0 }} aria-hidden="true" />
+                {/* Spacer: needed for in-flow headers (inner pages) so content doesn't jump when header becomes fixed.
+                    Home header overlays the hero already, so adding a spacer there creates a visible "jerk". */}
+                <div
+                    style={{
+                        height:
+                            variant !== "home" && sticky && headerHeight > 0
+                                ? `${headerHeight}px`
+                                : 0,
+                    }}
+                    aria-hidden="true"
+                />
                 <div ref={headerRef} id="header-sticky" className={wrapperClassName}>
                     <div className="container-fluid container-1710">
                         <div className="row align-items-center">
@@ -62,28 +105,24 @@ const HeaderSix = ({ variant = "home" }: HeaderSixProps) => {
                                 <div className="logo">
                                     <Link className="logo-1" href="/">
                                         {/* logo-1 = shown on non-sticky (dark header on Home) */}
-                                        <Image
-                                            src="/assets/img/logo/inoma-logo-dark.png"
+                                        <img
+                                            src={logoLight.src}
                                             alt="Inoma Digital"
-                                            width={245}
-                                            height={64}
-                                            priority
-                                            fetchPriority="high"
-                                            sizes="(max-width: 991px) 140px, 170px"
-                                            style={{ width: "auto", height: "auto" }}
+                                            width={logoLight.width}
+                                            height={logoLight.height}
+                                            loading="eager"
+                                            decoding="async"
                                         />
                                     </Link>
                                     <Link className="logo-2 d-none" href="/">
                                         {/* logo-2 = shown on sticky/white header */}
-                                        <Image
-                                            src="/assets/img/logo/inoma-logo-light.png"
+                                        <img
+                                            src={logoDark.src}
                                             alt="Inoma Digital"
-                                            width={245}
-                                            height={64}
-                                            priority
-                                            fetchPriority="high"
-                                            sizes="(max-width: 991px) 140px, 170px"
-                                            style={{ width: "auto", height: "auto" }}
+                                            width={logoDark.width}
+                                            height={logoDark.height}
+                                            loading="eager"
+                                            decoding="async"
                                         />
                                     </Link>
                                 </div>

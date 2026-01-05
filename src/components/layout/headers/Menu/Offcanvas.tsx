@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
-import Image from "next/image";
 import MobileMenu from "./MobileMenu";
+import logoLight from "../../../../../extras/inoma-logo-for-dark.png";
 
 interface OffcanvasProps {
     offCanvas: boolean;
@@ -18,13 +18,13 @@ const Offcanvas = ({ offCanvas, setOffCanvas }: OffcanvasProps) => {
                     </button>
                     <div className="nav-logo">
                         <Link href="/">
-                            <Image
-                                src="/assets/img/logo/inoma-logo-light.png"
+                            <img
+                                src={logoLight.src}
                                 alt="Inoma Digital"
-                                width={245}
-                                height={64}
-                                sizes="170px"
-                                style={{ width: "auto", height: "auto" }}
+                                width={logoLight.width}
+                                height={logoLight.height}
+                                loading="eager"
+                                decoding="async"
                             />
                         </Link>
                     </div>
