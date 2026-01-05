@@ -7,7 +7,8 @@ import Link from "next/link";
 import type { Swiper as SwiperType } from "swiper";
 import heroBg from "../../../extras/bg.jpg";
 
-const banner_slider: string[] = [
+// Fallback static images if no WordPress data
+const FALLBACK_SLIDES: string[] = [
     "/assets/img/hero/hero-6/thumb.jpg",
     "/assets/img/hero/hero-6/thumb-2.jpg",
     "/assets/img/hero/hero-6/thumb-3.jpg",
@@ -19,14 +20,24 @@ const banner_slider: string[] = [
     "/assets/img/hero/hero-6/thumb-5.jpg",
 ];
 
-const Hero = () => {
+// Display dimensions for slides (4:5 ratio)
+const SLIDE_WIDTH = 208;
+const SLIDE_HEIGHT = 260;
+
+type WPImage = {
+    url: string;
+    alt?: string | null;
+    width?: number | null;
+    height?: number | null;
+};
+
+interface HeroProps {
+    slides?: WPImage[];
+}
+
+const Hero = ({ slides }: HeroProps) => {
     const swiperRef = useRef<SwiperType | null>(null);
     const rafUpdateRef = useRef<number | null>(null);
-    const dimsFor = (src: string) => {
-        // Use real asset dimensions to avoid CLS.
-        if (src.endsWith("/thumb.jpg")) return { w: 304, h: 390 };
-        return { w: 196, h: 260 };
-    };
 
     const scheduleSwiperUpdate = () => {
         if (typeof window === "undefined") return;
@@ -44,13 +55,31 @@ const Hero = () => {
         });
     };
 
+    // Build slide data: use WordPress images if available, else fallback to static
+    const slideData = useMemo(() => {
+        if (slides && slides.length >= 8) {
+            // Use WordPress images
+            return slides.map((img) => ({
+                src: img.url,
+                alt: img.alt || "",
+                isRemote: true,
+            }));
+        }
+        // Fallback to static images
+        return FALLBACK_SLIDES.map((src) => ({
+            src,
+            alt: "",
+            isRemote: false,
+        }));
+    }, [slides]);
+
     // Swiper loop with slidesPerView:'auto' needs enough physical slides to stay stable on wide screens.
-    const banner_slider_loop = useMemo(() => {
+    const slidesLoop = useMemo(() => {
         const minSlides = 24;
-        const out: string[] = [];
-        while (out.length < minSlides) out.push(...banner_slider);
+        const out: typeof slideData = [];
+        while (out.length < minSlides) out.push(...slideData);
         return out;
-    }, []);
+    }, [slideData]);
 
     useEffect(() => {
         // One post-mount tick helps Swiper measure after first paint, but avoid repeated forced reflows.
@@ -67,7 +96,7 @@ const Hero = () => {
         spaceBetween: 30,
         centeredSlides: false,
         allowTouchMove: false,
-        speed: 30000,
+        speed: 18000,
         watchSlidesProgress: true,
         observer: true,
         observeParents: true,
@@ -163,21 +192,37 @@ const Hero = () => {
                             modules={[Autoplay]}
                             className="swiper-container td-hero-6-slider"
                         >
-                            {banner_slider_loop.map((thumb, i) => (
+                            {slidesLoop.map((slide, i) => (
                                 <SwiperSlide key={i} className="swiper-slide">
                                     <div className="td-hero-6-thumb">
-                                        <picture>
-                                            <source srcSet={thumb.replace(/\.jpg$/i, ".webp")} type="image/webp" />
-                                            <img
-                                                src={thumb}
-                                                alt=""
-                                                width={dimsFor(thumb).w}
-                                                height={dimsFor(thumb).h}
-                                                loading={i === 0 ? "eager" : "lazy"}
-                                                fetchPriority={i === 0 ? "high" : "auto"}
-                                                decoding="async"
+                                        {slide.isRemote ? (
+                                            // WordPress images: use next/image for optimization
+                                            <Image
+                                                src={slide.src}
+                                                alt={slide.alt}
+                                                width={SLIDE_WIDTH}
+                                                height={SLIDE_HEIGHT}
+                                                style={{ objectFit: "cover" }}
+                                                priority={i < 2}
+                                                loading={i < 2 ? "eager" : "lazy"}
+                                                sizes={`${SLIDE_WIDTH}px`}
                                             />
-                                        </picture>
+                                        ) : (
+                                            // Static fallback images
+                                            <picture>
+                                                <source srcSet={slide.src.replace(/\.jpg$/i, ".webp")} type="image/webp" />
+                                                <img
+                                                    src={slide.src}
+                                                    alt={slide.alt}
+                                                    width={SLIDE_WIDTH}
+                                                    height={SLIDE_HEIGHT}
+                                                    loading={i < 2 ? "eager" : "lazy"}
+                                                    fetchPriority={i < 2 ? "high" : "auto"}
+                                                    decoding="async"
+                                                    style={{ objectFit: "cover" }}
+                                                />
+                                            </picture>
+                                        )}
                                     </div>
                                 </SwiperSlide>
                             ))}

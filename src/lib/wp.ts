@@ -761,3 +761,64 @@ export async function getPortfolioItem(slug: string): Promise<PortfolioItem | nu
   };
 }
 
+/**
+ * Fetch hero slider images from ACF Options page.
+ * Requires WPGraphQL + WPGraphQL for ACF plugins with an Options page containing a Gallery field.
+ */
+export async function getHeroSlides(): Promise<WPImage[]> {
+  // Try multiple possible field names for the hero slides gallery
+  const HERO_SLIDES_FIELD_CANDIDATES = ["heroSlides", "heroSlider", "hero_slides", "hero_slider"];
+  const ACF_OPTIONS_FIELD_CANDIDATES = ["acfOptionsHeroSettings", "acfOptionsHero", "acfOptionsSiteSettings", "acfOptions"];
+
+  type GalleryImage = {
+    sourceUrl?: string | null;
+    altText?: string | null;
+    mediaDetails?: {
+      width?: number | null;
+      height?: number | null;
+    } | null;
+  };
+
+  // Try each combination of options field and gallery field
+  for (const optionsField of ACF_OPTIONS_FIELD_CANDIDATES) {
+    for (const galleryField of HERO_SLIDES_FIELD_CANDIDATES) {
+      const query = `
+        query GetHeroSlides {
+          ${optionsField} {
+            ${galleryField} {
+              sourceUrl
+              altText
+              mediaDetails {
+                width
+                height
+              }
+            }
+          }
+        }
+      `;
+
+      const raw = await wpFetchRaw<Record<string, Record<string, GalleryImage[] | null> | null>>(query);
+      
+      // Check if we got valid data (no errors and has the gallery)
+      if (raw && !raw.errors && raw.data) {
+        const optionsData = raw.data[optionsField];
+        const gallery = optionsData?.[galleryField];
+        
+        if (Array.isArray(gallery) && gallery.length > 0) {
+          return gallery
+            .filter((img): img is GalleryImage => !!img?.sourceUrl)
+            .map((img) => ({
+              url: normalizeWpMediaUrl(img.sourceUrl!)!,
+              alt: img.altText ?? undefined,
+              width: img.mediaDetails?.width ?? null,
+              height: img.mediaDetails?.height ?? null,
+            }));
+        }
+      }
+    }
+  }
+
+  // If no data found, return empty array (fallback to static images in Hero component)
+  return [];
+}
+
