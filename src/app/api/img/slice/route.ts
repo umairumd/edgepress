@@ -156,7 +156,8 @@ export async function GET(req: NextRequest) {
     }
 
     // Cache aggressively; varies by Accept due to format negotiation.
-    return new Response(body, {
+    // Convert Buffer to Uint8Array for Response compatibility
+    return new Response(new Uint8Array(body), {
       status: 200,
       headers: {
         "Content-Type": contentType,
