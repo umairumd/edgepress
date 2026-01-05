@@ -619,8 +619,8 @@ export async function getPortfolioItems(limit = 200): Promise<PortfolioItem[]> {
 
   while (hasNextPage && out.length < limit) {
     const data: { portfolioItems?: PortfolioItemsConnection } | null = await wpFetch<{ portfolioItems?: PortfolioItemsConnection }>(chosenQuery, { first, after });
-    const conn = data?.portfolioItems;
-    const nodes = conn?.nodes ?? [];
+    const conn: PortfolioItemsConnection | undefined = data?.portfolioItems;
+    const nodes: WpPortfolioNode[] = conn?.nodes ?? [];
     out.push(...nodes);
     hasNextPage = Boolean(conn?.pageInfo?.hasNextPage);
     after = conn?.pageInfo?.endCursor ?? null;
