@@ -779,8 +779,16 @@ export async function getHeroSlides(): Promise<WPImage[]> {
   };
 
   // Approach 1: Page with ACF Gallery field (ACF Free - RECOMMENDED)
-  const pageSlugs = ["homepage-settings", "hero-settings", "site-settings", "home-settings"];
-  const galleryFieldNames = ["heroSlides", "heroSlider", "hero_slides", "hero_slider", "sliderImages", "slider_images"];
+  const pageSlugs = [
+    "hero-slider",
+    "homepage-slider", 
+    "slider-settings",
+    "homepage-settings",
+    "hero-settings",
+    "site-settings",
+    "home-settings",
+  ];
+  const galleryFieldNames = ["heroSlides", "heroSlider", "hero_slides", "hero_slider", "sliderImages", "slider_images", "images"];
 
   for (const slug of pageSlugs) {
     for (const fieldName of galleryFieldNames) {
