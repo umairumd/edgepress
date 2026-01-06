@@ -216,7 +216,9 @@ const Hero = ({ slides }: HeroProps) => {
                                                 style={{ objectFit: "cover" }}
                                                 priority={i < 2}
                                                 loading={i < 2 ? "eager" : "lazy"}
+                                                fetchPriority={i < 2 ? "high" : "low"}
                                                 sizes={`${SLIDE_WIDTH}px`}
+                                                quality={65}
                                             />
                                         ) : (
                                             // Static fallback images

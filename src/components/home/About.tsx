@@ -57,7 +57,7 @@ const About = () => {
                                     width={177}
                                     height={60}
                                     sizes="177px"
-                                    style={{ height: "auto" }}
+                                    style={{ width: "177px", height: "60px" }}
                                 />
                                 <p className="mb-25">
                                     Built by experienced founders and executed by an in-house team across strategy, design, development, and marketing.

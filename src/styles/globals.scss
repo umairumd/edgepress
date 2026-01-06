@@ -960,6 +960,24 @@ img {
     display: block;
 }
 
+/* Fix CLS for hero slider - fixed dimensions prevent layout shift */
+.td-hero-6-slider .swiper-slide {
+    width: 208px !important;
+    height: 260px !important;
+    flex-shrink: 0;
+}
+.td-hero-6-thumb {
+    width: 208px;
+    height: 260px;
+    overflow: hidden;
+    background: #1c1d1f; /* Placeholder color while loading */
+}
+.td-hero-6-thumb img {
+    width: 208px !important;
+    height: 260px !important;
+    object-fit: cover;
+}
+
 /* Home "Choose" value blocks: icon before heading */
 .td-home-value-title {
     display: inline-flex;
