@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
@@ -37,8 +37,6 @@ interface HeroProps {
 const Hero = ({ slides }: HeroProps) => {
     const swiperRef = useRef<SwiperType | null>(null);
     const rafUpdateRef = useRef<number | null>(null);
-    // Defer Swiper rendering until after LCP (hero background) has painted
-    const [swiperReady, setSwiperReady] = useState(false);
 
     const scheduleSwiperUpdate = () => {
         if (typeof window === "undefined") return;
@@ -85,23 +83,8 @@ const Hero = ({ slides }: HeroProps) => {
     }, [slideData]);
 
     useEffect(() => {
-        // Defer Swiper initialization until after first paint + idle time
-        // This ensures the hero background image (LCP) renders first
-        const ric = (window as unknown as { requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number }).requestIdleCallback;
-        let id: number | ReturnType<typeof setTimeout>;
-        
-        if (typeof ric === "function") {
-            id = ric(() => setSwiperReady(true), { timeout: 200 });
-        } else {
-            id = setTimeout(() => setSwiperReady(true), 100);
-        }
-        
+        // Cleanup on unmount
         return () => {
-            if (typeof ric === "function") {
-                (window as unknown as { cancelIdleCallback?: (id: number) => void }).cancelIdleCallback?.(id as number);
-            } else {
-                clearTimeout(id as ReturnType<typeof setTimeout>);
-            }
             if (rafUpdateRef.current != null) cancelAnimationFrame(rafUpdateRef.current);
             rafUpdateRef.current = null;
         };
@@ -204,8 +187,7 @@ const Hero = ({ slides }: HeroProps) => {
                     <div className="col-lg-12">
                         {/* Swiper container with fixed height to prevent layout shift */}
                         <div className="td-hero-6-slider-wrap" style={{ minHeight: SLIDE_HEIGHT, contain: "layout style" }}>
-                            {swiperReady && (
-                                <Swiper
+                            <Swiper
                                     {...setting}
                                     modules={[Autoplay]}
                                     className="swiper-container td-hero-6-slider"
@@ -249,7 +231,6 @@ const Hero = ({ slides }: HeroProps) => {
                                         );
                                     })}
                                 </Swiper>
-                            )}
                         </div>
                     </div>
                 </div>

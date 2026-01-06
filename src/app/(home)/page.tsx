@@ -20,18 +20,35 @@ export default async function HomePage() {
         getHeroSlides(),
     ]);
 
+    // Preload first hero slide for faster LCP (React hoists <link> to <head>)
+    const firstSlideUrl = heroSlides?.[0]?.url;
+    const preloadUrl = firstSlideUrl
+        ? `/_next/image?url=${encodeURIComponent(firstSlideUrl)}&w=256&q=65`
+        : null;
+
     return (
-        <main>
-            <Hero slides={heroSlides} />
-            <About />
-            <Service />
-            <Portfolio items={featuredPortfolios} />
-            <VideoArea />
-            <Pricing />
-            <Testimonial />
-            <Choose />
-            <Team />
-            <Counter />
-        </main>
+        <>
+            {/* Preload LCP image - React hoists this to <head> */}
+            {preloadUrl && (
+                <link
+                    rel="preload"
+                    as="image"
+                    href={preloadUrl}
+                    fetchPriority="high"
+                />
+            )}
+            <main>
+                <Hero slides={heroSlides} />
+                <About />
+                <Service />
+                <Portfolio items={featuredPortfolios} />
+                <VideoArea />
+                <Pricing />
+                <Testimonial />
+                <Choose />
+                <Team />
+                <Counter />
+            </main>
+        </>
     );
 }
