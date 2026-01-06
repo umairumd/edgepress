@@ -221,37 +221,44 @@ const Hero = ({ slides }: HeroProps) => {
                                     modules={[Autoplay]}
                                     className="swiper-container td-hero-6-slider"
                                 >
-                                    {slidesLoop.map((slide, i) => (
-                                        <SwiperSlide key={i} className="swiper-slide">
-                                            <div className="td-hero-6-thumb">
-                                                {slide.isRemote ? (
-                                                    <Image
-                                                        src={slide.src}
-                                                        alt={slide.alt}
-                                                        width={SLIDE_WIDTH}
-                                                        height={SLIDE_HEIGHT}
-                                                        style={{ objectFit: "cover" }}
-                                                        loading="lazy"
-                                                        sizes={`${SLIDE_WIDTH}px`}
-                                                        quality={65}
-                                                    />
-                                                ) : (
-                                                    <picture>
-                                                        <source srcSet={slide.src.replace(/\.jpg$/i, ".webp")} type="image/webp" />
-                                                        <img
+                                    {slidesLoop.map((slide, i) => {
+                                        // First 2 slides are prioritized for LCP
+                                        const isLCPCandidate = i < 2;
+                                        return (
+                                            <SwiperSlide key={i} className="swiper-slide">
+                                                <div className="td-hero-6-thumb">
+                                                    {slide.isRemote ? (
+                                                        <Image
                                                             src={slide.src}
                                                             alt={slide.alt}
                                                             width={SLIDE_WIDTH}
                                                             height={SLIDE_HEIGHT}
-                                                            loading="lazy"
-                                                            decoding="async"
                                                             style={{ objectFit: "cover" }}
+                                                            priority={isLCPCandidate}
+                                                            loading={isLCPCandidate ? "eager" : "lazy"}
+                                                            fetchPriority={isLCPCandidate ? "high" : "auto"}
+                                                            sizes={`${SLIDE_WIDTH}px`}
+                                                            quality={65}
                                                         />
-                                                    </picture>
-                                                )}
-                                            </div>
-                                        </SwiperSlide>
-                                    ))}
+                                                    ) : (
+                                                        <picture>
+                                                            <source srcSet={slide.src.replace(/\.jpg$/i, ".webp")} type="image/webp" />
+                                                            <img
+                                                                src={slide.src}
+                                                                alt={slide.alt}
+                                                                width={SLIDE_WIDTH}
+                                                                height={SLIDE_HEIGHT}
+                                                                loading={isLCPCandidate ? "eager" : "lazy"}
+                                                                fetchPriority={isLCPCandidate ? "high" : "auto"}
+                                                                decoding="async"
+                                                                style={{ objectFit: "cover" }}
+                                                            />
+                                                        </picture>
+                                                    )}
+                                                </div>
+                                            </SwiperSlide>
+                                        );
+                                    })}
                                 </Swiper>
                             )}
                         </div>

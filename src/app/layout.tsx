@@ -47,6 +47,9 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/inoma-favicon.jpg" type="image/jpeg" />
         <link rel="apple-touch-icon" href="/inoma-favicon.jpg" />
+        {/* Preconnect to WordPress media origin for faster image loading */}
+        <link rel="preconnect" href="https://cms.inomadigital.com" />
+        <link rel="dns-prefetch" href="https://cms.inomadigital.com" />
         {/* Static CSS from public folder */}
         <link rel="stylesheet" href="/assets/css/bootstrap.min.css" />
         <link rel="stylesheet" href="/assets/css/animate.css" />

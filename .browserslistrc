@@ -1,0 +1,7 @@
+# Modern browsers only - removes legacy polyfills (saves ~14 KiB)
+# These browsers natively support: Array.prototype.at, Object.fromEntries, etc.
+last 2 Chrome versions
+last 2 Firefox versions
+last 2 Safari versions
+last 2 Edge versions
+
