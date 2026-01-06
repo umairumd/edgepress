@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
+import { IconPhone, IconEnvelope } from "@/components/icons";
 
 interface FooterSixProps {
     style?: boolean;
@@ -52,11 +53,11 @@ const FooterSix = ({ style }: FooterSixProps = {}) => {
                                     <h3 className="td-footer-title mb-30">Connect</h3>
                                     <div className="td-footer-connect mb-45">
                                         <div className="d-flex align-items-center mb-10">
-                                            <i className="fa-solid fa-phone mr-10" aria-hidden="true"></i>
+                                            <IconPhone className="mr-10" aria-hidden="true" />
                                             <Link href="tel:+923142551400">+92-314-2551400</Link>
                                         </div>
                                         <div className="d-flex align-items-center">
-                                            <i className="fa-solid fa-envelope mr-10" aria-hidden="true"></i>
+                                            <IconEnvelope className="mr-10" aria-hidden="true" />
                                             <Link href="mailto:info@inomadigital.com">info@inomadigital.com</Link>
                                         </div>
                                     </div>

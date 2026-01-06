@@ -2,6 +2,16 @@
 import Link from "next/link";
 import MobileMenu from "./MobileMenu";
 import logoLight from "../../../../../extras/inoma-logo-for-dark.png";
+import {
+    IconXmark,
+    IconSearch,
+    IconAngleRight,
+    IconFacebookF,
+    IconTwitter,
+    IconInstagram,
+    IconLinkedinIn,
+    IconYoutube
+} from "@/components/icons";
 
 interface OffcanvasProps {
     offCanvas: boolean;
@@ -14,7 +24,7 @@ const Offcanvas = ({ offCanvas, setOffCanvas }: OffcanvasProps) => {
             <div className="tdmobile__menu td-menu-large">
                 <nav id="tdmobile-menu" className="tdmobile__menu-box" aria-label="Mobile navigation">
                     <button type="button" onClick={() => setOffCanvas(false)} className="close-btn" aria-label="Close menu">
-                        <i className="fa-solid fa-xmark" aria-hidden="true"></i>
+                        <IconXmark aria-hidden="true" />
                     </button>
                     <div className="nav-logo">
                         <Link href="/">
@@ -32,7 +42,7 @@ const Offcanvas = ({ offCanvas, setOffCanvas }: OffcanvasProps) => {
                         <form onSubmit={(e) => e.preventDefault()}>
                             <input type="text" placeholder="Search here..." aria-label="Search" />
                             <button type="submit" aria-label="Search">
-                                <i className="fas fa-search" aria-hidden="true"></i>
+                                <IconSearch aria-hidden="true" />
                             </button>
                         </form>
                     </div>
@@ -43,18 +53,18 @@ const Offcanvas = ({ offCanvas, setOffCanvas }: OffcanvasProps) => {
                         <Link href="/contact" className="td-btn td-btn-menu-black w-100 d-inline-block td-btn-switch-animation ml-10">
                             <span className="d-flex align-items-center justify-content-center">
                                 <span className="btn-text"> Contact Us </span>
-                                <span className="btn-icon"><i className="fa-sharp fa-solid fa-angle-right"></i></span>
-                                <span className="btn-icon"><i className="fa-sharp fa-solid fa-angle-right"></i></span>
+                                <span className="btn-icon"><IconAngleRight /></span>
+                                <span className="btn-icon"><IconAngleRight /></span>
                             </span>
                         </Link>
                     </div>
                     <div className="social-links">
                         <ul className="list-wrap">
-                            <li><Link href="#" aria-label="Facebook"><i className="fab fa-facebook-f" aria-hidden="true"></i></Link></li>
-                            <li><Link href="#" aria-label="Twitter"><i className="fab fa-twitter" aria-hidden="true"></i></Link></li>
-                            <li><Link href="#" aria-label="Instagram"><i className="fab fa-instagram" aria-hidden="true"></i></Link></li>
-                            <li><Link href="#" aria-label="LinkedIn"><i className="fab fa-linkedin-in" aria-hidden="true"></i></Link></li>
-                            <li><Link href="#" aria-label="YouTube"><i className="fab fa-youtube" aria-hidden="true"></i></Link></li>
+                            <li><Link href="#" aria-label="Facebook"><IconFacebookF aria-hidden="true" /></Link></li>
+                            <li><Link href="#" aria-label="Twitter"><IconTwitter aria-hidden="true" /></Link></li>
+                            <li><Link href="#" aria-label="Instagram"><IconInstagram aria-hidden="true" /></Link></li>
+                            <li><Link href="#" aria-label="LinkedIn"><IconLinkedinIn aria-hidden="true" /></Link></li>
+                            <li><Link href="#" aria-label="YouTube"><IconYoutube aria-hidden="true" /></Link></li>
                         </ul>
                     </div>
                 </nav>

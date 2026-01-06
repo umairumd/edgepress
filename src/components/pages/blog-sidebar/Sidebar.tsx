@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Category, Post } from "@/lib/wp";
 import Image from "next/image";
+import { IconFacebookF, IconTwitter, IconLinkedinIn, IconWhatsapp } from "@/components/icons";
 
 type SidebarProps = {
   featuredPosts?: Post[];
@@ -48,16 +49,16 @@ const Sidebar = ({ featuredPosts, recentPosts, categories, currentUrl, shareTitl
             style={{ display: "flex", gap: "14px", flexWrap: "wrap", alignItems: "center", marginBottom: "30px" }}
           >
             <Link className="facebook" href={shareLinks.facebook} target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook">
-              <i className="fa-brands fa-facebook-f"></i>
+              <IconFacebookF />
             </Link>
             <Link className="twitter" href={shareLinks.twitter} target="_blank" rel="noopener noreferrer" aria-label="Share on Twitter">
-              <i className="fa-brands fa-twitter"></i>
+              <IconTwitter />
             </Link>
             <Link className="linkedin" href={shareLinks.linkedin} target="_blank" rel="noopener noreferrer" aria-label="Share on LinkedIn">
-              <i className="fa-brands fa-linkedin-in"></i>
+              <IconLinkedinIn />
             </Link>
             <Link className="whatsapp" href={shareLinks.whatsapp} target="_blank" rel="noopener noreferrer" aria-label="Share on WhatsApp">
-              <i className="fa-brands fa-whatsapp"></i>
+              <IconWhatsapp />
             </Link>
           </div>
         </div>

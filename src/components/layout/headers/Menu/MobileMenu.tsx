@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import menu_data from "@/data/MenuData";
+import { IconAngleRight } from "@/components/icons";
 
 const MobileMenu = () => {
     const [navTitle, setNavTitle] = useState("");
@@ -29,7 +30,7 @@ const MobileMenu = () => {
                                 className={`dropdown-btn ${navTitle === menu.title ? "open" : ""}`}
                                 onClick={() => openMobileMenu(menu.title)}
                             >
-                                <i className="fa-regular fa-angle-right"></i>
+                                <IconAngleRight />
                             </div>
                             <ul className="sub-menu" style={{ display: navTitle === menu.title ? "block" : "none" }}>
                                 {menu.sub_menus?.map((sub_m, i) => (

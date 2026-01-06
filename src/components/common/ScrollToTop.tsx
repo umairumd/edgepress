@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import UseSticky from "@/hooks/UseSticky";
+import { IconArrowUp } from "@/components/icons";
 
 const ScrollToTop = () => {
 
@@ -41,7 +42,7 @@ const ScrollToTop = () => {
          data-target="html"
          aria-label="Scroll to top"
       >
-         <i className="fa-sharp fa-regular fa-arrow-up" aria-hidden="true"></i>
+         <IconArrowUp aria-hidden="true" />
       </button>
    );
 };

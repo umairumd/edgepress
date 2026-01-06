@@ -1,6 +1,7 @@
 "use client";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation } from 'swiper/modules';
+import { IconArrowLeft, IconArrowRight } from "@/components/icons";
 
 const slider_data: string[] = [
     "/assets/img/portfolio/details/thumb-3.jpg",
@@ -81,13 +82,13 @@ const PortfolioVisualIdentity = () => {
                     <div className="col-lg-4">
                         <div className="td-portfolio-identity-navigation d-flex justify-content-between pt-80 align-items-center">
                             <span className="td-portfolio-identity-prev">
-                                <i className="fa-solid fa-arrow-left"></i>
+                                <IconArrowLeft />
                                 Prev
                             </span>
                             <div className="td-portfolio-identity-border"></div>
                             <span className="td-portfolio-identity-next">
                                 Next
-                                <i className="fa-solid fa-arrow-right"></i>
+                                <IconArrowRight />
                             </span>
                         </div>
                     </div>

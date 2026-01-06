@@ -7,9 +7,16 @@
     "prebuild": "node scripts/sync-extras-assets.mjs",
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "npx csso public/assets/css/main.css -o public/assets/css/main.css --no-restructure",
     "start": "next start",
     "lint": "eslint"
   },
+  "browserslist": [
+    "last 2 Chrome versions",
+    "last 2 Firefox versions",
+    "last 2 Safari versions",
+    "last 2 Edge versions"
+  ],
   "dependencies": {
     "@types/isotope-layout": "^3.0.15",
     "gsap": "^3.14.2",
@@ -31,6 +38,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "csso-cli": "^4.0.2",
     "eslint": "^9",
     "eslint-config-next": "16.1.1",
     "tailwindcss": "^4",

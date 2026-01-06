@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import menu_data from "@/data/MenuData";
+import { IconAngleDown } from "@/components/icons";
 
 const NavMenu = () => {
     return (
@@ -11,7 +12,7 @@ const NavMenu = () => {
                         {menu.title}
                         {menu.has_dropdown ? (
                             <span className="tdmenu__dropdown-indicator" aria-hidden="true">
-                                <i className="fa-regular fa-angle-down"></i>
+                                <IconAngleDown />
                             </span>
                         ) : null}
                     </Link>

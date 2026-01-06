@@ -4,6 +4,7 @@ import Link from "next/link";
 import { PortfolioItem } from "@/lib/wp";
 import Image from "next/image";
 import type Isotope from "isotope-layout";
+import { IconStar, IconBehance, IconArrowRight } from "@/components/icons";
 
 type Props = {
     items?: PortfolioItem[];
@@ -153,7 +154,7 @@ const PortfolioArea = ({ items }: Props) => {
                                             )}
                                             {item.featured ? (
                                                 <span className="td-portfolio-card-badge" aria-label="Featured project">
-                                                    <i className="fa-solid fa-star" aria-hidden="true"></i>
+                                                    <IconStar aria-hidden="true" />
                                                     Featured
                                                 </span>
                                             ) : null}
@@ -181,11 +182,11 @@ const PortfolioArea = ({ items }: Props) => {
                         <div className="d-flex justify-content-center mt-50">
                             <div className="td-btn-group">
                                 <Link className="td-btn-circle" href="https://www.behance.net/inoma" target="_blank" rel="noopener noreferrer" aria-label="Behance Portfolio">
-                                    <i className="fa-brands fa-behance"></i>
+                                    <IconBehance />
                                 </Link>
                                 <Link className="td-btn-2 td-btn-primary" href="https://www.behance.net/inoma" target="_blank" rel="noopener noreferrer">Behance Portfolio</Link>
                                 <Link className="td-btn-circle" href="https://www.behance.net/inoma" target="_blank" rel="noopener noreferrer" aria-label="Behance Portfolio">
-                                    <i className="fa-solid fa-arrow-right"></i>
+                                    <IconArrowRight />
                                 </Link>
                             </div>
                         </div>

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { IconBullseye, IconUsers, IconGears } from "@/components/icons";
 
 const Choose = () => {
     return (
@@ -29,7 +30,7 @@ const Choose = () => {
                         <div className="td-chose-3-list-wrap td-chose-6-list-wrap mr-110 mb-30 wow fadeInRight" data-wow-delay=".4s" data-wow-duration="1s">
                             <div className="td-chose-3-list mb-35">
                                 <h3 className="mb-20 td-home-value-title">
-                                    <i className="fa-solid fa-fw fa-bullseye td-home-value-icon" aria-hidden="true"></i>
+                                    <IconBullseye className="svg-icon-fw td-home-value-icon" aria-hidden="true" />
                                     Measurable Outcomes
                                 </h3>
                                 <p>
@@ -38,7 +39,7 @@ const Choose = () => {
                             </div>
                             <div className="td-chose-3-list  mb-35">
                                 <h3 className="mb-20 td-home-value-title">
-                                    <i className="fa-solid fa-fw fa-users td-home-value-icon" aria-hidden="true"></i>
+                                    <IconUsers className="svg-icon-fw td-home-value-icon" aria-hidden="true" />
                                     Strategic Partners
                                 </h3>
                                 <p>
@@ -47,7 +48,7 @@ const Choose = () => {
                             </div>
                             <div className="td-chose-3-list">
                                 <h3 className="mb-20 td-home-value-title">
-                                    <i className="fa-solid fa-fw fa-gears td-home-value-icon" aria-hidden="true"></i>
+                                    <IconGears className="svg-icon-fw td-home-value-icon" aria-hidden="true" />
                                     Operational Discipline
                                 </h3>
                                 <p>

@@ -6,6 +6,21 @@ html, body {
     max-width: 100vw !important;
 }
 
+/* Inline SVG icons (replacing Font Awesome) */
+.svg-icon {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.125em;
+    fill: currentColor;
+    overflow: visible;
+}
+/* Fixed-width icon (equivalent to fa-fw) */
+.svg-icon-fw {
+    text-align: center;
+    width: 1.25em;
+}
+
 /* Portfolio focus mode (desktop only): fade page background to dark as you scroll down portfolio detail */
 @media (min-width: 992px) {
     body.td-portfolio-focus::before {
@@ -961,6 +976,10 @@ img {
 }
 
 /* Fix CLS for hero slider - fixed dimensions prevent layout shift */
+.td-hero-6-slider-wrap {
+    contain: layout style;
+    min-height: 260px;
+}
 .td-hero-6-slider .swiper-slide {
     width: 208px !important;
     height: 260px !important;

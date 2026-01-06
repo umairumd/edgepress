@@ -2,6 +2,7 @@ import Link from "next/link";
 import Sidebar from "./Sidebar";
 import { Category, Post } from "@/lib/wp";
 import Image from "next/image";
+import { IconArrowLeft, IconArrowRight } from "@/components/icons";
 
 type Props = {
   contentHtml?: string | null;
@@ -87,13 +88,13 @@ const BlogSidebarArea = ({
               )}
               <div className="td-blog-details-pagenation td-portfolio-identity-navigation d-flex justify-content-between pt-45 align-items-center">
                 <span className="td-blog-details-prev">
-                  <i className="fa-solid fa-arrow-left mr-10"></i>
+                  <IconArrowLeft className="mr-10" />
                   Prev
                 </span>
                 <div className="td-portfolio-identity-border"></div>
                 <span className="td-blog-details-next">
                   Next
-                  <i className="fa-solid fa-arrow-right ml-10"></i>
+                  <IconArrowRight className="ml-10" />
                 </span>
               </div>
             </div>

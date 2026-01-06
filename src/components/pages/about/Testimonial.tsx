@@ -1,6 +1,7 @@
 "use client";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation } from 'swiper/modules';
+import { IconStar, IconArrowLeft, IconArrowRight } from "@/components/icons";
 
 interface DataType {
     id: number;
@@ -47,21 +48,21 @@ const Testimonial = () => {
                             <h3 className="title mb-0 mr-20">4.82</h3>
                             <div>
                                 <span className="ratings mb-10">
-                                    <i className="fa-solid fa-star-sharp"></i>
-                                    <i className="fa-solid fa-star-sharp"></i>
-                                    <i className="fa-solid fa-star-sharp"></i>
-                                    <i className="fa-solid fa-star-sharp"></i>
-                                    <i className="fa-solid fa-star-sharp"></i>
+                                    <IconStar />
+                                    <IconStar />
+                                    <IconStar />
+                                    <IconStar />
+                                    <IconStar />
                                 </span>
                                 <span className="review">Client review</span>
                             </div>
                         </div>
                         <div className="td-testimonial-5-navigation mb-30">
                             <span className="td-testimonial-5-prev d-inline-block">
-                                <i className="fa-solid fa-arrow-left"></i>
+                                <IconArrowLeft />
                             </span>
                             <span className="td-testimonial-5-next ml-5 d-inline-block">
-                                <i className="fa-solid fa-arrow-right"></i>
+                                <IconArrowRight />
                             </span>
                         </div>
                     </div>

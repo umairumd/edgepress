@@ -1,11 +1,14 @@
 "use client";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay } from 'swiper/modules';
 import Link from "next/link";
 import type { Swiper as SwiperType } from "swiper";
 import heroBg from "../../../extras/bg.jpg";
+
+// Dynamically import Swiper to defer its JavaScript from blocking LCP
+const Swiper = dynamic(() => import('swiper/react').then(mod => mod.Swiper), { ssr: false });
+const SwiperSlide = dynamic(() => import('swiper/react').then(mod => mod.SwiperSlide), { ssr: false });
 
 // Fallback static images if no WordPress data
 const FALLBACK_SLIDES: string[] = [
@@ -38,6 +41,8 @@ interface HeroProps {
 const Hero = ({ slides }: HeroProps) => {
     const swiperRef = useRef<SwiperType | null>(null);
     const rafUpdateRef = useRef<number | null>(null);
+    // Defer Swiper rendering until after LCP (hero background) has painted
+    const [swiperReady, setSwiperReady] = useState(false);
 
     const scheduleSwiperUpdate = () => {
         if (typeof window === "undefined") return;
@@ -74,19 +79,33 @@ const Hero = ({ slides }: HeroProps) => {
     }, [slides]);
 
     // Swiper loop needs ~2x visible slides for smooth looping.
-    // With 208px slides + 30px gap on 2560px ultrawide, ~11 are visible.
-    // Use 32 slides (3x visible) to prevent Swiper loop warnings.
+    // With 208px slides + 30px gap, ~8-11 are visible on desktop.
+    // Use 16 slides (2x visible) - balance between smooth loop and DOM size.
     const slidesLoop = useMemo(() => {
-        const minSlides = 32;
+        const minSlides = 16;
         const out: typeof slideData = [];
         while (out.length < minSlides) out.push(...slideData);
         return out;
     }, [slideData]);
 
     useEffect(() => {
-        // One post-mount tick helps Swiper measure after first paint, but avoid repeated forced reflows.
-        scheduleSwiperUpdate();
+        // Defer Swiper initialization until after first paint + idle time
+        // This ensures the hero background image (LCP) renders first
+        const ric = (window as unknown as { requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number }).requestIdleCallback;
+        let id: number | ReturnType<typeof setTimeout>;
+        
+        if (typeof ric === "function") {
+            id = ric(() => setSwiperReady(true), { timeout: 200 });
+        } else {
+            id = setTimeout(() => setSwiperReady(true), 100);
+        }
+        
         return () => {
+            if (typeof ric === "function") {
+                (window as unknown as { cancelIdleCallback?: (id: number) => void }).cancelIdleCallback?.(id as number);
+            } else {
+                clearTimeout(id as ReturnType<typeof setTimeout>);
+            }
             if (rafUpdateRef.current != null) cancelAnimationFrame(rafUpdateRef.current);
             rafUpdateRef.current = null;
         };
@@ -108,7 +127,7 @@ const Hero = ({ slides }: HeroProps) => {
             delay: 0,
             disableOnInteraction: false,
             pauseOnMouseEnter: false,
-            waitForTransition: true, // Wait for transition to complete before next slide
+            waitForTransition: true,
             stopOnLastSlide: false,
             reverseDirection: false,
         },
@@ -127,7 +146,6 @@ const Hero = ({ slides }: HeroProps) => {
         onImagesReady: () => {
             scheduleSwiperUpdate();
         },
-        // Ensure autoplay restarts after loop fix
         onSlideChangeTransitionEnd: (swiper: SwiperType) => {
             if (swiper.autoplay && !swiper.autoplay.running) {
                 swiper.autoplay.start();
@@ -137,7 +155,7 @@ const Hero = ({ slides }: HeroProps) => {
 
     return (
         <div className="td-hero-area td-hero-6-spacing p-relative">
-            {/* LCP background image: keep it discoverable in HTML + high priority (instead of CSS background-image). */}
+            {/* LCP background image: prioritized to be the Largest Contentful Paint element */}
             <Image
                 className="td-hero-6-bg-img"
                 src={heroBg}
@@ -198,53 +216,85 @@ const Hero = ({ slides }: HeroProps) => {
             <div className="container-fluid container-1680">
                 <div className="row">
                     <div className="col-lg-12">
-                        <Swiper
-                            {...setting}
-                            modules={[Autoplay]}
-                            className="swiper-container td-hero-6-slider"
-                        >
-                            {slidesLoop.map((slide, i) => (
-                                <SwiperSlide key={i} className="swiper-slide">
-                                    <div className="td-hero-6-thumb">
-                                        {slide.isRemote ? (
-                                            // WordPress images: use next/image for optimization
-                                            <Image
-                                                src={slide.src}
-                                                alt={slide.alt}
-                                                width={SLIDE_WIDTH}
-                                                height={SLIDE_HEIGHT}
-                                                style={{ objectFit: "cover" }}
-                                                priority={i < 2}
-                                                loading={i < 2 ? "eager" : "lazy"}
-                                                fetchPriority={i < 2 ? "high" : "low"}
-                                                sizes={`${SLIDE_WIDTH}px`}
-                                                quality={65}
-                                            />
-                                        ) : (
-                                            // Static fallback images
-                                            <picture>
-                                                <source srcSet={slide.src.replace(/\.jpg$/i, ".webp")} type="image/webp" />
-                                                <img
-                                                    src={slide.src}
-                                                    alt={slide.alt}
-                                                    width={SLIDE_WIDTH}
-                                                    height={SLIDE_HEIGHT}
-                                                    loading={i < 2 ? "eager" : "lazy"}
-                                                    fetchPriority={i < 2 ? "high" : "auto"}
-                                                    decoding="async"
-                                                    style={{ objectFit: "cover" }}
-                                                />
-                                            </picture>
-                                        )}
-                                    </div>
-                                </SwiperSlide>
-                            ))}
-                        </Swiper>
+                        {/* Swiper container with fixed height to prevent layout shift */}
+                        <div className="td-hero-6-slider-wrap" style={{ minHeight: SLIDE_HEIGHT, contain: "layout style" }}>
+                            {swiperReady && Swiper && SwiperSlide && (
+                                <SwiperComponent
+                                    setting={setting}
+                                    slidesLoop={slidesLoop}
+                                    SLIDE_WIDTH={SLIDE_WIDTH}
+                                    SLIDE_HEIGHT={SLIDE_HEIGHT}
+                                />
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     )
+}
+
+// Separate component to load Autoplay dynamically with Swiper
+function SwiperComponent({ 
+    setting, 
+    slidesLoop, 
+    SLIDE_WIDTH, 
+    SLIDE_HEIGHT 
+}: { 
+    setting: Record<string, unknown>; 
+    slidesLoop: { src: string; alt: string; isRemote: boolean }[];
+    SLIDE_WIDTH: number;
+    SLIDE_HEIGHT: number;
+}) {
+    const [Autoplay, setAutoplay] = useState<typeof import('swiper/modules').Autoplay | null>(null);
+    
+    useEffect(() => {
+        import('swiper/modules').then(mod => setAutoplay(() => mod.Autoplay));
+    }, []);
+    
+    if (!Autoplay) return null;
+    
+    return (
+        <Swiper
+            {...setting}
+            modules={[Autoplay]}
+            className="swiper-container td-hero-6-slider"
+        >
+            {slidesLoop.map((slide, i) => (
+                <SwiperSlide key={i} className="swiper-slide">
+                    <div className="td-hero-6-thumb">
+                        {slide.isRemote ? (
+                            // WordPress images: all lazy loaded (LCP is bg.jpg, not slides)
+                            <Image
+                                src={slide.src}
+                                alt={slide.alt}
+                                width={SLIDE_WIDTH}
+                                height={SLIDE_HEIGHT}
+                                style={{ objectFit: "cover" }}
+                                loading="lazy"
+                                sizes={`${SLIDE_WIDTH}px`}
+                                quality={65}
+                            />
+                        ) : (
+                            // Static fallback images
+                            <picture>
+                                <source srcSet={slide.src.replace(/\.jpg$/i, ".webp")} type="image/webp" />
+                                <img
+                                    src={slide.src}
+                                    alt={slide.alt}
+                                    width={SLIDE_WIDTH}
+                                    height={SLIDE_HEIGHT}
+                                    loading="lazy"
+                                    decoding="async"
+                                    style={{ objectFit: "cover" }}
+                                />
+                            </picture>
+                        )}
+                    </div>
+                </SwiperSlide>
+            ))}
+        </Swiper>
+    );
 }
 
 export default Hero;

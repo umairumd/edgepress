@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import Image from "next/image";
+import { IconPhone, IconEnvelope, IconLocationDot } from "@/components/icons";
 
 const ContactMap = () => {
     const [isLoaded, setIsLoaded] = useState(false);
@@ -25,15 +26,15 @@ const ContactMap = () => {
                                 />
                                 <h6 className="mb-25">Contact Info</h6>
                                 <div className="td-contact-info-item d-flex align-items-center mb-10">
-                                    <i className="fa-solid fa-phone mr-10" aria-hidden="true"></i>
+                                    <IconPhone className="mr-10" aria-hidden="true" />
                                     <Link href="tel:+923142551400">+92-314-2551400</Link>
                                 </div>
                                 <div className="td-contact-info-item d-flex align-items-center mb-10">
-                                    <i className="fa-solid fa-envelope mr-10" aria-hidden="true"></i>
+                                    <IconEnvelope className="mr-10" aria-hidden="true" />
                                     <Link href="mailto:info@inomadigital.com">info@inomadigital.com</Link>
                                 </div>
                                 <div className="td-contact-info-item d-flex align-items-start">
-                                    <i className="fa-solid fa-location-dot mr-10" aria-hidden="true"></i>
+                                    <IconLocationDot className="mr-10" aria-hidden="true" />
                                     <p className="mb-0">M.A Jinnah Road, Okara</p>
                                 </div>
                             </div>

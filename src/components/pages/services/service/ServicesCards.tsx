@@ -1,4 +1,14 @@
 import type { JSX } from "react";
+import {
+  IconChessKnight,
+  IconCompassDrafting,
+  IconDatabase,
+  IconCartShopping,
+  IconPalette,
+  IconBullhorn,
+  IconMagnifyingGlass,
+  IconMobileScreenButton,
+} from "@/components/icons";
 
 type ServiceCard = {
   id: number;
@@ -14,49 +24,49 @@ const cards: ServiceCard[] = [
     id: 1,
     title: "Business Strategy",
     desc: "Clarity-first planning for measurable growth.",
-    icon: <i className="fa-solid fa-chess-knight" aria-hidden="true" />,
+    icon: <IconChessKnight aria-hidden="true" />,
   },
   {
     id: 2,
     title: "UI / UX Design",
     desc: "User-first design that improves conversion.",
-    icon: <i className="fa-solid fa-compass-drafting" aria-hidden="true" />,
+    icon: <IconCompassDrafting aria-hidden="true" />,
   },
   {
     id: 3,
     title: "Web Development",
     desc: "Fast, scalable sites built to perform.",
-    icon: <i className="fa-solid fa-database" aria-hidden="true" />,
+    icon: <IconDatabase aria-hidden="true" />,
   },
   {
     id: 4,
     title: "E-Commerce Store",
     desc: "Storefronts optimized for sales.",
-    icon: <i className="fa-solid fa-cart-shopping" aria-hidden="true" />,
+    icon: <IconCartShopping aria-hidden="true" />,
   },
   {
     id: 5,
     title: "Graphics Designing",
     desc: "Consistent visuals across every touchpoint.",
-    icon: <i className="fa-solid fa-palette" aria-hidden="true" />,
+    icon: <IconPalette aria-hidden="true" />,
   },
   {
     id: 6,
     title: "Digital Marketing",
     desc: "Multi-channel campaigns aligned to outcomes.",
-    icon: <i className="fa-solid fa-bullhorn" aria-hidden="true" />,
+    icon: <IconBullhorn aria-hidden="true" />,
   },
   {
     id: 7,
     title: "SEO Services",
     desc: "Sustainable traffic that compounds.",
-    icon: <i className="fa-solid fa-magnifying-glass" aria-hidden="true" />,
+    icon: <IconMagnifyingGlass aria-hidden="true" />,
   },
   {
     id: 8,
     title: "App Development",
     desc: "Mobile products built for scale.",
-    icon: <i className="fa-solid fa-mobile-screen-button" aria-hidden="true" />,
+    icon: <IconMobileScreenButton aria-hidden="true" />,
   },
 ];
 

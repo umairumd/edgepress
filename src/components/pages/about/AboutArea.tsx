@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { IconArrowRight } from "@/components/icons";
 
 const AboutArea = () => {
     return (
@@ -46,11 +47,11 @@ const AboutArea = () => {
                                         <p className="mb-30">A digital agency built on systems, clarity, and long-term results. Helping businesses through strategy, design, technology, and marketing.</p>
                                         <div className="td-btn-group">
                                             <Link className="td-btn-circle about-brand-circle" href="/contact">
-                                                <i className="fa-solid fa-arrow-right"></i>
+                                                <IconArrowRight />
                                             </Link>
                                             <Link className="td-btn-2 td-btn-primary about-brand-btn" href="/contact">EXPLORE MORE</Link>
                                             <Link className="td-btn-circle about-brand-circle" href="/contact">
-                                                <i className="fa-solid fa-arrow-right"></i>
+                                                <IconArrowRight />
                                             </Link>
                                         </div>
                                     </div>

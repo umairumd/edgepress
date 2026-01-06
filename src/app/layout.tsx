@@ -47,15 +47,10 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/inoma-favicon.jpg" type="image/jpeg" />
         <link rel="apple-touch-icon" href="/inoma-favicon.jpg" />
-        {/* Preload Font Awesome fonts to prevent CLS */}
-        <link rel="preload" href="/assets/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-        <link rel="preload" href="/assets/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-        <link rel="preload" href="/assets/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         {/* Static CSS from public folder */}
         <link rel="stylesheet" href="/assets/css/bootstrap.min.css" />
         <link rel="stylesheet" href="/assets/css/animate.css" />
-        <link rel="stylesheet" href="/assets/css/fontawesome-all.min.css" />
-        <link rel="stylesheet" href="/assets/css/fontawesome-display.css" />
+        {/* Font Awesome removed - using inline SVG icons instead (saves ~82 KiB) */}
         <link rel="stylesheet" href="/assets/css/defauls-spacing.css" />
         <link rel="stylesheet" href="/assets/css/main.css" />
         <script

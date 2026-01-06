@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef } from "react";
 import type { JSX } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { IconArrowRight } from "@/components/icons";
 
 interface DataType {
     id: number;
@@ -228,11 +229,11 @@ const ServiceItem = () => {
                                         </ul>
                                         <div className="td-btn-group td-btn-group-border pt-50">
                                             <Link className="td-btn-circle" href="/contact" aria-label="Reach out">
-                                                <i className="fa-solid fa-arrow-right"></i>
+                                                <IconArrowRight />
                                             </Link>
                                             <Link className="td-btn-2 td-btn-primary" href="/contact">REACH OUT</Link>
                                             <Link className="td-btn-circle" href="/contact" aria-label="Reach out">
-                                                <i className="fa-solid fa-arrow-right"></i>
+                                                <IconArrowRight />
                                             </Link>
                                         </div>
                                     </div>
