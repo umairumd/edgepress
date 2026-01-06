@@ -2097,8 +2097,8 @@ main.td-has-cta-footer + footer .td-footer-area {
     ) !important;
 }
 
-// Pricing/Growth Package section: same gradient as hero
-.td-pricing-area.td-pricing-main-wrap {
+// Pricing card with gradient background (Growth package style)
+.td-pricing-main-wrap .pricing-card--featured {
     background: radial-gradient(
         ellipse 160% 130% at 50% 0%,
         #1a8fcc 0%,
@@ -2107,22 +2107,11 @@ main.td-has-cta-footer + footer .td-footer-area {
         #065a8a 80%,
         #044c74 100%
     ) !important;
+    border-color: transparent !important;
     
-    // Title text should be white on gradient background
-    .td-pricing-6-title-wrap .td-section-6-subtitle {
-        color: #fff !important;
-        background: rgba(255, 255, 255, 0.15) !important;
-        &::before {
-            background: rgba(255, 255, 255, 0.3) !important;
-        }
-    }
-    .td-pricing-6-title-wrap .td-section-6-bigtitle {
-        color: #fff !important;
-        -webkit-text-stroke-color: rgba(255, 255, 255, 0.2) !important;
-    }
-    // Bottom note text
-    .td-pricing-microline p {
-        color: rgba(255, 255, 255, 0.85) !important;
+    // Remove the default overlay
+    &::before {
+        display: none !important;
     }
 }
 
