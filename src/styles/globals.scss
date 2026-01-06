@@ -6,6 +6,17 @@ html, body {
     max-width: 100vw !important;
 }
 
+/* Button reset for accessibility (buttons used as anchors) */
+button.popup-video {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+}
+
 /* Inline SVG icons (replacing Font Awesome) */
 .svg-icon {
     display: inline-block;

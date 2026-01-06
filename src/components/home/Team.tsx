@@ -88,13 +88,13 @@ const Team = () => {
                                 <SwiperSlide key={`${item.id}-${idx}`} className="swiper-slide">
                                     <div className="td-team-6-wrap">
                                         <div className="td-team-6-thumb mb-20">
-                                            <Link href="/team">
+                                            <Link href="/team" aria-label={`View ${item.name}'s profile`}>
                                                 <picture>
                                                     <source srcSet={item.thumb.replace(/\.jpg$/i, ".webp")} type="image/webp" />
                                                     <img
                                                         className="w-100"
                                                         src={item.thumb}
-                                                        alt=""
+                                                        alt={`${item.name} - ${item.designation}`}
                                                         width={307}
                                                         height={420}
                                                         loading="lazy"

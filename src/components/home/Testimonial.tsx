@@ -121,7 +121,7 @@ const Testimonial = () => {
                                             <p className="mb-40">{item.desc}</p>
                                             <div className="td-testimonial-6-author">
                                                 <span className="position">{item.designation}</span>
-                                                <h4 className="name">{item.name}</h4>
+                                                <p className="name">{item.name}</p>
                                             </div>
                                         </div>
                                     </SwiperSlide>
