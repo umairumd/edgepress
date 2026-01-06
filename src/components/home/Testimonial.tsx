@@ -111,7 +111,7 @@ const Testimonial = () => {
                     <div className="col-lg-8">
                         <div className="td-testimonial-6-wrap">
                             <div className="td-testimonial-6-title-wrap mb-55">
-                                <span className="td-section-6-subtitle d-inline-block mb-15">OUR SUITABLE PRICING PLANS</span>
+                                <span className="td-section-6-subtitle d-inline-block mb-15">TESTIMONIALS</span>
                                 <h2 className="title">CLIENTS FEEDBACK</h2>
                             </div>
                             <Swiper {...setting} modules={[Autoplay, Thumbs]} thumbs={{ swiper: thumbsSwiper }} className="swiper-container td-testimonial-6-content-active">
