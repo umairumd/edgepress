@@ -50,14 +50,7 @@ export default function RootLayout({
         {/* Preconnect to WordPress media origin for faster image loading */}
         <link rel="preconnect" href="https://cms.inomadigital.com" />
         <link rel="dns-prefetch" href="https://cms.inomadigital.com" />
-        {/* CRITICAL: Preload hero background image BEFORE CSS to improve LCP */}
-        <link
-          rel="preload"
-          href="/assets/img/hero/hero-bg.jpg"
-          as="image"
-          type="image/jpeg"
-          fetchPriority="high"
-        />
+        {/* Hero background is now pure CSS gradient - no preload needed */}
         {/* Critical CSS - loaded synchronously */}
         <link rel="stylesheet" href="/assets/css/bootstrap.min.css" />
         {/* Font Awesome removed - using inline SVG icons instead (saves ~82 KiB) */}

@@ -6,9 +6,6 @@ import { Autoplay } from 'swiper/modules';
 import Link from "next/link";
 import type { Swiper as SwiperType } from "swiper";
 
-// Hero background from public folder (preloaded in layout.tsx for faster LCP)
-const HERO_BG_SRC = "/assets/img/hero/hero-bg.jpg";
-
 // Fallback static images if no WordPress data
 const FALLBACK_SLIDES: string[] = [
     "/assets/img/hero/hero-6/thumb.jpg",
@@ -154,21 +151,7 @@ const Hero = ({ slides }: HeroProps) => {
 
     return (
         <div className="td-hero-area td-hero-6-spacing p-relative">
-            {/* LCP background image: preloaded in layout.tsx, uses native img for fastest paint */}
-            <img
-                className="td-hero-6-bg-img"
-                src={HERO_BG_SRC}
-                alt=""
-                fetchPriority="high"
-                decoding="async"
-                style={{
-                    position: "absolute",
-                    inset: 0,
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                }}
-            />
+            {/* Background is now pure CSS gradient in globals.scss - instant LCP, no image load */}
             <div className="container">
                 <div className="td-hero-6-top pb-45 p-relative z-index-1">
                     <div className="td-hero-6-line">
