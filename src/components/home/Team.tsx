@@ -2,15 +2,19 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import Link from "next/link";
+import Image from "next/image";
+import type { TeamMember as TeamMemberType } from "@/lib/wp";
 
-interface TeamMember {
+interface TeamMemberData {
     id: number;
     thumb: string;
     name: string;
     designation: string;
+    isRemote?: boolean;
 }
 
-const team_data: TeamMember[] = [
+// Fallback static data if WordPress returns empty
+const fallback_data: TeamMemberData[] = [
     {
         id: 1,
         thumb: "/assets/img/team/thumb-6/thumb.jpg",
@@ -43,9 +47,9 @@ const team_data: TeamMember[] = [
     },
 ];
 
-// Swiper loop with slidesPerView:'auto' can warn if there aren't enough slides.
-// Duplicate for smooth infinite loop without console warnings.
-const team_slider = team_data.length < 10 ? [...team_data, ...team_data] : team_data;
+interface TeamProps {
+    members?: TeamMemberType[];
+}
 
 const setting = {
     loop: true,
@@ -54,14 +58,29 @@ const setting = {
     spaceBetween: 30,
     centeredSlides: true,
     allowTouchMove: false,
-    speed: 30000,
+    speed: 8000, // Fixed: was 30000 which made slider appear stuck
     autoplay: {
-        delay: 1,
-        disableOnInteraction: true,
+        delay: 0,
+        disableOnInteraction: false,
     },
 };
 
-const Team = () => {
+const Team = ({ members }: TeamProps) => {
+    // Map WordPress team members to component format, or use fallback
+    const team_data: TeamMemberData[] = members && members.length > 0
+        ? members.map((m) => ({
+            id: m.id,
+            thumb: m.image?.url || "/assets/img/team/thumb-6/thumb.jpg",
+            name: m.name,
+            designation: m.role || "",
+            isRemote: !!m.image?.url,
+        }))
+        : fallback_data;
+
+    // Swiper loop with slidesPerView:'auto' can warn if there aren't enough slides.
+    // Duplicate for smooth infinite loop without console warnings.
+    const team_slider = team_data.length < 10 ? [...team_data, ...team_data] : team_data;
+
     return (
         <div className="td-team-area pt-105 fix">
             <div className="container">
@@ -89,18 +108,30 @@ const Team = () => {
                                     <div className="td-team-6-wrap">
                                         <div className="td-team-6-thumb mb-20">
                                             <Link href="/team" aria-label={`View ${item.name}'s profile`}>
-                                                <picture>
-                                                    <source srcSet={item.thumb.replace(/\.jpg$/i, ".webp")} type="image/webp" />
-                                                    <img
-                                                        className="w-100"
+                                                {item.isRemote ? (
+                                                    <Image
                                                         src={item.thumb}
                                                         alt={`${item.name} - ${item.designation}`}
                                                         width={307}
                                                         height={420}
+                                                        className="w-100"
+                                                        style={{ objectFit: "cover" }}
                                                         loading="lazy"
-                                                        decoding="async"
                                                     />
-                                                </picture>
+                                                ) : (
+                                                    <picture>
+                                                        <source srcSet={item.thumb.replace(/\.jpg$/i, ".webp")} type="image/webp" />
+                                                        <img
+                                                            className="w-100"
+                                                            src={item.thumb}
+                                                            alt={`${item.name} - ${item.designation}`}
+                                                            width={307}
+                                                            height={420}
+                                                            loading="lazy"
+                                                            decoding="async"
+                                                        />
+                                                    </picture>
+                                                )}
                                             </Link>
                                         </div>
                                         <div className="td-team-6-content">

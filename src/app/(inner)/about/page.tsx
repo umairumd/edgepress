@@ -4,6 +4,7 @@ import Feature from "@/components/pages/about/Feature";
 import Testimonial from "@/components/pages/about/Testimonial";
 import Founders from "@/components/pages/about/Founders";
 import Awards from "@/components/pages/about/Awards";
+import { getTestimonials } from "@/lib/wp";
 
 export const metadata: Metadata = {
     title: "About",
@@ -11,11 +12,17 @@ export const metadata: Metadata = {
     alternates: { canonical: "/about" },
 };
 
-export default function AboutPage() {
+// Revalidate about page every hour to pick up new testimonials
+export const revalidate = 3600;
+
+export default async function AboutPage() {
+    // Fetch testimonials at build time (ISR)
+    const testimonials = await getTestimonials(10);
+
     return (
         <main>
             <AboutArea />
-            <Testimonial />
+            <Testimonial testimonials={testimonials} />
             <Feature />
             <Founders />
             <Awards />

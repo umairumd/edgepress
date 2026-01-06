@@ -955,3 +955,277 @@ export async function getHeroSlides(): Promise<WPImage[]> {
   return [];
 }
 
+// ============================================================================
+// TESTIMONIALS
+// ============================================================================
+
+export type Testimonial = {
+  id: number;
+  name: string;
+  designation?: string;
+  text: string;
+};
+
+type WpTestimonialNode = {
+  databaseId?: number | null;
+  title?: string | null;
+  content?: string | null;
+  // ACF fields - try multiple field name patterns
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
+};
+
+const TESTIMONIAL_ACF_GROUP_CANDIDATES = ["testimonialDetails", "testimonialFields", "acf", "acfFields"];
+const TESTIMONIAL_DESIGNATION_FIELD_CANDIDATES = ["designation", "role", "company", "position", "title"];
+
+function getTestimonialDesignation(node: WpTestimonialNode): string | undefined {
+  // Try grouped ACF fields first
+  for (const groupKey of TESTIMONIAL_ACF_GROUP_CANDIDATES) {
+    const group = node?.[groupKey] as Record<string, unknown> | null | undefined;
+    if (!group) continue;
+    for (const fieldKey of TESTIMONIAL_DESIGNATION_FIELD_CANDIDATES) {
+      const val = group?.[fieldKey];
+      if (typeof val === "string" && val.trim()) return val.trim();
+    }
+  }
+  // Try top-level fields
+  for (const fieldKey of TESTIMONIAL_DESIGNATION_FIELD_CANDIDATES) {
+    const val = node?.[fieldKey];
+    if (typeof val === "string" && val.trim()) return val.trim();
+  }
+  return undefined;
+}
+
+function stripHtml(html: string): string {
+  return html.replace(/<[^>]*>/g, "").trim();
+}
+
+/**
+ * Fetch testimonials from WordPress.
+ * Supports Custom Post Type "testimonials" or "testimonial".
+ */
+export async function getTestimonials(limit = 10): Promise<Testimonial[]> {
+  const cptCandidates = ["testimonials", "testimonial"];
+
+  // Build ACF field selection dynamically
+  const acfFieldSelection = TESTIMONIAL_DESIGNATION_FIELD_CANDIDATES.join(" ");
+  const acfGroupSelections = TESTIMONIAL_ACF_GROUP_CANDIDATES.map(
+    (g) => `${g} { ${acfFieldSelection} }`
+  ).join(" ");
+
+  for (const cptName of cptCandidates) {
+    // Try with ACF fields first
+    const queryWithAcf = `
+      query GetTestimonials($limit: Int!) {
+        ${cptName}(first: $limit, where: {orderby: {field: DATE, order: DESC}}) {
+          nodes {
+            databaseId
+            title
+            content
+            ${acfGroupSelections}
+            ${acfFieldSelection}
+          }
+        }
+      }
+    `;
+
+    const rawWithAcf = await wpFetchRaw<Record<string, { nodes?: WpTestimonialNode[] } | null>>(
+      queryWithAcf,
+      { limit }
+    );
+
+    if (rawWithAcf && !rawWithAcf.errors && rawWithAcf.data) {
+      const cptData = rawWithAcf.data[cptName];
+      const nodes = cptData?.nodes;
+
+      if (Array.isArray(nodes) && nodes.length > 0) {
+        return nodes.map((node, idx) => ({
+          id: node.databaseId ?? idx + 1,
+          name: node.title ?? "Anonymous",
+          designation: getTestimonialDesignation(node),
+          text: stripHtml(node.content ?? ""),
+        }));
+      }
+    }
+
+    // Fallback: try without ACF fields
+    const queryBase = `
+      query GetTestimonials($limit: Int!) {
+        ${cptName}(first: $limit, where: {orderby: {field: DATE, order: DESC}}) {
+          nodes {
+            databaseId
+            title
+            content
+          }
+        }
+      }
+    `;
+
+    const rawBase = await wpFetchRaw<Record<string, { nodes?: WpTestimonialNode[] } | null>>(
+      queryBase,
+      { limit }
+    );
+
+    if (rawBase && !rawBase.errors && rawBase.data) {
+      const cptData = rawBase.data[cptName];
+      const nodes = cptData?.nodes;
+
+      if (Array.isArray(nodes) && nodes.length > 0) {
+        return nodes.map((node, idx) => ({
+          id: node.databaseId ?? idx + 1,
+          name: node.title ?? "Anonymous",
+          designation: undefined,
+          text: stripHtml(node.content ?? ""),
+        }));
+      }
+    }
+  }
+
+  // No testimonials found
+  return [];
+}
+
+// ============================================================================
+// TEAM MEMBERS
+// ============================================================================
+
+export type TeamMember = {
+  id: number;
+  name: string;
+  role?: string;
+  image?: WPImage;
+};
+
+type WpTeamMemberNode = {
+  databaseId?: number | null;
+  title?: string | null;
+  featuredImage?: { node?: WpMediaNode | null } | null;
+  // ACF fields
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
+};
+
+const TEAM_ACF_GROUP_CANDIDATES = ["teamDetails", "teamFields", "acf", "acfFields"];
+const TEAM_ROLE_FIELD_CANDIDATES = ["role", "designation", "position", "jobTitle", "job_title", "title"];
+
+function getTeamMemberRole(node: WpTeamMemberNode): string | undefined {
+  // Try grouped ACF fields first
+  for (const groupKey of TEAM_ACF_GROUP_CANDIDATES) {
+    const group = node?.[groupKey] as Record<string, unknown> | null | undefined;
+    if (!group) continue;
+    for (const fieldKey of TEAM_ROLE_FIELD_CANDIDATES) {
+      const val = group?.[fieldKey];
+      if (typeof val === "string" && val.trim()) return val.trim();
+    }
+  }
+  // Try top-level fields
+  for (const fieldKey of TEAM_ROLE_FIELD_CANDIDATES) {
+    const val = node?.[fieldKey];
+    if (typeof val === "string" && val.trim()) return val.trim();
+  }
+  return undefined;
+}
+
+/**
+ * Fetch team members from WordPress.
+ * Supports Custom Post Types: "teamMembers", "team_members", "team".
+ */
+export async function getTeamMembers(limit = 20): Promise<TeamMember[]> {
+  const cptCandidates = ["teamMembers", "team_members", "team", "teams"];
+
+  // Build ACF field selection dynamically
+  const acfFieldSelection = TEAM_ROLE_FIELD_CANDIDATES.join(" ");
+  const acfGroupSelections = TEAM_ACF_GROUP_CANDIDATES.map(
+    (g) => `${g} { ${acfFieldSelection} }`
+  ).join(" ");
+
+  for (const cptName of cptCandidates) {
+    // Try with ACF fields first
+    const queryWithAcf = `
+      query GetTeamMembers($limit: Int!) {
+        ${cptName}(first: $limit, where: {orderby: {field: MENU_ORDER, order: ASC}}) {
+          nodes {
+            databaseId
+            title
+            featuredImage {
+              node {
+                sourceUrl
+                altText
+                mediaDetails {
+                  width
+                  height
+                }
+              }
+            }
+            ${acfGroupSelections}
+            ${acfFieldSelection}
+          }
+        }
+      }
+    `;
+
+    const rawWithAcf = await wpFetchRaw<Record<string, { nodes?: WpTeamMemberNode[] } | null>>(
+      queryWithAcf,
+      { limit }
+    );
+
+    if (rawWithAcf && !rawWithAcf.errors && rawWithAcf.data) {
+      const cptData = rawWithAcf.data[cptName];
+      const nodes = cptData?.nodes;
+
+      if (Array.isArray(nodes) && nodes.length > 0) {
+        return nodes.map((node, idx) => ({
+          id: node.databaseId ?? idx + 1,
+          name: node.title ?? "Team Member",
+          role: getTeamMemberRole(node),
+          image: mapWpImage(node.featuredImage?.node),
+        }));
+      }
+    }
+
+    // Fallback: try without ACF fields, just featured image
+    const queryBase = `
+      query GetTeamMembers($limit: Int!) {
+        ${cptName}(first: $limit, where: {orderby: {field: MENU_ORDER, order: ASC}}) {
+          nodes {
+            databaseId
+            title
+            featuredImage {
+              node {
+                sourceUrl
+                altText
+                mediaDetails {
+                  width
+                  height
+                }
+              }
+            }
+          }
+        }
+      }
+    `;
+
+    const rawBase = await wpFetchRaw<Record<string, { nodes?: WpTeamMemberNode[] } | null>>(
+      queryBase,
+      { limit }
+    );
+
+    if (rawBase && !rawBase.errors && rawBase.data) {
+      const cptData = rawBase.data[cptName];
+      const nodes = cptData?.nodes;
+
+      if (Array.isArray(nodes) && nodes.length > 0) {
+        return nodes.map((node, idx) => ({
+          id: node.databaseId ?? idx + 1,
+          name: node.title ?? "Team Member",
+          role: undefined,
+          image: mapWpImage(node.featuredImage?.node),
+        }));
+      }
+    }
+  }
+
+  // No team members found
+  return [];
+}
+

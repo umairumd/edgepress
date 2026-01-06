@@ -8,16 +8,18 @@ import Testimonial from "@/components/home/Testimonial";
 import Choose from "@/components/home/Choose";
 import Team from "@/components/home/Team";
 import Counter from "@/components/home/Counter";
-import { getFeaturedPortfolios, getHeroSlides } from "@/lib/wp";
+import { getFeaturedPortfolios, getHeroSlides, getTestimonials, getTeamMembers } from "@/lib/wp";
 
 // Revalidate homepage every hour to pick up new featured portfolios and hero slides
 export const revalidate = 3600;
 
 export default async function HomePage() {
     // Fetch data at build time (ISR)
-    const [featuredPortfolios, heroSlides] = await Promise.all([
+    const [featuredPortfolios, heroSlides, testimonials, teamMembers] = await Promise.all([
         getFeaturedPortfolios(5),
         getHeroSlides(),
+        getTestimonials(10),
+        getTeamMembers(20),
     ]);
 
     // Preload first hero slide for faster LCP (React hoists <link> to <head>)
@@ -44,9 +46,9 @@ export default async function HomePage() {
                 <Portfolio items={featuredPortfolios} />
                 <VideoArea />
                 <Pricing />
-                <Testimonial />
+                <Testimonial testimonials={testimonials} />
                 <Choose />
-                <Team />
+                <Team members={teamMembers} />
                 <Counter />
             </main>
         </>

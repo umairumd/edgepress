@@ -2,6 +2,7 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation } from 'swiper/modules';
 import { IconStar, IconArrowLeft, IconArrowRight } from "@/components/icons";
+import type { Testimonial as TestimonialType } from "@/lib/wp";
 
 interface DataType {
     id: number;
@@ -9,23 +10,28 @@ interface DataType {
     desc: string;
 }
 
-const testi_data: DataType[] = [
+// Fallback static data if WordPress returns empty
+const fallback_data: DataType[] = [
     {
         id: 1,
-        name: "@ lLaura Leipina",
+        name: "@ Laura Leipina",
         desc: "We offer a comprehensive suite of services design to drive innovation and excellence in the tech industry. Our team of experts is dedicated to delivering top-notch",
     },
     {
         id: 2,
-        name: "@ lLaura Leipina",
-        desc: "We offer a comprehensive suite of services design to drive innovation and excellence in the tech industry. Our team of experts is dedicated to delivering top-notch",
+        name: "@ John Smith",
+        desc: "Working with Inoma Digital was a game-changer for our business. Their strategic approach and attention to detail helped us achieve our goals faster than expected.",
     },
     {
         id: 3,
-        name: "@ lLaura Leipina",
-        desc: "We offer a comprehensive suite of services design to drive innovation and excellence in the tech industry. Our team of experts is dedicated to delivering top-notch",
+        name: "@ Sarah Johnson",
+        desc: "The team's expertise in design and development is unmatched. They delivered a beautiful, high-performing website that exceeded all our expectations.",
     },
 ];
+
+interface TestimonialProps {
+    testimonials?: TestimonialType[];
+}
 
 const setting = {
     slidesPerView: 1,
@@ -38,7 +44,16 @@ const setting = {
     },
 };
 
-const Testimonial = () => {
+const Testimonial = ({ testimonials }: TestimonialProps) => {
+    // Map WordPress testimonials to component format, or use fallback
+    const testi_data: DataType[] = testimonials && testimonials.length > 0
+        ? testimonials.map((t) => ({
+            id: t.id,
+            name: t.designation ? `@ ${t.name} - ${t.designation}` : `@ ${t.name}`,
+            desc: t.text,
+        }))
+        : fallback_data;
+
     return (
         <div className="td-testimonial-area pt-115 pb-150 td-about-testimonial">
             <div className="container">

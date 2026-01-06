@@ -5,6 +5,7 @@ import type { Swiper as SwiperClass } from "swiper";
 import Link from 'next/link';
 import { useState } from 'react';
 import Image from "next/image";
+import type { Testimonial as TestimonialType } from "@/lib/wp";
 
 const avatar_data: string[] = [
     "/assets/img/testimonial/tes-6/01.png",
@@ -48,7 +49,8 @@ interface DataType {
     desc: string
 }
 
-const testi_data: DataType[] = [
+// Fallback static data if WordPress returns empty
+const fallback_data: DataType[] = [
     {
         id: 1,
         name: "Jonathon Marry",
@@ -68,6 +70,10 @@ const testi_data: DataType[] = [
         desc: "The collaboration was seamless and the results speak for themselves. Their attention to detail and commitment to quality is what sets them apart from other agencies."
     },
 ];
+
+interface TestimonialProps {
+    testimonials?: TestimonialType[];
+}
 
 const setting = {
     spaceBetween: 0,
@@ -101,8 +107,18 @@ const setting3 = {
     },
 };
 
-const Testimonial = () => {
+const Testimonial = ({ testimonials }: TestimonialProps) => {
     const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
+
+    // Map WordPress testimonials to component format, or use fallback
+    const testi_data: DataType[] = testimonials && testimonials.length > 0
+        ? testimonials.map((t) => ({
+            id: t.id,
+            name: t.name,
+            designation: t.designation || "",
+            desc: t.text,
+        }))
+        : fallback_data;
 
     return (
         <div className="td-testimonial-area td-testimonial-6-bg pt-155 pb-160">
