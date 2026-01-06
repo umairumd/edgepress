@@ -1360,8 +1360,14 @@ img {
     }
 }
 
-/* Mobile header alignment: logo, button, and menu icon same height (44px) */
+/* Mobile header: larger with more padding */
 @media (max-width: 991px) {
+    /* Extra top/bottom padding for taller header */
+    .td-header-6-wrapper {
+        padding-top: 16px !important;
+        padding-bottom: 16px !important;
+    }
+    
     /* Let's Talk button */
     .td-header-6-wrapper .td-btn-12 {
         padding: 10px 18px !important;
