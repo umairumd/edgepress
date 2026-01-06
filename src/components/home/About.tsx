@@ -74,7 +74,7 @@ const About = () => {
                                     <div className="col-lg-6 col-md-6 col-sm-6">
                                         <div className="td-about-6-author-single">
                                             <h2 className="mb-10">625+</h2>
-                                            <p>Projects Completed in<br /> Worldwide</p>
+                                            <p>Projects Completed<br /> Worldwide</p>
                                         </div>
                                     </div>
                                 </div>
