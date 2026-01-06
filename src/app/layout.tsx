@@ -50,12 +50,37 @@ export default function RootLayout({
         {/* Preconnect to WordPress media origin for faster image loading */}
         <link rel="preconnect" href="https://cms.inomadigital.com" />
         <link rel="dns-prefetch" href="https://cms.inomadigital.com" />
-        {/* Static CSS from public folder */}
+        {/* CRITICAL: Preload hero background image BEFORE CSS to improve LCP */}
+        <link
+          rel="preload"
+          href="/assets/img/hero/hero-bg.jpg"
+          as="image"
+          type="image/jpeg"
+          fetchPriority="high"
+        />
+        {/* Critical CSS - loaded synchronously */}
         <link rel="stylesheet" href="/assets/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="/assets/css/animate.css" />
         {/* Font Awesome removed - using inline SVG icons instead (saves ~82 KiB) */}
         <link rel="stylesheet" href="/assets/css/defauls-spacing.css" />
         <link rel="stylesheet" href="/assets/css/main.css" />
+        {/* Non-critical CSS - deferred until after first paint using preload */}
+        <link
+          rel="preload"
+          href="/assets/css/animate.css"
+          as="style"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              requestAnimationFrame(function(){
+                var l=document.createElement('link');
+                l.rel='stylesheet';
+                l.href='/assets/css/animate.css';
+                document.head.appendChild(l);
+              });
+            `,
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

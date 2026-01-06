@@ -32,6 +32,11 @@ const wpMediaHosts = Array.from(
 );
 
 const nextConfig: NextConfig = {
+  // Experimental optimizations for faster CSS loading
+  experimental: {
+    // Inline critical CSS to reduce render-blocking
+    optimizeCss: true,
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     // Allow custom quality values (65 for hero slider, 75 default)

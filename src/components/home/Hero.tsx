@@ -5,7 +5,9 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import Link from "next/link";
 import type { Swiper as SwiperType } from "swiper";
-import heroBg from "../../../extras/bg.jpg";
+
+// Hero background from public folder (preloaded in layout.tsx for faster LCP)
+const HERO_BG_SRC = "/assets/img/hero/hero-bg.jpg";
 
 // Fallback static images if no WordPress data
 const FALLBACK_SLIDES: string[] = [
@@ -152,16 +154,20 @@ const Hero = ({ slides }: HeroProps) => {
 
     return (
         <div className="td-hero-area td-hero-6-spacing p-relative">
-            {/* LCP background image: prioritized to be the Largest Contentful Paint element */}
-            <Image
+            {/* LCP background image: preloaded in layout.tsx, uses native img for fastest paint */}
+            <img
                 className="td-hero-6-bg-img"
-                src={heroBg}
+                src={HERO_BG_SRC}
                 alt=""
-                fill
-                priority
                 fetchPriority="high"
-                sizes="100vw"
-                style={{ objectFit: "cover" }}
+                decoding="async"
+                style={{
+                    position: "absolute",
+                    inset: 0,
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                }}
             />
             <div className="container">
                 <div className="td-hero-6-top pb-45 p-relative z-index-1">

@@ -38,6 +38,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "critters": "^0.0.23",
     "csso-cli": "^4.0.2",
     "eslint": "^9",
     "eslint-config-next": "16.1.1",
