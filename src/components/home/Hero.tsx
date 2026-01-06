@@ -196,15 +196,35 @@ const Hero = ({ slides }: HeroProps) => {
                                         // First 2 slides are prioritized for LCP
                                         const isLCPCandidate = i < 2;
                                         return (
-                                            <SwiperSlide key={i} className="swiper-slide">
-                                                <div className="td-hero-6-thumb">
+                                            <SwiperSlide
+                                                key={i}
+                                                className="swiper-slide"
+                                                style={{
+                                                    width: SLIDE_WIDTH,
+                                                    height: SLIDE_HEIGHT,
+                                                    flexShrink: 0,
+                                                }}
+                                            >
+                                                <div
+                                                    className="td-hero-6-thumb"
+                                                    style={{
+                                                        width: SLIDE_WIDTH,
+                                                        height: SLIDE_HEIGHT,
+                                                        overflow: "hidden",
+                                                        borderRadius: "10px",
+                                                    }}
+                                                >
                                                     {slide.isRemote ? (
                                                         <Image
                                                             src={slide.src}
                                                             alt={slide.alt}
                                                             width={SLIDE_WIDTH}
                                                             height={SLIDE_HEIGHT}
-                                                            style={{ objectFit: "cover" }}
+                                                            style={{
+                                                                objectFit: "cover",
+                                                                width: SLIDE_WIDTH,
+                                                                height: SLIDE_HEIGHT,
+                                                            }}
                                                             priority={isLCPCandidate}
                                                             loading={isLCPCandidate ? "eager" : "lazy"}
                                                             fetchPriority={isLCPCandidate ? "high" : "auto"}
@@ -222,7 +242,11 @@ const Hero = ({ slides }: HeroProps) => {
                                                                 loading={isLCPCandidate ? "eager" : "lazy"}
                                                                 fetchPriority={isLCPCandidate ? "high" : "auto"}
                                                                 decoding="async"
-                                                                style={{ objectFit: "cover" }}
+                                                                style={{
+                                                                    objectFit: "cover",
+                                                                    width: SLIDE_WIDTH,
+                                                                    height: SLIDE_HEIGHT,
+                                                                }}
                                                             />
                                                         </picture>
                                                     )}
