@@ -74,10 +74,10 @@ const Hero = ({ slides }: HeroProps) => {
     }, [slides]);
 
     // Swiper loop needs ~2x visible slides for smooth looping.
-    // With 208px slides + 30px gap on 1920px screen, ~8 are visible.
-    // Use 20 slides (2.5x visible) - balance between smooth loop and fast LCP.
+    // With 208px slides + 30px gap on 2560px ultrawide, ~11 are visible.
+    // Use 32 slides (3x visible) to prevent Swiper loop warnings.
     const slidesLoop = useMemo(() => {
-        const minSlides = 20;
+        const minSlides = 32;
         const out: typeof slideData = [];
         while (out.length < minSlides) out.push(...slideData);
         return out;

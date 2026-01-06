@@ -34,6 +34,8 @@ const wpMediaHosts = Array.from(
 const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
+    // Allow custom quality values (65 for hero slider, 75 default)
+    qualities: [65, 75],
     // Cache optimized images for 30 days (reduces re-compression)
     minimumCacheTTL: 2592000,
     remotePatterns: wpMediaHosts.length
