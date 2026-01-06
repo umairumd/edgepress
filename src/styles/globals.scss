@@ -187,7 +187,14 @@ img {
 
 /* Contact page: map info card theme */
 .td-contact-map-wrap {
-    background: #062539 !important;
+    background: radial-gradient(
+        ellipse 160% 130% at 50% 0%,
+        #1a8fcc 0%,
+        #0d84c2 25%,
+        #0277b5 50%,
+        #065a8a 80%,
+        #044c74 100%
+    ) !important;
 }
 .td-contact-map-wrap h6 {
     color: #b8e9ff !important;

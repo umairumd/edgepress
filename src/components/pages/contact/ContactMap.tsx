@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import Image from "next/image";
 import { IconPhone, IconEnvelope, IconLocationDot } from "@/components/icons";
+import logoLight from "../../../../extras/inoma-logo-for-dark.png";
 
 const ContactMap = () => {
     const [isLoaded, setIsLoaded] = useState(false);
@@ -17,12 +18,10 @@ const ContactMap = () => {
                             <div className="td-contact-map-wrap">
                                 <Image
                                     className="mb-60"
-                                    src="/assets/img/logo/inoma-logo-for-dark.png"
+                                    src={logoLight}
                                     alt="Inoma Digital"
-                                    width={666}
-                                    height={175}
                                     sizes="(max-width: 768px) 220px, 280px"
-                                    style={{ height: "auto" }}
+                                    style={{ width: "280px", height: "auto" }}
                                 />
                                 <h6 className="mb-25">Contact Info</h6>
                                 <div className="td-contact-info-item d-flex align-items-center mb-10">
