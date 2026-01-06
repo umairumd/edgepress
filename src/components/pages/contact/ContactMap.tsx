@@ -17,11 +17,11 @@ const ContactMap = () => {
                         <div className="td-contact-map p-relative">
                             <div className="td-contact-map-wrap">
                                 <Image
-                                    className="mb-60"
+                                    className="mb-60 contact-card-logo"
                                     src={logoLight}
                                     alt="Inoma Digital"
-                                    sizes="(max-width: 768px) 220px, 280px"
-                                    style={{ width: "280px", height: "auto" }}
+                                    sizes="(max-width: 768px) 200px, 220px"
+                                    style={{ width: "220px", height: "auto" }}
                                 />
                                 <h6 className="mb-25">Contact Info</h6>
                                 <div className="td-contact-info-item d-flex align-items-center mb-10">
