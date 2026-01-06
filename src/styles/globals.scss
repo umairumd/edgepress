@@ -1699,22 +1699,22 @@ img {
     color: inherit !important;
 }
 
-/* Mobile offcanvas menu: replace black accents with #062539 */
+/* Mobile offcanvas menu: theme blue buttons */
 .td-btn-menu-black {
-    background: #062539 !important;
-    border-color: #062539 !important;
+    background: #0277b5 !important;
+    border-color: #0277b5 !important;
 }
 
-/* Optional: keep text/icon contrast on the CTA button */
+/* Keep text/icon contrast on the CTA button */
 .td-btn-menu-black,
 .td-btn-menu-black:hover {
     color: #fff !important;
 }
 
-/* Mobile offcanvas: dropdown toggle + social icons (black -> #062539) */
+/* Mobile offcanvas: dropdown toggle (About arrow) - theme blue */
 .tdmobile__menu .navigation li.menu-item-has-children .dropdown-btn,
 .tdmobile__menu .navigation li.menu-item-has-children .dropdown-btn.open {
-    background: #062539 !important;
+    background: #0277b5 !important;
 }
 
 .tdmobile__menu .social-links ul li a,

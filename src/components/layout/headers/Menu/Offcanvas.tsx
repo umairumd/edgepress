@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import MobileMenu from "./MobileMenu";
-import logoLight from "../../../../../extras/inoma-logo-for-dark.png";
+import logoDark from "../../../../../extras/inoma-logo.png";
 import {
     IconXmark,
     IconSearch,
@@ -29,10 +29,10 @@ const Offcanvas = ({ offCanvas, setOffCanvas }: OffcanvasProps) => {
                     <div className="nav-logo">
                         <Link href="/">
                             <img
-                                src={logoLight.src}
+                                src={logoDark.src}
                                 alt="Inoma Digital"
-                                width={logoLight.width}
-                                height={logoLight.height}
+                                width={logoDark.width}
+                                height={logoDark.height}
                                 loading="eager"
                                 decoding="async"
                             />
