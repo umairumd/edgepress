@@ -73,11 +73,11 @@ const Hero = ({ slides }: HeroProps) => {
         }));
     }, [slides]);
 
-    // Swiper loop with slidesPerView:'auto' needs MANY more slides than visible.
-    // With 208px slides + 30px gap on a 1920px screen, ~8 are visible.
-    // Swiper loop needs at least 2x visible slides, but we go 5x for safety.
+    // Swiper loop needs ~2x visible slides for smooth looping.
+    // With 208px slides + 30px gap on 1920px screen, ~8 are visible.
+    // Use 20 slides (2.5x visible) - balance between smooth loop and fast LCP.
     const slidesLoop = useMemo(() => {
-        const minSlides = 48; // 5-6x what's visible on wide screens
+        const minSlides = 20;
         const out: typeof slideData = [];
         while (out.length < minSlides) out.push(...slideData);
         return out;
@@ -94,7 +94,7 @@ const Hero = ({ slides }: HeroProps) => {
 
     const setting = {
         loop: true,
-        loopAdditionalSlides: 12, // Extra buffer slides for seamless loop
+        loopAdditionalSlides: 4, // Small buffer for seamless loop
         slidesPerView: 'auto' as const,
         spaceBetween: 30,
         centeredSlides: false,

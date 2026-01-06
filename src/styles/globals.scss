@@ -970,12 +970,14 @@ img {
     width: 208px;
     height: 260px;
     overflow: hidden;
-    background: #1c1d1f; /* Placeholder color while loading */
+    border-radius: 8px;
+    background: transparent; /* No placeholder - avoids black gaps */
 }
 .td-hero-6-thumb img {
     width: 208px !important;
     height: 260px !important;
     object-fit: cover;
+    border-radius: 8px;
 }
 
 /* Home "Choose" value blocks: icon before heading */
