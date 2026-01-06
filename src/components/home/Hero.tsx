@@ -1,14 +1,11 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
-import dynamic from "next/dynamic";
 import Image from "next/image";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay } from 'swiper/modules';
 import Link from "next/link";
 import type { Swiper as SwiperType } from "swiper";
 import heroBg from "../../../extras/bg.jpg";
-
-// Dynamically import Swiper to defer its JavaScript from blocking LCP
-const Swiper = dynamic(() => import('swiper/react').then(mod => mod.Swiper), { ssr: false });
-const SwiperSlide = dynamic(() => import('swiper/react').then(mod => mod.SwiperSlide), { ssr: false });
 
 // Fallback static images if no WordPress data
 const FALLBACK_SLIDES: string[] = [
@@ -113,7 +110,7 @@ const Hero = ({ slides }: HeroProps) => {
 
     const setting = {
         loop: true,
-        loopAdditionalSlides: 4, // Small buffer for seamless loop
+        loopAdditionalSlides: 4,
         slidesPerView: 'auto' as const,
         spaceBetween: 30,
         centeredSlides: false,
@@ -218,13 +215,44 @@ const Hero = ({ slides }: HeroProps) => {
                     <div className="col-lg-12">
                         {/* Swiper container with fixed height to prevent layout shift */}
                         <div className="td-hero-6-slider-wrap" style={{ minHeight: SLIDE_HEIGHT, contain: "layout style" }}>
-                            {swiperReady && Swiper && SwiperSlide && (
-                                <SwiperComponent
-                                    setting={setting}
-                                    slidesLoop={slidesLoop}
-                                    SLIDE_WIDTH={SLIDE_WIDTH}
-                                    SLIDE_HEIGHT={SLIDE_HEIGHT}
-                                />
+                            {swiperReady && (
+                                <Swiper
+                                    {...setting}
+                                    modules={[Autoplay]}
+                                    className="swiper-container td-hero-6-slider"
+                                >
+                                    {slidesLoop.map((slide, i) => (
+                                        <SwiperSlide key={i} className="swiper-slide">
+                                            <div className="td-hero-6-thumb">
+                                                {slide.isRemote ? (
+                                                    <Image
+                                                        src={slide.src}
+                                                        alt={slide.alt}
+                                                        width={SLIDE_WIDTH}
+                                                        height={SLIDE_HEIGHT}
+                                                        style={{ objectFit: "cover" }}
+                                                        loading="lazy"
+                                                        sizes={`${SLIDE_WIDTH}px`}
+                                                        quality={65}
+                                                    />
+                                                ) : (
+                                                    <picture>
+                                                        <source srcSet={slide.src.replace(/\.jpg$/i, ".webp")} type="image/webp" />
+                                                        <img
+                                                            src={slide.src}
+                                                            alt={slide.alt}
+                                                            width={SLIDE_WIDTH}
+                                                            height={SLIDE_HEIGHT}
+                                                            loading="lazy"
+                                                            decoding="async"
+                                                            style={{ objectFit: "cover" }}
+                                                        />
+                                                    </picture>
+                                                )}
+                                            </div>
+                                        </SwiperSlide>
+                                    ))}
+                                </Swiper>
                             )}
                         </div>
                     </div>
@@ -232,69 +260,6 @@ const Hero = ({ slides }: HeroProps) => {
             </div>
         </div>
     )
-}
-
-// Separate component to load Autoplay dynamically with Swiper
-function SwiperComponent({ 
-    setting, 
-    slidesLoop, 
-    SLIDE_WIDTH, 
-    SLIDE_HEIGHT 
-}: { 
-    setting: Record<string, unknown>; 
-    slidesLoop: { src: string; alt: string; isRemote: boolean }[];
-    SLIDE_WIDTH: number;
-    SLIDE_HEIGHT: number;
-}) {
-    const [Autoplay, setAutoplay] = useState<typeof import('swiper/modules').Autoplay | null>(null);
-    
-    useEffect(() => {
-        import('swiper/modules').then(mod => setAutoplay(() => mod.Autoplay));
-    }, []);
-    
-    if (!Autoplay) return null;
-    
-    return (
-        <Swiper
-            {...setting}
-            modules={[Autoplay]}
-            className="swiper-container td-hero-6-slider"
-        >
-            {slidesLoop.map((slide, i) => (
-                <SwiperSlide key={i} className="swiper-slide">
-                    <div className="td-hero-6-thumb">
-                        {slide.isRemote ? (
-                            // WordPress images: all lazy loaded (LCP is bg.jpg, not slides)
-                            <Image
-                                src={slide.src}
-                                alt={slide.alt}
-                                width={SLIDE_WIDTH}
-                                height={SLIDE_HEIGHT}
-                                style={{ objectFit: "cover" }}
-                                loading="lazy"
-                                sizes={`${SLIDE_WIDTH}px`}
-                                quality={65}
-                            />
-                        ) : (
-                            // Static fallback images
-                            <picture>
-                                <source srcSet={slide.src.replace(/\.jpg$/i, ".webp")} type="image/webp" />
-                                <img
-                                    src={slide.src}
-                                    alt={slide.alt}
-                                    width={SLIDE_WIDTH}
-                                    height={SLIDE_HEIGHT}
-                                    loading="lazy"
-                                    decoding="async"
-                                    style={{ objectFit: "cover" }}
-                                />
-                            </picture>
-                        )}
-                    </div>
-                </SwiperSlide>
-            ))}
-        </Swiper>
-    );
 }
 
 export default Hero;
