@@ -2055,13 +2055,13 @@ main.td-has-cta-footer + footer .td-footer-area {
 
 // Hero background: pure CSS gradient (no image = instant LCP)
 .td-hero-area.td-hero-6-spacing {
-    // Radial gradient matching the original bg.jpg
-    // Center-top is lighter blue, edges are darker
+    // Radial gradient - larger spread for brighter center
     background: radial-gradient(
-        ellipse 120% 100% at 50% 0%,
+        ellipse 160% 130% at 50% 0%,
         #1a8fcc 0%,
-        #0277b5 35%,
-        #065a8a 70%,
+        #0d84c2 25%,
+        #0277b5 50%,
+        #065a8a 80%,
         #044c74 100%
     ) !important;
 }
