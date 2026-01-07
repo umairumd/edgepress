@@ -39,7 +39,7 @@ const Sidebar = ({ featuredPosts, recentPosts, categories, currentUrl, shareTitl
     <div className="td-blog-sidebar-right">
       <div className="td-blog-postbox-widget">
         <div className="td-blog-postbox-info">
-          <h2 className="td-blog-postbox-info-title">Inoma Digital</h2>
+          <h3 className="td-blog-postbox-info-title">Inoma Digital</h3>
             <p>
               A digital agency built on systems, clarity, and long-term results. Helping businesses through strategy,
               design, technology, marketing and business growth.
