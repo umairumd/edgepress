@@ -7,10 +7,9 @@ import {
     IconSearch,
     IconAngleRight,
     IconFacebookF,
-    IconTwitter,
     IconInstagram,
     IconLinkedinIn,
-    IconYoutube
+    IconBehance
 } from "@/components/icons";
 
 interface OffcanvasProps {
@@ -60,11 +59,10 @@ const Offcanvas = ({ offCanvas, setOffCanvas }: OffcanvasProps) => {
                     </div>
                     <div className="social-links">
                         <ul className="list-wrap">
-                            <li><Link href="#" aria-label="Facebook"><IconFacebookF aria-hidden="true" /></Link></li>
-                            <li><Link href="#" aria-label="Twitter"><IconTwitter aria-hidden="true" /></Link></li>
-                            <li><Link href="#" aria-label="Instagram"><IconInstagram aria-hidden="true" /></Link></li>
-                            <li><Link href="#" aria-label="LinkedIn"><IconLinkedinIn aria-hidden="true" /></Link></li>
-                            <li><Link href="#" aria-label="YouTube"><IconYoutube aria-hidden="true" /></Link></li>
+                            <li><Link href="https://www.facebook.com/inomadigital" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><IconFacebookF aria-hidden="true" /></Link></li>
+                            <li><Link href="https://www.instagram.com/inomadigital/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><IconInstagram aria-hidden="true" /></Link></li>
+                            <li><Link href="https://www.linkedin.com/company/inoma-digital" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><IconLinkedinIn aria-hidden="true" /></Link></li>
+                            <li><Link href="https://www.behance.net/inoma" target="_blank" rel="noopener noreferrer" aria-label="Behance"><IconBehance aria-hidden="true" /></Link></li>
                         </ul>
                     </div>
                 </nav>
