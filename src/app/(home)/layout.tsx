@@ -13,7 +13,7 @@ export default function HomeLayout({
             <div id="smooth-wrapper">
                 <div id="smooth-content">
                     {children}
-                    <FooterSix />
+                    <FooterSix style />
                 </div>
             </div>
         </>

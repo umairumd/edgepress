@@ -8,6 +8,7 @@ import Testimonial from "@/components/home/Testimonial";
 import Choose from "@/components/home/Choose";
 import Team from "@/components/home/Team";
 import Counter from "@/components/home/Counter";
+import Cta from "@/components/common/Cta";
 import { getFeaturedPortfolios, getHeroSlides, getTestimonials, getTeamMembers } from "@/lib/wp";
 
 // Revalidate homepage every hour to pick up new featured portfolios and hero slides
@@ -50,6 +51,7 @@ export default async function HomePage() {
                 <Choose />
                 <Team members={teamMembers} />
                 <Counter />
+                <Cta />
             </main>
         </>
     );
