@@ -4,7 +4,11 @@ import { useState } from "react";
 import menu_data from "@/data/MenuData";
 import { IconAngleRight } from "@/components/icons";
 
-const MobileMenu = () => {
+interface MobileMenuProps {
+    onNavigate?: () => void;
+}
+
+const MobileMenu = ({ onNavigate }: MobileMenuProps) => {
     const [navTitle, setNavTitle] = useState("");
 
     // openMobileMenu
@@ -16,6 +20,13 @@ const MobileMenu = () => {
         }
     };
 
+    // Handle link click - close menu on navigation
+    const handleLinkClick = () => {
+        if (onNavigate) {
+            onNavigate();
+        }
+    };
+
     return (
         <ul className="navigation">
             {menu_data.map((menu) => (
@@ -23,7 +34,7 @@ const MobileMenu = () => {
                     key={menu.id}
                     className={`${menu.has_dropdown ? "menu-item-has-children" : ""} ${navTitle === menu.title ? "active" : ""}`}
                 >
-                    <Link href={menu.link} className={menu.has_dropdown ? "" : ""}>{menu.title}</Link>
+                    <Link href={menu.link} onClick={handleLinkClick}>{menu.title}</Link>
                     {menu.has_dropdown && (
                         <>
                             <div
@@ -35,7 +46,7 @@ const MobileMenu = () => {
                             <ul className="sub-menu" style={{ display: navTitle === menu.title ? "block" : "none" }}>
                                 {menu.sub_menus?.map((sub_m, i) => (
                                     <li key={i}>
-                                        <Link href={sub_m.link}>{sub_m.title}</Link>
+                                        <Link href={sub_m.link} onClick={handleLinkClick}>{sub_m.title}</Link>
                                     </li>
                                 ))}
                             </ul>

@@ -1,13 +1,13 @@
 import type { JSX } from "react";
 import {
-  IconChessKnight,
-  IconCompassDrafting,
-  IconDatabase,
-  IconCartShopping,
-  IconPalette,
-  IconBullhorn,
-  IconMagnifyingGlass,
-  IconMobileScreenButton,
+  IconBusinessStrategy,
+  IconPenTool,
+  IconWebDev,
+  IconEcommerce,
+  IconGraphicsDesign,
+  IconDigitalMarketing,
+  IconSeoServices,
+  IconAppDev,
 } from "@/components/icons";
 
 type ServiceCard = {
@@ -24,49 +24,49 @@ const cards: ServiceCard[] = [
     id: 1,
     title: "Business Strategy",
     desc: "Clarity-first planning for measurable growth.",
-    icon: <IconChessKnight aria-hidden="true" />,
+    icon: <IconBusinessStrategy aria-hidden="true" />,
   },
   {
     id: 2,
     title: "UI / UX Design",
     desc: "User-first design that improves conversion.",
-    icon: <IconCompassDrafting aria-hidden="true" />,
+    icon: <IconPenTool aria-hidden="true" />,
   },
   {
     id: 3,
     title: "Web Development",
     desc: "Fast, scalable sites built to perform.",
-    icon: <IconDatabase aria-hidden="true" />,
+    icon: <IconWebDev aria-hidden="true" />,
   },
   {
     id: 4,
     title: "E-Commerce Store",
     desc: "Storefronts optimized for sales.",
-    icon: <IconCartShopping aria-hidden="true" />,
+    icon: <IconEcommerce aria-hidden="true" />,
   },
   {
     id: 5,
-    title: "Graphics Designing",
+    title: "Creative Design",
     desc: "Consistent visuals across every touchpoint.",
-    icon: <IconPalette aria-hidden="true" />,
+    icon: <IconGraphicsDesign aria-hidden="true" />,
   },
   {
     id: 6,
     title: "Digital Marketing",
     desc: "Multi-channel campaigns aligned to outcomes.",
-    icon: <IconBullhorn aria-hidden="true" />,
+    icon: <IconDigitalMarketing aria-hidden="true" />,
   },
   {
     id: 7,
     title: "SEO Services",
     desc: "Sustainable traffic that compounds.",
-    icon: <IconMagnifyingGlass aria-hidden="true" />,
+    icon: <IconSeoServices aria-hidden="true" />,
   },
   {
     id: 8,
     title: "App Development",
     desc: "Mobile products built for scale.",
-    icon: <IconMobileScreenButton aria-hidden="true" />,
+    icon: <IconAppDev aria-hidden="true" />,
   },
 ];
 

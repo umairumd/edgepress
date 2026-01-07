@@ -1,6 +1,8 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState, FormEvent } from "react";
 import { IconPhone, IconEnvelope } from "@/components/icons";
 
 interface FooterSixProps {
@@ -8,6 +10,17 @@ interface FooterSixProps {
 }
 
 const FooterSix = ({ style }: FooterSixProps = {}) => {
+    const router = useRouter();
+    const [footerEmail, setFooterEmail] = useState("");
+
+    const handleFooterSubmit = (e: FormEvent) => {
+        e.preventDefault();
+        const emailParam = footerEmail.trim() 
+            ? `?email=${encodeURIComponent(footerEmail.trim())}` 
+            : "";
+        // Navigate to contact form section
+        router.push(`/contact${emailParam}#contact-form`);
+    };
     return (
         <footer>
             <div className={`td-footer-area td-footer-6-wrap ${style ? "td-footer-spacing" : "pt-120"} td-testimonial-6-bg `}>
@@ -62,9 +75,15 @@ const FooterSix = ({ style }: FooterSixProps = {}) => {
                                         </div>
                                     </div>
                                 <div className="td-footer-form p-relative">
-                                    <form onSubmit={(e) => e.preventDefault()}>
-                                        <input type="email" placeholder="example@gmail.com" aria-label="Email address" suppressHydrationWarning />
-                                        <button type="submit" aria-label="Submit email">
+                                    <form onSubmit={handleFooterSubmit}>
+                                        <input 
+                                            type="email" 
+                                            placeholder="example@gmail.com" 
+                                            aria-label="Email address" 
+                                            value={footerEmail}
+                                            onChange={(e) => setFooterEmail(e.target.value)}
+                                        />
+                                        <button type="submit" aria-label="Go to contact form">
                                             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M1 11L11 1" stroke="#1C1D1F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                                 <path d="M1 1H11V11" stroke="#1C1D1F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />

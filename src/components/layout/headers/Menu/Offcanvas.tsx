@@ -47,10 +47,10 @@ const Offcanvas = ({ offCanvas, setOffCanvas }: OffcanvasProps) => {
                         </form>
                     </div>
                     <div className="tdmobile__menu-outer">
-                        <MobileMenu />
+                        <MobileMenu onNavigate={() => setOffCanvas(false)} />
                     </div>
                     <div className="mt-30 ml-25 mr-25">
-                        <Link href="/contact" className="td-btn td-btn-menu-black w-100 d-inline-block td-btn-switch-animation ml-10">
+                        <Link href="/contact" onClick={() => setOffCanvas(false)} className="td-btn td-btn-menu-black w-100 d-inline-block td-btn-switch-animation ml-10">
                             <span className="d-flex align-items-center justify-content-center">
                                 <span className="btn-text"> Contact Us </span>
                                 <span className="btn-icon"><IconAngleRight /></span>

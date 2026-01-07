@@ -1,8 +1,32 @@
+import { Suspense } from "react";
 import ContactForm from "./ContactForm";
+
+// Loading skeleton for the form
+const ContactFormSkeleton = () => (
+    <div className="td-contact-form-skeleton" style={{ opacity: 0.6 }}>
+        <div className="row">
+            <div className="col-lg-6 mb-25">
+                <div style={{ height: 60, background: "#f0f0f0", borderRadius: 8 }} />
+            </div>
+            <div className="col-lg-6 mb-25">
+                <div style={{ height: 60, background: "#f0f0f0", borderRadius: 8 }} />
+            </div>
+            <div className="col-lg-6 mb-25">
+                <div style={{ height: 60, background: "#f0f0f0", borderRadius: 8 }} />
+            </div>
+            <div className="col-lg-6 mb-25">
+                <div style={{ height: 60, background: "#f0f0f0", borderRadius: 8 }} />
+            </div>
+            <div className="col-lg-12 mb-25">
+                <div style={{ height: 120, background: "#f0f0f0", borderRadius: 8 }} />
+            </div>
+        </div>
+    </div>
+);
 
 const ContactArea = () => {
     return (
-        <div className="td-contact-main pt-155 pb-120">
+        <div id="contact-form" className="td-contact-main pt-155 pb-120">
             <div className="container">
                 <div className="row">
                     <div className="col-lg-5">
@@ -14,7 +38,9 @@ const ContactArea = () => {
                     </div>
                     <div className="col-lg-7">
                         <div className="td-contact-form-box mb-30 wow fadeInRight" data-wow-delay=".5s" data-wow-duration="1s">
-                            <ContactForm />
+                            <Suspense fallback={<ContactFormSkeleton />}>
+                                <ContactForm />
+                            </Suspense>
                         </div>
                     </div>
                 </div>
@@ -24,4 +50,3 @@ const ContactArea = () => {
 }
 
 export default ContactArea;
-
