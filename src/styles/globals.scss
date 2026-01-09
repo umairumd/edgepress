@@ -2073,19 +2073,20 @@ main.td-has-cta-footer + footer .td-footer-area {
 // - Use fixed positioning to prevent CLS (no JS dependency)
 // - Hide on mobile to avoid visual glitches
 .td-hero-area.td-hero-6-spacing .td-hero-6-line {
-    // Fixed value: 90px (header height) - 220px (hero padding) = -130px
-    // This eliminates CLS caused by JS-set --td-header-h variable
+    // Lines extend from below header down through hero
+    // Header height ~90px, hero padding 220px → top = 90 - 220 = -130px
+    // Adjust this value if header height changes
     top: -130px !important;
 }
-// Hide decorative lines on tablet/mobile - they cause visual glitches and CLS
+// Hide decorative lines on tablet/mobile - they cause visual glitches
 @media (max-width: 991px) {
     .td-hero-area.td-hero-6-spacing .td-hero-6-line {
         display: none !important;
     }
 }
 .td-hero-area.td-hero-6-spacing .td-hero-6-line span {
-    // Fixed height instead of viewport-relative to prevent CLS
-    height: 620px !important;
+    // Original viewport-relative height for proper visual proportion
+    height: clamp(520px, 62vh, 740px) !important;
     background: linear-gradient(
         180deg,
         rgba(255, 255, 255, 0.18) 0%,
