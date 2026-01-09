@@ -2070,21 +2070,22 @@ main.td-has-cta-footer + footer .td-footer-area {
 }
 
 // Home hero vertical divider lines:
-// - Don’t let them bleed into the transparent header area
-// - Slightly increase opacity so they remain visible on the new bg
+// - Use fixed positioning to prevent CLS (no JS dependency)
+// - Hide on mobile to avoid visual glitches
 .td-hero-area.td-hero-6-spacing .td-hero-6-line {
-    /* Align to header bottom precisely:
-       heroPaddingTop (desktop) = 220px, so: 220px + top = headerHeight  =>  top = headerHeight - 220px */
-    top: calc(var(--td-header-h, 90px) - 220px) !important;
+    // Fixed value: 90px (header height) - 220px (hero padding) = -130px
+    // This eliminates CLS caused by JS-set --td-header-h variable
+    top: -130px !important;
 }
+// Hide decorative lines on tablet/mobile - they cause visual glitches and CLS
 @media (max-width: 991px) {
     .td-hero-area.td-hero-6-spacing .td-hero-6-line {
-        /* heroPaddingTop (mobile) = 170px */
-        top: calc(var(--td-header-h, 72px) - 170px) !important;
+        display: none !important;
     }
 }
 .td-hero-area.td-hero-6-spacing .td-hero-6-line span {
-    height: clamp(520px, 62vh, 740px) !important;
+    // Fixed height instead of viewport-relative to prevent CLS
+    height: 620px !important;
     background: linear-gradient(
         180deg,
         rgba(255, 255, 255, 0.18) 0%,

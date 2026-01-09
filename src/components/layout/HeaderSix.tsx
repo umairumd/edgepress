@@ -41,12 +41,7 @@ const HeaderSix = ({ variant = "home" }: HeaderSixProps) => {
         if (!el) return;
 
         const measure = () => {
-            const h = el.offsetHeight;
-            setHeaderHeight(h);
-            // Expose header height globally so hero decorations (a sibling) can align to it.
-            if (typeof document !== "undefined") {
-                document.documentElement.style.setProperty("--td-header-h", `${h}px`);
-            }
+            setHeaderHeight(el.offsetHeight);
         };
         measure();
 
@@ -57,9 +52,6 @@ const HeaderSix = ({ variant = "home" }: HeaderSixProps) => {
         return () => {
             ro?.disconnect();
             window.removeEventListener("resize", measure);
-            if (typeof document !== "undefined") {
-                document.documentElement.style.removeProperty("--td-header-h");
-            }
         };
     }, []);
 
