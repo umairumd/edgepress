@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { GoogleTagManager } from "@next/third-parties/google";
 import "@/styles/globals.scss";
 import LayoutWrapper from "@/components/common/LayoutWrapper";
 import { fontVarsClassName } from "./fonts";
@@ -109,6 +110,7 @@ export default function RootLayout({
         />
       </head>
       <body suppressHydrationWarning>
+        <GoogleTagManager gtmId="GTM-MMSWN6S" />
         <LayoutWrapper>
           {children}
         </LayoutWrapper>
