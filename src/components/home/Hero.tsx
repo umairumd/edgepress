@@ -137,7 +137,10 @@ const Hero = ({ slides }: HeroProps) => {
             {/* Background is now pure CSS gradient in globals.scss - instant LCP, no image load */}
             <div className="container">
                 <div className="td-hero-6-top pb-45 p-relative z-index-1">
-                    <div className="td-hero-6-line">
+                    <div 
+                        className="td-hero-6-line"
+                        style={{ top: "-130px" }}
+                    >
                         <span></span>
                         <span></span>
                         <span></span>
