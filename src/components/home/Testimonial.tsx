@@ -157,7 +157,7 @@ const Testimonial = ({ testimonials }: TestimonialProps) => {
                                 {avatar_data.map((avatar, i) => (
                                     <SwiperSlide key={i} className="swiper-slide">
                                         <div className="td-testimonial-bottom-thumb">
-                                            <Image src={avatar} alt="" width={60} height={60} sizes="60px" />
+                                            <Image src={avatar} alt="Client avatar" width={60} height={60} sizes="60px" />
                                         </div>
                                     </SwiperSlide>
                                 ))}
@@ -179,7 +179,7 @@ const Testimonial = ({ testimonials }: TestimonialProps) => {
                                             <Link href="/portfolio" aria-label="View portfolio">
                                                 <Image
                                                     src={brand}
-                                                    alt=""
+                                                    alt="Partner brand logo"
                                                     width={brandSizeFor(brand).w}
                                                     height={brandSizeFor(brand).h}
                                                     sizes="(max-width: 768px) 120px, 140px"

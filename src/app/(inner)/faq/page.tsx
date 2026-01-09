@@ -5,6 +5,7 @@ import FaqArea from "@/components/pages/faq/FaqArea";
 export const metadata: Metadata = {
     title: "FAQ",
     description: "Answers to common questions about Inoma Digital, our packages, process, and how we deliver growth.",
+    alternates: { canonical: "/faq" },
 };
 
 export default function FaqPage() {

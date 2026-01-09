@@ -91,6 +91,23 @@ function mapWpImage(node: WpMediaNode | null | undefined): WPImage | undefined {
   };
 }
 
+/**
+ * Ensures an alt text is present; returns the fallback if alt is empty/undefined.
+ * Used to guarantee all images have meaningful alt text for SEO.
+ */
+function ensureAlt(alt: string | null | undefined, fallback: string): string {
+  return alt?.trim() || fallback;
+}
+
+/**
+ * Maps a WordPress image with a guaranteed alt fallback.
+ */
+function mapWpImageWithAlt(node: WpMediaNode | null | undefined, fallbackAlt: string): WPImage | undefined {
+  const img = mapWpImage(node);
+  if (!img) return undefined;
+  return { ...img, alt: ensureAlt(img.alt, fallbackAlt) };
+}
+
 export type YoastSeo = {
   title?: string | null;
   metaDesc?: string | null;
@@ -362,15 +379,18 @@ export async function getPosts(limit = 12): Promise<Post[]> {
 
   if (!nodes) return [];
 
-  return nodes.map((node) => ({
-    slug: node.slug ?? "",
-    title: node.title ?? "",
-    excerpt: node.excerpt ?? undefined,
-    date: node.date ?? undefined,
-    category: node.categories?.nodes?.[0]?.name ?? undefined,
-    featuredImage: mapWpImage(node.featuredImage?.node),
-    featured: getPostFeaturedFlag(node) ?? false,
-  }));
+  return nodes.map((node) => {
+    const title = node.title ?? "";
+    return {
+      slug: node.slug ?? "",
+      title,
+      excerpt: node.excerpt ?? undefined,
+      date: node.date ?? undefined,
+      category: node.categories?.nodes?.[0]?.name ?? undefined,
+      featuredImage: mapWpImageWithAlt(node.featuredImage?.node, stripHtml(title) || "Blog post"),
+      featured: getPostFeaturedFlag(node) ?? false,
+    };
+  });
 }
 
 export async function getPost(slug: string): Promise<Post | null> {
@@ -425,15 +445,18 @@ export async function getPost(slug: string): Promise<Post | null> {
   const post = fallback?.post;
   if (!post) return null;
 
+  const title = post.title ?? "";
+  const titleAlt = stripHtml(title) || "Blog post";
+
   return {
     slug: post.slug ?? "",
-    title: post.title ?? "",
+    title,
     excerpt: post.excerpt ?? undefined,
     content: post.content ?? undefined,
     date: post.date ?? undefined,
     category: post.categories?.nodes?.[0]?.name ?? undefined,
     author: post.author?.node?.name ?? undefined,
-    featuredImage: mapWpImage(post.featuredImage?.node),
+    featuredImage: mapWpImageWithAlt(post.featuredImage?.node, titleAlt),
     seo: post.seo
       ? {
           title: post.seo.title,
@@ -441,10 +464,10 @@ export async function getPost(slug: string): Promise<Post | null> {
           canonical: post.seo.canonical,
           opengraphTitle: post.seo.opengraphTitle,
           opengraphDescription: post.seo.opengraphDescription,
-          opengraphImage: mapWpImage(post.seo.opengraphImage),
+          opengraphImage: mapWpImageWithAlt(post.seo.opengraphImage, titleAlt),
           twitterTitle: post.seo.twitterTitle,
           twitterDescription: post.seo.twitterDescription,
-          twitterImage: mapWpImage(post.seo.twitterImage),
+          twitterImage: mapWpImageWithAlt(post.seo.twitterImage, titleAlt),
         }
       : undefined,
   };
@@ -494,14 +517,17 @@ export async function getRecentPosts(limit = 5): Promise<Post[]> {
 
   if (!nodes) return [];
 
-  return nodes.map((node) => ({
-    slug: node.slug ?? "",
-    title: node.title ?? "",
-    date: node.date ?? undefined,
-    category: node.categories?.nodes?.[0]?.name ?? undefined,
-    featuredImage: mapWpImage(node.featuredImage?.node),
-    featured: getPostFeaturedFlag(node) ?? false,
-  }));
+  return nodes.map((node) => {
+    const title = node.title ?? "";
+    return {
+      slug: node.slug ?? "",
+      title,
+      date: node.date ?? undefined,
+      category: node.categories?.nodes?.[0]?.name ?? undefined,
+      featuredImage: mapWpImageWithAlt(node.featuredImage?.node, stripHtml(title) || "Blog post"),
+      featured: getPostFeaturedFlag(node) ?? false,
+    };
+  });
 }
 
 export async function getFeaturedPosts(limit = 2): Promise<Post[]> {
@@ -632,12 +658,14 @@ export async function getPortfolioItems(limit = 200): Promise<PortfolioItem[]> {
 
   return nodes.map((node) => {
     const categories = mapWpTerms(getPortfolioTaxonomyConnection(node));
+    const title = node.title ?? "";
+    const titleAlt = stripHtml(title) || "Portfolio project";
     return {
       slug: node.slug ?? "",
-      title: node.title ?? "",
+      title,
       date: node.date ?? undefined,
-      featuredImage: mapWpImage(node.featuredImage?.node),
-      entryImage: mapWpImage(getPortfolioEntryImageNode(node)),
+      featuredImage: mapWpImageWithAlt(node.featuredImage?.node, titleAlt),
+      entryImage: mapWpImageWithAlt(getPortfolioEntryImageNode(node), titleAlt),
       featured: getPortfolioFeaturedFlag(node) ?? false,
       categories,
       // Keep a simple string category for backwards-compat UI. Prefer first term name.
@@ -734,14 +762,16 @@ export async function getPortfolioItem(slug: string): Promise<PortfolioItem | nu
   if (!item) return null;
 
   const categories = mapWpTerms(getPortfolioTaxonomyConnection(item));
+  const title = item.title ?? "";
+  const titleAlt = stripHtml(title) || "Portfolio project";
 
   return {
     slug: item.slug ?? "",
-    title: item.title ?? "",
+    title,
     content: item.content ?? undefined,
     date: item.date ?? undefined,
-    featuredImage: mapWpImage(item.featuredImage?.node),
-    entryImage: mapWpImage(getPortfolioEntryImageNode(item)),
+    featuredImage: mapWpImageWithAlt(item.featuredImage?.node, titleAlt),
+    entryImage: mapWpImageWithAlt(getPortfolioEntryImageNode(item), titleAlt),
     featured: getPortfolioFeaturedFlag(item) ?? false,
     categories,
     category: categories?.[0]?.name ?? undefined,
@@ -752,10 +782,10 @@ export async function getPortfolioItem(slug: string): Promise<PortfolioItem | nu
           canonical: item.seo.canonical,
           opengraphTitle: item.seo.opengraphTitle,
           opengraphDescription: item.seo.opengraphDescription,
-          opengraphImage: mapWpImage(item.seo.opengraphImage),
+          opengraphImage: mapWpImageWithAlt(item.seo.opengraphImage, titleAlt),
           twitterTitle: item.seo.twitterTitle,
           twitterDescription: item.seo.twitterDescription,
-          twitterImage: mapWpImage(item.seo.twitterImage),
+          twitterImage: mapWpImageWithAlt(item.seo.twitterImage, titleAlt),
         }
       : undefined,
   };
@@ -814,7 +844,7 @@ export async function getHeroSlides(): Promise<WPImage[]> {
         if (url && !url.includes('emoji') && !url.includes('smilies')) {
           images.push({
             url: normalizeWpMediaUrl(url)!,
-            alt,
+            alt: ensureAlt(alt, "Inoma Digital creative showcase"),
             width: null,
             height: null,
           });
@@ -857,7 +887,7 @@ export async function getHeroSlides(): Promise<WPImage[]> {
             .filter((img): img is GalleryImage => !!img?.sourceUrl)
             .map((img) => ({
               url: normalizeWpMediaUrl(img.sourceUrl!)!,
-              alt: img.altText ?? undefined,
+              alt: ensureAlt(img.altText, "Inoma Digital creative showcase"),
               width: img.mediaDetails?.width ?? null,
               height: img.mediaDetails?.height ?? null,
             }));
@@ -903,7 +933,7 @@ export async function getHeroSlides(): Promise<WPImage[]> {
       
       if (Array.isArray(nodes) && nodes.length > 0) {
         const images = nodes
-          .map((node) => mapWpImage(node.featuredImage?.node))
+          .map((node) => mapWpImageWithAlt(node.featuredImage?.node, "Inoma Digital creative showcase"))
           .filter((img): img is WPImage => !!img?.url);
         
         if (images.length > 0) return images;
@@ -942,7 +972,7 @@ export async function getHeroSlides(): Promise<WPImage[]> {
             .filter((img): img is GalleryImage => !!img?.sourceUrl)
             .map((img) => ({
               url: normalizeWpMediaUrl(img.sourceUrl!)!,
-              alt: img.altText ?? undefined,
+              alt: ensureAlt(img.altText, "Inoma Digital creative showcase"),
               width: img.mediaDetails?.width ?? null,
               height: img.mediaDetails?.height ?? null,
             }));
@@ -1174,12 +1204,16 @@ export async function getTeamMembers(limit = 20): Promise<TeamMember[]> {
       const nodes = cptData?.nodes;
 
       if (Array.isArray(nodes) && nodes.length > 0) {
-        return nodes.map((node, idx) => ({
-          id: node.databaseId ?? idx + 1,
-          name: node.title ?? "Team Member",
-          role: getTeamMemberRole(node),
-          image: mapWpImage(node.featuredImage?.node),
-        }));
+        return nodes.map((node, idx) => {
+          const name = node.title ?? "Team Member";
+          const role = getTeamMemberRole(node);
+          return {
+            id: node.databaseId ?? idx + 1,
+            name,
+            role,
+            image: mapWpImageWithAlt(node.featuredImage?.node, `${name}${role ? ` - ${role}` : ""}`),
+          };
+        });
       }
     }
 
@@ -1215,12 +1249,15 @@ export async function getTeamMembers(limit = 20): Promise<TeamMember[]> {
       const nodes = cptData?.nodes;
 
       if (Array.isArray(nodes) && nodes.length > 0) {
-        return nodes.map((node, idx) => ({
-          id: node.databaseId ?? idx + 1,
-          name: node.title ?? "Team Member",
-          role: undefined,
-          image: mapWpImage(node.featuredImage?.node),
-        }));
+        return nodes.map((node, idx) => {
+          const name = node.title ?? "Team Member";
+          return {
+            id: node.databaseId ?? idx + 1,
+            name,
+            role: undefined,
+            image: mapWpImageWithAlt(node.featuredImage?.node, name),
+          };
+        });
       }
     }
   }

@@ -2,7 +2,7 @@ const PortfolioDetailsArea = () => {
     return (
         <>
             <div className="td-portfolio-area">
-                <img src="/assets/img/portfolio/details/thumb.jpg" alt="" />
+                <img src="/assets/img/portfolio/details/thumb.jpg" alt="Portfolio project details" />
             </div>
 
             <div className="td-portfolio-brand-view pt-150 pb-90">
@@ -12,7 +12,7 @@ const PortfolioDetailsArea = () => {
                             <div className="td-portfolio-brand-title-wrap mb-30">
                                 <h2 className="td-section-page-title">Brand <span>overview</span></h2>
                                 <div className="td-portfolio-brand-dates pt-155 mb-140">
-                                    <img className="mb-15" src="/assets/img/portfolio/details/text.png" alt="" />
+                                    <img className="mb-15" src="/assets/img/portfolio/details/text.png" alt="Portfolio project award text" />
                                     <p><span>Awards - </span> site of the day 2020</p>
                                 </div>
                                 <h2 className="td-portfolio-brand-bigtext mb-0">Inoma agency </h2>

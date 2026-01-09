@@ -12,13 +12,13 @@ const ServiceReplace = () => {
                     </div>
                     <div className="col-lg-4">
                         <div className="td-service-replace-shape pt-100 pb-30">
-                            <img src="/assets/img/service/replace/shape.png" alt="" />
+                            <img src="/assets/img/service/replace/shape.png" alt="Decorative shape" aria-hidden="true" />
                         </div>
                     </div>
                     <div className="col-lg-8">
                         <div className="td-service-replace-content">
                             <div className="td-service-replace-thumb mb-50">
-                                <img className="td-rounded-10" src="/assets/img/service/replace/thumb.jpg" alt="" />
+                                <img className="td-rounded-10" src="/assets/img/service/replace/thumb.jpg" alt="Service delivery process illustration" />
                             </div>
                             <div className="row">
                                 <div className="col-lg-6 col-md-6">

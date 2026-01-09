@@ -11,7 +11,7 @@ const Feature = () => {
                             <div className="row">
                                 <div className="col-lg-5 d-none d-md-block">
                                     <div className="td-about-main-feature-shape text-center ml-70 mb-40">
-                                        <img src="/assets/img/about/main/shape.png" alt="" />
+                                        <img src="/assets/img/about/main/shape.png" alt="Decorative shape" aria-hidden="true" />
                                     </div>
                                 </div>
                                 <div className="col-lg-7">

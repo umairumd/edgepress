@@ -30,7 +30,7 @@ const About = () => {
                             <Image
                                 className="shape td-live-anim-spin d-none d-lg-inline-block"
                                 src="/assets/img/about/shape.png"
-                                alt=""
+                                alt="Decorative rotating shape"
                                 width={140}
                                 height={140}
                                 sizes="140px"
@@ -38,7 +38,7 @@ const About = () => {
                             />
                             <Image
                                 src="/assets/img/about/about-6/thumb.jpg"
-                                alt=""
+                                alt="Inoma Digital team collaborating on a project"
                                 className="w-100"
                                 width={450}
                                 height={430}
@@ -53,7 +53,7 @@ const About = () => {
                                 <Image
                                     className="mb-25"
                                     src="/assets/img/about/about-6/avatar.png"
-                                    alt=""
+                                    alt="Inoma Digital team avatars"
                                     width={177}
                                     height={60}
                                     sizes="177px"

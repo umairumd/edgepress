@@ -72,7 +72,7 @@ const PortfolioVisualIdentity = () => {
                                 {slider_data.map((img, i) => (
                                     <SwiperSlide key={i} className="swiper-slide">
                                         <div className="td-portfolio-identity-slider-thumb">
-                                            <img className="w-100" src={img} alt="" />
+                                            <img className="w-100" src={img} alt="Portfolio visual identity showcase" />
                                         </div>
                                     </SwiperSlide>
                                 ))}

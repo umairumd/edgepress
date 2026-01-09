@@ -16,7 +16,7 @@ const Brand = () => {
                         <div className="td-brand-wrap d-flex flex-wrap justify-content-center align-items-center" style={{ gap: '60px' }}>
                             {brand_data.map((brand, i) => (
                                 <div key={i} className="td-brand-item">
-                                    <img src={brand} alt="" style={{ maxWidth: '100%', height: 'auto' }} />
+                                    <img src={brand} alt="Partner brand logo" style={{ maxWidth: '100%', height: 'auto' }} />
                                 </div>
                             ))}
                         </div>

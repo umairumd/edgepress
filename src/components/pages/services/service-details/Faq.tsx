@@ -33,7 +33,7 @@ const Faq = ({ style, page, defaultOpenIndex }: FaqProps) => {
                 <div className="row">
                     <div className="col-lg-6">
                         <div className="td-faq-2-thumb mb-30 fix td-rounded-10">
-                            <img data-speed=".9" className="td-rounded-10" src="/assets/img/faq/faq-2/thumb.jpg" alt="" />
+                            <img data-speed=".9" className="td-rounded-10" src="/assets/img/faq/faq-2/thumb.jpg" alt="Frequently asked questions illustration" />
                         </div>
                     </div>
                     <div className="col-lg-6">

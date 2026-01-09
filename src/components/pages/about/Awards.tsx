@@ -33,7 +33,7 @@ const Awards = () => {
                         <div className="td-awards-5-thumb text-center pt-0 mb-30">
                             <Image
                                 src="/assets/img/awards/awards-5/inoma-pattern2.jpg"
-                                alt=""
+                                alt="Inoma Digital pattern representing consistency and growth"
                                 width={550}
                                 height={550}
                                 sizes="(max-width: 992px) 70vw, 385px"

@@ -38,6 +38,11 @@ const COPY_MAP = [
       ]) ?? "public/assets/img/logo/inoma-logo-light.png",
     to: "public/assets/img/logo/inoma-logo-light.png",
   },
+  {
+    // OG image for social sharing (1200x630)
+    from: firstExisting(["extras/inoma-og.jpg"]) ?? "public/assets/img/logo/inoma-og.jpg",
+    to: "public/assets/img/logo/inoma-og.jpg",
+  },
 ];
 
 function copyFile(fromRel, toRel) {

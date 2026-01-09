@@ -50,9 +50,9 @@ const Cta = () => {
             <div className="container">
                 <div className="col-lg-12">
                     <div className="td-cta-wrap p-relative z-index-1 text-center pt-135 pb-135 include-bg" style={{ backgroundImage: `url("/assets/img/cta/cta-bg.jpg")` }}>
-                        <img className="td-cta-shape d-none d-xl-block" src="/assets/img/cta/cta.png" alt="" />
+                        <img className="td-cta-shape d-none d-xl-block" src="/assets/img/cta/cta.png" alt="Decorative shape" aria-hidden="true" />
                         <h2 className="title p-relative d-inline-block">
-                            <img className="td-cta-shape-2 d-none d-md-block" src="/assets/img/cta/cta-2.png" alt="" />
+                            <img className="td-cta-shape-2 d-none d-md-block" src="/assets/img/cta/cta-2.png" alt="Decorative accent" aria-hidden="true" />
                             <Link ref={textRef} href="/contact" className="td-text-invert">
                                 HAVE<br />
                                 PROJECTS<br />

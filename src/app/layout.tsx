@@ -18,17 +18,30 @@ export const metadata: Metadata = {
     icon: [{ url: "/inoma-favicon.jpg", type: "image/jpeg" }],
     apple: [{ url: "/inoma-favicon.jpg" }],
   },
+  // Canonical URL - tells search engines this is the main URL for this page
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: "Inoma Digital",
     description: "Digital marketing, design, and technology partner.",
     url: SITE_URL,
     siteName: "Inoma Digital",
     type: "website",
+    images: [
+      {
+        url: "/assets/img/logo/inoma-og.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Inoma Digital - Digital Marketing, Design & Technology Partner",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Inoma Digital",
     description: "Digital marketing, design, and technology partner.",
+    images: ["/assets/img/logo/inoma-og.jpg"],
   },
 };
 

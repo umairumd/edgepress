@@ -17,7 +17,7 @@ const Team = () => {
                         <div key={item.id} className="col-lg-3 col-md-6 col-sm-6">
                             <div className="td-team-4-wrap p-relative mb-30">
                                 <div className="td-team-4-thumb">
-                                    <img className="w-100" src={item.thumb} alt="" />
+                                    <img className="w-100" src={item.thumb} alt={`${item.name} - ${item.designation}`} />
                                 </div>
                                 <div className="td-team-4-content text-center">
                                     <span className="td-team-4-subtitle">{item.designation}</span>

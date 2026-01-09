@@ -22,7 +22,7 @@ const FaqArea = () => {
                 <div className="row">
                     <div className="col-lg-5">
                         <div className="td-faq-2-thumb td-faq-main-thumb mt-40 mr-110 mb-30">
-                            <img className="td-rounded-10" src="/assets/img/faq/main/thumb.jpg" alt="" />
+                            <img className="td-rounded-10" src="/assets/img/faq/main/thumb.jpg" alt="FAQ section illustration" />
                             <div className="td-faq-main-form pt-50">
                                 <form onClick={(e) => e.preventDefault()} className="p-relative">
                                     <input className="inputs" type="text" placeholder="Search product" />

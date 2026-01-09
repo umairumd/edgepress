@@ -18,7 +18,7 @@ const Choose = () => {
                             <Image
                                 className="w-100"
                                 src="/assets/img/chose/chose-6/thumb.jpg"
-                                alt=""
+                                alt="Strategic business planning and digital execution"
                                 width={645}
                                 height={320}
                                 sizes="(max-width: 991px) 100vw, 60vw"

@@ -57,17 +57,17 @@ const Hero = ({ slides }: HeroProps) => {
     // Build slide data: use WordPress images if available, else fallback to static
     const slideData = useMemo(() => {
         if (slides && slides.length >= 8) {
-            // Use WordPress images
-            return slides.map((img) => ({
+            // Use WordPress images (alt fallback already applied in wp.ts, but add safety net)
+            return slides.map((img, index) => ({
                 src: img.url,
-                alt: img.alt || "",
+                alt: img.alt || `Inoma Digital showcase ${index + 1}`,
                 isRemote: true,
             }));
         }
         // Fallback to static images
-        return FALLBACK_SLIDES.map((src) => ({
+        return FALLBACK_SLIDES.map((src, index) => ({
             src,
-            alt: "",
+            alt: `Inoma Digital showcase ${index + 1}`,
             isRemote: false,
         }));
     }, [slides]);
@@ -147,13 +147,13 @@ const Hero = ({ slides }: HeroProps) => {
                         <div className="col-12">
                             <div className="td-hero-6-title-wrap text-center pb-90">
                                 <div style={{ display: "inline-block", textAlign: "left" }}>
-                                    <h2 className="td-hero-6-title" style={{ marginBottom: "15px" }}>
+                                    <h1 className="td-hero-6-title" style={{ marginBottom: "15px" }}>
                                         <span>INOMA</span>
                                         <br />
                                         <span className="d-inline-block">
                                             DIGITAL
                                         </span>
-                                    </h2>
+                                    </h1>
                                     <p style={{
                                         margin: 0,
                                         fontFamily: "var(--td-ff-dm)",
