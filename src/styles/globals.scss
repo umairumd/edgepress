@@ -2070,8 +2070,13 @@ main.td-has-cta-footer + footer .td-footer-area {
 }
 
 // Home hero vertical divider lines:
-// - Restore original custom styles (higher opacity than template default)
+// - Custom positioning for our 220px hero padding (header ~90px)
+// - Higher opacity than template default
 // - Hide on mobile to avoid visual glitches
+.td-hero-area.td-hero-6-spacing .td-hero-6-line {
+    // Original: calc(var(--td-header-h, 90px) - 220px) = 90 - 220 = -130px
+    top: -130px !important;
+}
 .td-hero-area.td-hero-6-spacing .td-hero-6-line span {
     height: clamp(520px, 62vh, 740px) !important;
     background: linear-gradient(
