@@ -139,7 +139,7 @@ const Hero = ({ slides }: HeroProps) => {
                 <div className="td-hero-6-top pb-45 p-relative z-index-1">
                     <div 
                         className="td-hero-6-line"
-                        style={{ top: "-120px" }}
+                        style={{ top: "-123px" }}
                     >
                         <span></span>
                         <span></span>
