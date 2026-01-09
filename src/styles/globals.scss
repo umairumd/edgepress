@@ -2070,7 +2070,16 @@ main.td-has-cta-footer + footer .td-footer-area {
 }
 
 // Home hero vertical divider lines:
-// Hide on mobile to avoid visual glitches (desktop uses template default from main.css)
+// - Restore original custom styles (higher opacity than template default)
+// - Hide on mobile to avoid visual glitches
+.td-hero-area.td-hero-6-spacing .td-hero-6-line span {
+    height: clamp(520px, 62vh, 740px) !important;
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.18) 0%,
+        rgba(6, 50, 49, 0.16) 100%
+    ) !important;
+}
 @media (max-width: 991px) {
     .td-hero-area.td-hero-6-spacing .td-hero-6-line {
         display: none !important;
