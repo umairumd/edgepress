@@ -2,7 +2,7 @@ import Image from "next/image";
 
 const Awards = () => {
     const highlights = [
-        "8+ years of hands-on digital experience",
+        "7+ years of hands-on digital experience",
         "Proven success with international clients",
         "Clear communication and accountability",
         "Outcome-focused approach, not task selling",

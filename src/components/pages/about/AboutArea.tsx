@@ -22,8 +22,8 @@ const AboutArea = () => {
                             <Image
                                 data-speed=".9"
                                 className="w-100 td-rounded-10"
-                                src="/assets/img/about/main/thumb.jpg"
-                                alt="About Inoma Digital"
+                                src="/assets/img/about/main/inoma-about-1.jpg"
+                                alt="About Inoma Digital - Full-service digital agency with 7+ years of experience"
                                 width={650}
                                 height={650}
                                 priority
@@ -38,7 +38,7 @@ const AboutArea = () => {
                             <div className="row">
                                 <div className="col-lg-5 col-md-5">
                                     <div className="td-about-main-bigtext">
-                                        <h2>8+</h2>
+                                        <h2>7+</h2>
                                         <span>Years of experience</span>
                                     </div>
                                 </div>

@@ -3,6 +3,12 @@ import Sidebar from "./Sidebar";
 import { Category, Post } from "@/lib/wp";
 import Image from "next/image";
 import { IconArrowLeft, IconArrowRight } from "@/components/icons";
+import WpContent from "@/components/common/WpContent";
+
+type NavPost = {
+  slug: string;
+  title: string;
+};
 
 type Props = {
   contentHtml?: string | null;
@@ -22,6 +28,8 @@ type Props = {
   currentUrl?: string;
   recentPosts?: Post[];
   categories?: Category[];
+  prevPost?: NavPost | null;
+  nextPost?: NavPost | null;
 };
 
 function formatDate(date?: string) {
@@ -44,6 +52,8 @@ const BlogSidebarArea = ({
   categories,
   featuredImage,
   featuredPosts,
+  prevPost,
+  nextPost,
 }: Props) => {
   const img = typeof featuredImage === "string" ? { url: featuredImage } : featuredImage;
   const imgSrc = img?.url;
@@ -82,20 +92,34 @@ const BlogSidebarArea = ({
               ) : null}
 
               {contentHtml ? (
-                <div className="td-blog-sidebar-body td-wp-content" dangerouslySetInnerHTML={{ __html: contentHtml }} />
+                <WpContent html={contentHtml} className="td-blog-sidebar-body td-wp-content" />
               ) : (
                 <p>No content available.</p>
               )}
               <div className="td-blog-details-pagenation td-portfolio-identity-navigation d-flex justify-content-between pt-45 align-items-center">
-                <span className="td-blog-details-prev">
-                  <IconArrowLeft className="mr-10" />
-                  Prev
-                </span>
+                {prevPost ? (
+                  <Link href={`/blog/${prevPost.slug}`} className="td-blog-details-prev">
+                    <IconArrowLeft className="mr-10" />
+                    Prev
+                  </Link>
+                ) : (
+                  <span className="td-blog-details-prev td-disabled">
+                    <IconArrowLeft className="mr-10" />
+                    Prev
+                  </span>
+                )}
                 <div className="td-portfolio-identity-border"></div>
-                <span className="td-blog-details-next">
-                  Next
-                  <IconArrowRight className="ml-10" />
-                </span>
+                {nextPost ? (
+                  <Link href={`/blog/${nextPost.slug}`} className="td-blog-details-next">
+                    Next
+                    <IconArrowRight className="ml-10" />
+                  </Link>
+                ) : (
+                  <span className="td-blog-details-next td-disabled">
+                    Next
+                    <IconArrowRight className="ml-10" />
+                  </span>
+                )}
               </div>
             </div>
           </div>

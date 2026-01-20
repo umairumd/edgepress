@@ -31,7 +31,7 @@ const counter_data: DataType[] = [
     },
     {
         id: 4,
-        count: 8,
+        count: 7,
         count_text: "+",
         title: (<>Years of<br /> Experience</>),
     },

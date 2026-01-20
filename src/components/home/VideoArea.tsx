@@ -1,33 +1,19 @@
-"use client";
-import { useVideoPopup } from "@/hooks/useVideoPopup";
-import VideoPopup from "@/modals/VideoPopup";
+import Image from "next/image";
 
 const VideoArea = () => {
-    const { isVideoOpen, openVideo, closeVideo } = useVideoPopup();
     return (
-        <>
-            <div className="td-video-area include-bg" style={{ backgroundImage: `url(/assets/img/video/video-6/bg.jpg)` }}>
-                <div className="container">
-                    <div className="row">
-                        <div className="col-lg-12">
-                            <div className="td-video-6-wrap text-end">
-                                <button
-                                    type="button"
-                                    onClick={openVideo}
-                                    className="popup-video td-video-6-inner"
-                                    aria-label="Play video"
-                                >
-                                    <svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                        <path d="M20 12L0.5 23.2583V0.74167L20 12Z" fill="#1C1D1F" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <VideoPopup isOpen={isVideoOpen} onClose={closeVideo} videoId="eEzD-Y97ges" />
-        </>
+        <div className="td-video-area">
+            <Image
+                src="/assets/img/video/video-6/inoma-home-2.jpg"
+                alt="Inoma Digital - Full-service digital agency helping businesses grow"
+                width={1920}
+                height={600}
+                priority
+                fetchPriority="high"
+                sizes="100vw"
+                style={{ width: "100%", height: "auto", display: "block" }}
+            />
+        </div>
     )
 }
 

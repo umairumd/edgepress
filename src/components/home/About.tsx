@@ -1,6 +1,10 @@
+"use client";
 import Image from "next/image";
+import { useVideoPopup } from "@/hooks/useVideoPopup";
+import VideoPopup from "@/modals/VideoPopup";
 
 const About = () => {
+    const { isVideoOpen, openVideo, closeVideo } = useVideoPopup();
     return (
         <div className="td-about-area pt-140 pb-125">
             <div className="container">
@@ -36,15 +40,33 @@ const About = () => {
                                 sizes="140px"
                                 aria-hidden="true"
                             />
-                            <Image
-                                src="/assets/img/about/about-6/thumb.jpg"
-                                alt="Inoma Digital team collaborating on a project"
-                                className="w-100"
-                                width={450}
-                                height={430}
-                                sizes="(max-width: 991px) 100vw, 450px"
-                                style={{ width: "100%", height: "auto" }}
-                            />
+                            <div className="p-relative" style={{ cursor: "pointer" }} onClick={openVideo}>
+                                <Image
+                                    src="/assets/img/about/about-6/inoma-home-1.jpg"
+                                    alt="Inoma Digital team collaborating on digital strategy and execution - Click to watch video"
+                                    className="w-100"
+                                    width={450}
+                                    height={430}
+                                    sizes="(max-width: 991px) 100vw, 450px"
+                                    style={{ width: "100%", height: "auto" }}
+                                />
+                                <button
+                                    type="button"
+                                    className="popup-video td-video-6-inner"
+                                    aria-label="Play video"
+                                    style={{
+                                        position: "absolute",
+                                        top: "50%",
+                                        left: "50%",
+                                        transform: "translate(-50%, -50%)",
+                                        zIndex: 2,
+                                    }}
+                                >
+                                    <svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path d="M20 12L0.5 23.2583V0.74167L20 12Z" fill="#1C1D1F" />
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div className="col-lg-6">
@@ -83,6 +105,7 @@ const About = () => {
                     </div>
                 </div>
             </div>
+            <VideoPopup isOpen={isVideoOpen} onClose={closeVideo} videoId="YV6AQgnaPVA" />
         </div>
     )
 }

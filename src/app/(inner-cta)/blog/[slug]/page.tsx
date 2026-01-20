@@ -81,7 +81,19 @@ export default async function BlogDetailsPage({ params }: { params: Promise<{ sl
     description: stripHtml(post.excerpt),
   };
 
-  const candidates = (recentPosts || []).filter((p) => p.slug !== slug);
+  // Find current post index in the sorted list (newest first)
+  const allPosts = recentPosts || [];
+  const currentIndex = allPosts.findIndex((p) => p.slug === slug);
+  
+  // Next = older post (higher index), Prev = newer post (lower index)
+  const nextPost = currentIndex >= 0 && currentIndex < allPosts.length - 1 
+    ? { slug: allPosts[currentIndex + 1].slug, title: allPosts[currentIndex + 1].title }
+    : null;
+  const prevPost = currentIndex > 0 
+    ? { slug: allPosts[currentIndex - 1].slug, title: allPosts[currentIndex - 1].title }
+    : null;
+
+  const candidates = allPosts.filter((p) => p.slug !== slug);
 
   // Sidebar: hard cap to 6
   const sidebarRecent = candidates.slice(0, 6);
@@ -107,6 +119,8 @@ export default async function BlogDetailsPage({ params }: { params: Promise<{ sl
         recentPosts={sidebarRecent}
         categories={categories}
         currentUrl={currentUrl}
+        prevPost={prevPost}
+        nextPost={nextPost}
       />
       <BlogRelated items={related} footerContent={<Cta />} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />

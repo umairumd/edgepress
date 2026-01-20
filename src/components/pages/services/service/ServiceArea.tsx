@@ -9,8 +9,8 @@ const ServiceArea = () => {
                     <div className="col-12">
                         <div className="td-service-main-bigthumb fix td-rounded-10">
                             <Image
-                                src="/assets/img/service/details/services-image.jpg"
-                                alt="Inoma Digital services"
+                                src="/assets/img/service/details/inoma-service-1.jpg"
+                                alt="Inoma Digital services - Brand strategy, design, development, and digital marketing"
                                 width={1500}
                                 height={700}
                                 priority
@@ -33,7 +33,7 @@ const ServiceArea = () => {
                 <div className="row">
                     <div className="col-lg-4">
                         <div className="td-service-main-expreance mb-30">
-                            <h2 className="expreance mb-0">8+</h2>
+                            <h2 className="expreance mb-0">7+</h2>
                             <span className="year">YEARS OF WORK EXPERIENCE</span>
                         </div>
                     </div>

@@ -17,8 +17,8 @@ const Choose = () => {
                         <div className="td-chose-6-thumb mr-110 mb-30 wow fadeInLeft" data-wow-delay=".4s" data-wow-duration="1s">
                             <Image
                                 className="w-100"
-                                src="/assets/img/chose/chose-6/thumb.jpg"
-                                alt="Strategic business planning and digital execution"
+                                src="/assets/img/chose/chose-6/inoma-home-3.jpg"
+                                alt="Strategic business planning and digital execution at Inoma Digital"
                                 width={645}
                                 height={320}
                                 sizes="(max-width: 991px) 100vw, 60vw"

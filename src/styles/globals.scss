@@ -695,10 +695,76 @@ img {
     border-radius: 6px;
 }
 
+/* WP tables (Gutenberg / classic) */
+.td-wp-content figure.wp-block-table,
+.td-wp-content .wp-block-table {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 18px 0;
+}
+.td-wp-content table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin: 0;
+    min-width: 520px; /* enables horizontal scroll on narrow screens instead of collapsing */
+}
+.td-wp-content th,
+.td-wp-content td {
+    border: 1px solid rgba(6, 37, 57, 0.12);
+    padding: 10px 12px;
+    vertical-align: top;
+}
+.td-wp-content th {
+    background: rgba(184, 233, 255, 0.28);
+    color: #062539;
+    font-weight: 700;
+}
+.td-wp-content td {
+    background: #fff;
+    color: rgba(6, 37, 57, 0.82);
+}
+
+/* WP "template accordion" inside post content: ensure hover uses theme blue (not template secondary) */
+.td-wp-content .accordion-buttons:hover {
+    color: #0277b5 !important;
+}
+.td-wp-content .accordion-buttons:hover .plus-icon::before,
+.td-wp-content .accordion-buttons:hover .plus-icon::after {
+    background-color: #0277b5 !important;
+}
+
 /* Blog sidebar: category count badge hover should use brand light blue (not template green) */
 .td-blog-postbox-cetagory-list ul li a:hover .total {
     background: #b8e9ff !important;
     color: #062539 !important;
+}
+
+/* Blog detail: prev/next navigation buttons */
+.td-blog-details-pagenation {
+    .td-blog-details-prev,
+    .td-blog-details-next {
+        display: inline-flex;
+        align-items: center;
+        font-weight: 600;
+        font-size: 16px;
+        color: var(--td-heading-ink);
+        transition: color 0.2s ease;
+        cursor: pointer;
+    }
+    a.td-blog-details-prev,
+    a.td-blog-details-next {
+        text-decoration: none;
+        &:hover {
+            color: #0277b5;
+        }
+    }
+    span.td-blog-details-prev.td-disabled,
+    span.td-blog-details-next.td-disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
 }
 
 /* Blog detail: modern minimal hero (title above, full image shown without cropping) */

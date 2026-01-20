@@ -43,6 +43,31 @@ const COPY_MAP = [
     from: firstExisting(["extras/inoma-og.jpg"]) ?? "public/assets/img/logo/inoma-og.jpg",
     to: "public/assets/img/logo/inoma-og.jpg",
   },
+  {
+    // Home page - Who We Are section image (with video button)
+    from: firstExisting(["extras/inoma-home-1.jpg"]) ?? "public/assets/img/about/about-6/inoma-home-1.jpg",
+    to: "public/assets/img/about/about-6/inoma-home-1.jpg",
+  },
+  {
+    // Home page - Video section replacement (static image)
+    from: firstExisting(["extras/inoma-home-2.jpg"]) ?? "public/assets/img/video/video-6/inoma-home-2.jpg",
+    to: "public/assets/img/video/video-6/inoma-home-2.jpg",
+  },
+  {
+    // Home page - Choose section image
+    from: firstExisting(["extras/inoma-home-3.jpg"]) ?? "public/assets/img/chose/chose-6/inoma-home-3.jpg",
+    to: "public/assets/img/chose/chose-6/inoma-home-3.jpg",
+  },
+  {
+    // Service page image
+    from: firstExisting(["extras/inoma-service-1.jpg"]) ?? "public/assets/img/service/details/inoma-service-1.jpg",
+    to: "public/assets/img/service/details/inoma-service-1.jpg",
+  },
+  {
+    // About page image
+    from: firstExisting(["extras/inoma-about-1.jpg"]) ?? "public/assets/img/about/main/inoma-about-1.jpg",
+    to: "public/assets/img/about/main/inoma-about-1.jpg",
+  },
 ];
 
 function copyFile(fromRel, toRel) {
