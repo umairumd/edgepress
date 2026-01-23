@@ -32,13 +32,14 @@ export default function PortfolioLongImage({
   // If the provided height is small, treat the total height as unknown and keep loading until API returns 416.
   const trustHeight = Boolean(height && height >= 2200);
   const knownSlices = trustHeight && height ? Math.ceil(height / effectiveSliceH) : null;
-  // Load all slices immediately if we know the count, otherwise load aggressively
-  const initialTarget = knownSlices ?? 10; // Increased from 3 to load more slices upfront
+  // Progressive loading: start with 3 slices, then load more as needed
+  const initialTarget = Math.min(knownSlices ?? 3, 3);
   // Always load the first slice first; once it completes, we render more slices.
   const [count, setCount] = useState<number>(1);
   const [done, setDone] = useState<boolean>(false); // used only for unknown-height stop
   const [firstLoaded, setFirstLoaded] = useState<boolean>(false);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
+  const firstImageRef = useRef<HTMLImageElement | null>(null);
 
   const sliceUrl = (y: number, h: number, w: number, q = 88) =>
     `/api/img/slice?src=${encodeURIComponent(src)}&y=${y}&h=${h}&w=${w}&q=${q}`;
@@ -59,25 +60,19 @@ export default function PortfolioLongImage({
       `${sliceUrl(y, h, 3200)} 3200w`,
     ].join(", ");
 
-  // Load all slices aggressively once first slice loads
+  // Progressive loading: load more slices gradually as previous ones complete
   useEffect(() => {
     if (!firstLoaded) return;
     const reachedKnownEnd = Boolean(knownSlices && count >= knownSlices);
     if (done || reachedKnownEnd) return;
     
-    // If we know the total slices, load them all immediately
-    if (knownSlices && count < knownSlices) {
-      setCount(knownSlices);
-      return;
-    }
-    
-    // For unknown height, load more slices aggressively
-    // Start loading more slices immediately after first loads
+    // Progressive loading: load 2 more slices at a time, not all at once
     const timer = setTimeout(() => {
-      if (!done && count < 60) {
-        setCount((c) => Math.min(c + 5, 60)); // Load 5 more slices at a time
+      if (!done && count < (knownSlices ?? 60)) {
+        const nextCount = Math.min(count + 2, knownSlices ?? 60);
+        setCount(nextCount);
       }
-    }, 200); // Small delay to avoid overwhelming the network
+    }, 300); // Small delay between progressive loads to avoid overwhelming the network
     
     return () => clearTimeout(timer);
   }, [firstLoaded, done, knownSlices, count]);
@@ -106,6 +101,30 @@ export default function PortfolioLongImage({
     return () => io.disconnect();
   }, [done, knownSlices, count, firstLoaded]);
 
+  // Check if first image is already loaded (cached) - fixes loader persistence issue
+  useEffect(() => {
+    if (firstLoaded) return;
+    const img = firstImageRef.current;
+    if (!img) return;
+    
+    // If image is already complete (cached), set firstLoaded immediately
+    if (img.complete && img.naturalWidth > 0) {
+      setFirstLoaded(true);
+      setCount((c) => Math.max(c, initialTarget));
+      return;
+    }
+    
+    // Fallback timeout: hide loader after 5 seconds even if image hasn't loaded
+    const timeout = setTimeout(() => {
+      if (!firstLoaded) {
+        setFirstLoaded(true);
+        setCount((c) => Math.max(c, initialTarget));
+      }
+    }, 5000);
+    
+    return () => clearTimeout(timeout);
+  }, [firstLoaded, initialTarget]);
+
   const visibleCount = firstLoaded ? count : 1;
 
   return (
@@ -123,6 +142,7 @@ export default function PortfolioLongImage({
         return (
           <img
             key={i}
+            ref={i === 0 ? firstImageRef : null}
             className="td-portfolio-long-image__slice"
             // Faster first paint: smaller + slightly lower quality for slice 1; retina quality still comes from srcset.
             src={sliceUrl(y, h, eager ? 1000 : 1400, eager ? 78 : 88)}
@@ -141,15 +161,15 @@ export default function PortfolioLongImage({
             onLoad={() => {
               if (i === 0) {
                 setFirstLoaded(true);
-                // Load all known slices immediately, or at least 10 for unknown height
+                // Progressive loading: start with initialTarget (3 slices)
                 setCount((c) => Math.max(c, initialTarget));
               }
-              // Continue loading more slices if we haven't reached the end
+              // Continue loading more slices progressively if we haven't reached the end
               if (!done && !reachedKnownEnd && i === count - 1) {
                 const cap = knownSlices ?? 60;
                 if (count < cap) {
-                  // Load more slices immediately after each slice loads
-                  setCount((c) => Math.min(c + 2, cap));
+                  // Load 1 more slice after each slice completes (progressive)
+                  setCount((c) => Math.min(c + 1, cap));
                 }
               }
             }}
