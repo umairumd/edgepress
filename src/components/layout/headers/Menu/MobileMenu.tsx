@@ -34,7 +34,11 @@ const MobileMenu = ({ onNavigate }: MobileMenuProps) => {
                     key={menu.id}
                     className={`${menu.has_dropdown ? "menu-item-has-children" : ""} ${navTitle === menu.title ? "active" : ""}`}
                 >
-                    <Link href={menu.link} onClick={handleLinkClick}>{menu.title}</Link>
+                    {menu.is_unclickable ? (
+                        <span className="tdmenu__mobile-unclickable" style={{ cursor: "default" }}>{menu.title}</span>
+                    ) : (
+                        <Link href={menu.link} onClick={handleLinkClick}>{menu.title}</Link>
+                    )}
                     {menu.has_dropdown && (
                         <>
                             <div

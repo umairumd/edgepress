@@ -35,20 +35,22 @@ const BlogRelated = ({ items, footerContent }: Props) => {
                         <div key={item.slug + idx} className="col-xl-4 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay=".5s" data-wow-duration="1s">
                             <div className="td-blog-wrap mb-60">
                                 <div className="td-blog-thumb fix mb-25">
-                                    <Image
-                                        className="w-100"
-                                        src={item.featuredImage?.url ?? "/assets/img/blog/blog.jpg"}
-                                        alt={item.title}
-                                        width={800}
-                                        height={520}
-                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                        style={{ height: "auto" }}
-                                        unoptimized={
-                                            process.env.NODE_ENV !== "production" &&
-                                            typeof item.featuredImage?.url === "string" &&
-                                            item.featuredImage.url.startsWith("http")
-                                        }
-                                    />
+                                    <Link href={`/blog/${item.slug}`}>
+                                        <Image
+                                            className="w-100"
+                                            src={item.featuredImage?.url ?? "/assets/img/blog/blog.jpg"}
+                                            alt={item.title}
+                                            width={800}
+                                            height={520}
+                                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                            style={{ height: "auto" }}
+                                            unoptimized={
+                                                process.env.NODE_ENV !== "production" &&
+                                                typeof item.featuredImage?.url === "string" &&
+                                                item.featuredImage.url.startsWith("http")
+                                            }
+                                        />
+                                    </Link>
                                 </div>
                                 <div className="td-blog-content">
                                     <h3 className="td-blog-title mb-30">

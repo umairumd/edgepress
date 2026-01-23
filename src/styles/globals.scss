@@ -791,12 +791,224 @@ img {
 }
 
 /* WP "template accordion" inside post content: ensure hover uses theme blue (not template secondary) */
-.td-wp-content .accordion-buttons:hover {
+.td-wp-content .accordion-buttons:hover,
+.td-wp-content .faq-question:hover {
     color: #0277b5 !important;
 }
 .td-wp-content .accordion-buttons:hover .plus-icon::before,
-.td-wp-content .accordion-buttons:hover .plus-icon::after {
+.td-wp-content .accordion-buttons:hover .plus-icon::after,
+.td-wp-content .faq-question:hover .faq-toggle-icon::before,
+.td-wp-content .faq-question:hover .faq-toggle-icon::after {
     background-color: #0277b5 !important;
+}
+
+/* AGGRESSIVE FAQ OVERRIDES - Highest specificity to override any WordPress/template CSS */
+/* Target FAQ questions when active - multiple selector patterns for maximum coverage */
+.td-wp-content .faq-container .faq-item button.faq-question[aria-expanded="true"],
+.td-wp-content .faq-container .faq-item .faq-question[aria-expanded="true"],
+.td-wp-content .faq-item button.faq-question[aria-expanded="true"],
+.td-wp-content .faq-item .faq-question[aria-expanded="true"],
+.td-wp-content button.faq-question[aria-expanded="true"],
+.td-wp-content .faq-question[aria-expanded="true"] {
+    color: #0277b5 !important;
+}
+
+/* Target FAQ items with open answers */
+.td-wp-content .faq-container .faq-item:has(.faq-answer.show) button.faq-question,
+.td-wp-content .faq-container .faq-item:has(.faq-answer.show) .faq-question,
+.td-wp-content .faq-container .faq-item:has(.faq-answer.active) button.faq-question,
+.td-wp-content .faq-container .faq-item:has(.faq-answer.active) .faq-question,
+.td-wp-content .faq-item:has(.faq-answer.show) button.faq-question,
+.td-wp-content .faq-item:has(.faq-answer.show) .faq-question,
+.td-wp-content .faq-item:has(.faq-answer.active) button.faq-question,
+.td-wp-content .faq-item:has(.faq-answer.active) .faq-question {
+    color: #0277b5 !important;
+}
+
+/* Target toggle icons - all possible combinations */
+.td-wp-content .faq-container .faq-item button.faq-question[aria-expanded="true"] .faq-toggle-icon,
+.td-wp-content .faq-container .faq-item .faq-question[aria-expanded="true"] .faq-toggle-icon,
+.td-wp-content .faq-item button.faq-question[aria-expanded="true"] .faq-toggle-icon,
+.td-wp-content .faq-item .faq-question[aria-expanded="true"] .faq-toggle-icon,
+.td-wp-content button.faq-question[aria-expanded="true"] .faq-toggle-icon,
+.td-wp-content .faq-question[aria-expanded="true"] .faq-toggle-icon,
+.td-wp-content .faq-container .faq-item:has(.faq-answer.show) button.faq-question .faq-toggle-icon,
+.td-wp-content .faq-container .faq-item:has(.faq-answer.show) .faq-question .faq-toggle-icon,
+.td-wp-content .faq-container .faq-item:has(.faq-answer.active) button.faq-question .faq-toggle-icon,
+.td-wp-content .faq-container .faq-item:has(.faq-answer.active) .faq-question .faq-toggle-icon {
+    color: #0277b5 !important;
+    fill: #0277b5 !important;
+    stroke: #0277b5 !important;
+}
+
+/* Target toggle icon pseudo-elements - most aggressive */
+.td-wp-content .faq-container .faq-item button.faq-question[aria-expanded="true"] .faq-toggle-icon::before,
+.td-wp-content .faq-container .faq-item button.faq-question[aria-expanded="true"] .faq-toggle-icon::after,
+.td-wp-content .faq-container .faq-item .faq-question[aria-expanded="true"] .faq-toggle-icon::before,
+.td-wp-content .faq-container .faq-item .faq-question[aria-expanded="true"] .faq-toggle-icon::after,
+.td-wp-content .faq-item button.faq-question[aria-expanded="true"] .faq-toggle-icon::before,
+.td-wp-content .faq-item button.faq-question[aria-expanded="true"] .faq-toggle-icon::after,
+.td-wp-content .faq-item .faq-question[aria-expanded="true"] .faq-toggle-icon::before,
+.td-wp-content .faq-item .faq-question[aria-expanded="true"] .faq-toggle-icon::after,
+.td-wp-content button.faq-question[aria-expanded="true"] .faq-toggle-icon::before,
+.td-wp-content button.faq-question[aria-expanded="true"] .faq-toggle-icon::after,
+.td-wp-content .faq-question[aria-expanded="true"] .faq-toggle-icon::before,
+.td-wp-content .faq-question[aria-expanded="true"] .faq-toggle-icon::after,
+.td-wp-content .faq-container .faq-item:has(.faq-answer.show) button.faq-question .faq-toggle-icon::before,
+.td-wp-content .faq-container .faq-item:has(.faq-answer.show) button.faq-question .faq-toggle-icon::after,
+.td-wp-content .faq-container .faq-item:has(.faq-answer.show) .faq-question .faq-toggle-icon::before,
+.td-wp-content .faq-container .faq-item:has(.faq-answer.show) .faq-question .faq-toggle-icon::after,
+.td-wp-content .faq-container .faq-item:has(.faq-answer.active) button.faq-question .faq-toggle-icon::before,
+.td-wp-content .faq-container .faq-item:has(.faq-answer.active) button.faq-question .faq-toggle-icon::after,
+.td-wp-content .faq-container .faq-item:has(.faq-answer.active) .faq-question .faq-toggle-icon::before,
+.td-wp-content .faq-container .faq-item:has(.faq-answer.active) .faq-question .faq-toggle-icon::after {
+    background-color: #0277b5 !important;
+    background: #0277b5 !important;
+    border-color: #0277b5 !important;
+    color: #0277b5 !important;
+    fill: #0277b5 !important;
+    stroke: #0277b5 !important;
+}
+
+/* Override any inline styles or CSS variables */
+.td-wp-content .faq-question[aria-expanded="true"],
+.td-wp-content .faq-item:has(.faq-answer.show) .faq-question,
+.td-wp-content .faq-item:has(.faq-answer.active) .faq-question {
+    --faq-active-color: #0277b5 !important;
+    color: #0277b5 !important;
+}
+
+/* WP accordion/FAQ active/clicked state: use theme blue when open */
+/* When accordion is open, the button doesn't have .collapsed class */
+.td-wp-content .accordion-buttons:not(.collapsed),
+.td-wp-content .faq-question[aria-expanded="true"] {
+    color: #0277b5 !important;
+}
+.td-wp-content .accordion-buttons:not(.collapsed) .plus-icon::before,
+.td-wp-content .accordion-buttons:not(.collapsed) .plus-icon::after,
+.td-wp-content .faq-question[aria-expanded="true"] .faq-toggle-icon::before,
+.td-wp-content .faq-question[aria-expanded="true"] .faq-toggle-icon::after {
+    background-color: #0277b5 !important;
+}
+
+/* Also target when panel has .show or .active class (using :has for modern browsers) */
+.td-wp-content .accordion-items:has(.accordion-collapse.show) .accordion-buttons,
+.td-wp-content .faq-item:has(.faq-answer.show) .faq-question,
+.td-wp-content .faq-item:has(.faq-answer.active) .faq-question {
+    color: #0277b5 !important;
+}
+.td-wp-content .accordion-items:has(.accordion-collapse.show) .accordion-buttons .plus-icon::before,
+.td-wp-content .accordion-items:has(.accordion-collapse.show) .accordion-buttons .plus-icon::after,
+.td-wp-content .faq-item:has(.faq-answer.show) .faq-question .faq-toggle-icon::before,
+.td-wp-content .faq-item:has(.faq-answer.show) .faq-question .faq-toggle-icon::after,
+.td-wp-content .faq-item:has(.faq-answer.active) .faq-question .faq-toggle-icon::before,
+.td-wp-content .faq-item:has(.faq-answer.active) .faq-question .faq-toggle-icon::after {
+    background-color: #0277b5 !important;
+}
+
+/* More specific selectors to override any WordPress/theme CSS */
+.td-wp-content .faq-container .faq-item .faq-question[aria-expanded="true"],
+.td-wp-content .faq-container .faq-item:has(.faq-answer.show) .faq-question,
+.td-wp-content .faq-container .faq-item:has(.faq-answer.active) .faq-question {
+    color: #0277b5 !important;
+}
+
+.td-wp-content .faq-container .faq-item .faq-question[aria-expanded="true"] .faq-toggle-icon,
+.td-wp-content .faq-container .faq-item:has(.faq-answer.show) .faq-question .faq-toggle-icon,
+.td-wp-content .faq-container .faq-item:has(.faq-answer.active) .faq-question .faq-toggle-icon {
+    color: #0277b5 !important;
+}
+
+.td-wp-content .faq-container .faq-item .faq-question[aria-expanded="true"] .faq-toggle-icon::before,
+.td-wp-content .faq-container .faq-item .faq-question[aria-expanded="true"] .faq-toggle-icon::after,
+.td-wp-content .faq-container .faq-item:has(.faq-answer.show) .faq-question .faq-toggle-icon::before,
+.td-wp-content .faq-container .faq-item:has(.faq-answer.show) .faq-question .faq-toggle-icon::after,
+.td-wp-content .faq-container .faq-item:has(.faq-answer.active) .faq-question .faq-toggle-icon::before,
+.td-wp-content .faq-container .faq-item:has(.faq-answer.active) .faq-question .faq-toggle-icon::after {
+    background-color: #0277b5 !important;
+    border-color: #0277b5 !important;
+}
+
+/* Override any inline styles or more specific selectors */
+.td-wp-content .faq-question[aria-expanded="true"],
+.td-wp-content .faq-item .faq-answer.show ~ .faq-question,
+.td-wp-content .faq-item .faq-answer.active ~ .faq-question {
+    color: #0277b5 !important;
+}
+
+/* Comprehensive FAQ active state overrides - catch all possible selectors */
+.td-wp-content .faq-question[aria-expanded="true"],
+.td-wp-content .faq-item:has(.faq-answer.show) .faq-question,
+.td-wp-content .faq-item:has(.faq-answer.active) .faq-question,
+.td-wp-content .faq-item .faq-answer.show + .faq-question,
+.td-wp-content .faq-item .faq-answer.active + .faq-question {
+    color: #0277b5 !important;
+}
+
+/* FAQ toggle icon - all possible combinations */
+.td-wp-content .faq-question[aria-expanded="true"] .faq-toggle-icon,
+.td-wp-content .faq-item:has(.faq-answer.show) .faq-question .faq-toggle-icon,
+.td-wp-content .faq-item:has(.faq-answer.active) .faq-question .faq-toggle-icon,
+.td-wp-content .faq-item .faq-answer.show + .faq-question .faq-toggle-icon,
+.td-wp-content .faq-item .faq-answer.active + .faq-question .faq-toggle-icon {
+    color: #0277b5 !important;
+    background-color: transparent !important;
+}
+
+/* FAQ toggle icon pseudo-elements (::before and ::after for plus/minus icon) */
+.td-wp-content .faq-question[aria-expanded="true"] .faq-toggle-icon::before,
+.td-wp-content .faq-question[aria-expanded="true"] .faq-toggle-icon::after,
+.td-wp-content .faq-item:has(.faq-answer.show) .faq-question .faq-toggle-icon::before,
+.td-wp-content .faq-item:has(.faq-answer.show) .faq-question .faq-toggle-icon::after,
+.td-wp-content .faq-item:has(.faq-answer.active) .faq-question .faq-toggle-icon::before,
+.td-wp-content .faq-item:has(.faq-answer.active) .faq-question .faq-toggle-icon::after,
+.td-wp-content .faq-item .faq-answer.show + .faq-question .faq-toggle-icon::before,
+.td-wp-content .faq-item .faq-answer.show + .faq-question .faq-toggle-icon::after,
+.td-wp-content .faq-item .faq-answer.active + .faq-question .faq-toggle-icon::before,
+.td-wp-content .faq-item .faq-answer.active + .faq-question .faq-toggle-icon::after {
+    background-color: #0277b5 !important;
+    background: #0277b5 !important;
+    border-color: #0277b5 !important;
+    color: #0277b5 !important;
+}
+
+/* Universal override for any FAQ active state - highest specificity */
+.td-wp-content .faq-container .faq-item .faq-answer.show ~ .faq-question,
+.td-wp-content .faq-container .faq-item .faq-answer.active ~ .faq-question,
+.td-wp-content .faq-container .faq-item .faq-question[aria-expanded="true"] {
+    color: #0277b5 !important;
+}
+
+.td-wp-content .faq-container .faq-item .faq-answer.show ~ .faq-question .faq-toggle-icon,
+.td-wp-content .faq-container .faq-item .faq-answer.active ~ .faq-question .faq-toggle-icon,
+.td-wp-content .faq-container .faq-item .faq-question[aria-expanded="true"] .faq-toggle-icon {
+    color: #0277b5 !important;
+}
+
+.td-wp-content .faq-container .faq-item .faq-answer.show ~ .faq-question .faq-toggle-icon::before,
+.td-wp-content .faq-container .faq-item .faq-answer.show ~ .faq-question .faq-toggle-icon::after,
+.td-wp-content .faq-container .faq-item .faq-answer.active ~ .faq-question .faq-toggle-icon::before,
+.td-wp-content .faq-container .faq-item .faq-answer.active ~ .faq-question .faq-toggle-icon::after,
+.td-wp-content .faq-container .faq-item .faq-question[aria-expanded="true"] .faq-toggle-icon::before,
+.td-wp-content .faq-container .faq-item .faq-question[aria-expanded="true"] .faq-toggle-icon::after {
+    background-color: #0277b5 !important;
+    background: #0277b5 !important;
+}
+
+/* Override for SVG icons if toggle icon uses SVG */
+.td-wp-content .faq-question[aria-expanded="true"] .faq-toggle-icon svg,
+.td-wp-content .faq-item:has(.faq-answer.show) .faq-question .faq-toggle-icon svg,
+.td-wp-content .faq-item:has(.faq-answer.active) .faq-question .faq-toggle-icon svg {
+    fill: #0277b5 !important;
+    color: #0277b5 !important;
+    stroke: #0277b5 !important;
+}
+
+/* Override for any background images */
+.td-wp-content .faq-question[aria-expanded="true"] .faq-toggle-icon,
+.td-wp-content .faq-item:has(.faq-answer.show) .faq-question .faq-toggle-icon,
+.td-wp-content .faq-item:has(.faq-answer.active) .faq-question .faq-toggle-icon {
+    filter: none !important;
 }
 
 /* Blog sidebar: category count badge hover should use brand light blue (not template green) */
@@ -1697,8 +1909,42 @@ img {
 /* Header menu hover color */
 .tdmenu__navbar-wrap > ul > li > a:hover,
 .tdmenu__navbar-wrap > ul > li.active > a,
-.tdmenu__navbar-wrap > ul > li.menu-item-has-children:hover > a {
+.tdmenu__navbar-wrap > ul > li.menu-item-has-children:hover > a,
+.tdmenu__navbar-wrap > ul > li.menu-item-has-children:hover > span.tdmenu__unclickable {
     color: #b8e9ff !important;
+}
+
+/* Mobile menu: style unclickable items to match regular menu items */
+.tdmobile__menu .navigation li > span.tdmenu__mobile-unclickable {
+    position: relative !important;
+    display: block !important;
+    padding: 10px 60px 10px 25px !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    color: var(--td-common-black) !important;
+    text-transform: uppercase !important;
+    -webkit-transition: all 500ms ease !important;
+    -o-transition: all 500ms ease !important;
+    transition: all 500ms ease !important;
+    border: none !important;
+    letter-spacing: 1px !important;
+    text-decoration: none !important;
+    cursor: default !important;
+}
+
+/* Match the ::before pseudo-element styling for mobile menu items */
+.tdmobile__menu .navigation li > span.tdmenu__mobile-unclickable::before {
+    content: '' !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    height: 0 !important;
+    -webkit-transition: all 500ms ease !important;
+    -o-transition: all 500ms ease !important;
+    transition: all 500ms ease !important;
+    width: 2px !important;
+    background: var(--td-common-black) !important;
+    pointer-events: none !important;
 }
 
 .td-header-6-wrapper .tdmenu__navbar-wrap > ul > li:hover > a,
@@ -1715,9 +1961,41 @@ img {
 
 /* Uppercase menu text */
 .td-header-6-wrapper .tdmenu__navbar-wrap > ul > li > a,
+.td-header-6-wrapper .tdmenu__navbar-wrap > ul > li > span.tdmenu__unclickable,
 .td-header-6-wrapper .tdmenu__navbar-wrap > ul > li .sub-menu > li > a {
     text-transform: uppercase !important;
     letter-spacing: 0.02em;
+}
+
+/* Make unclickable menu items look identical to clickable links */
+.tdmenu__navbar-wrap > ul > li > span.tdmenu__unclickable {
+    font-weight: 600 !important;
+    font-size: 17px !important;
+    display: inline-block !important;
+    color: #fff !important; /* Always white on desktop */
+    padding: 17px 0px !important;
+    text-decoration: none !important;
+    -webkit-transition: all 500ms ease !important;
+    -o-transition: all 500ms ease !important;
+    transition: all 500ms ease !important;
+    cursor: default !important;
+}
+
+/* "More" button colors: match regular menu items in each header state */
+/* White header (sticky/default): dark color like other menu items */
+.td-header-6-wrapper.td-sticky .tdmenu__navbar-wrap > ul > li > span.tdmenu__unclickable,
+.td-header-6-wrapper.td-header-default .tdmenu__navbar-wrap > ul > li > span.tdmenu__unclickable {
+    color: #062539 !important;
+}
+
+/* Home header (non-sticky, dark background): white color */
+.td-header-6-wrapper:not(.td-header-default):not(.td-sticky) .tdmenu__navbar-wrap > ul > li > span.tdmenu__unclickable {
+    color: #fff !important;
+}
+
+/* Portfolio focus mode sticky header: white color */
+body.td-portfolio-focus .td-header-6-wrapper.td-sticky .tdmenu__navbar-wrap > ul > li > span.tdmenu__unclickable {
+    color: #fff !important;
 }
 
 /* Desktop dropdown indicator (small chevron) */

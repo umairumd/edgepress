@@ -68,6 +68,16 @@ const COPY_MAP = [
     from: firstExisting(["extras/inoma-about-1.jpg"]) ?? "public/assets/img/about/main/inoma-about-1.jpg",
     to: "public/assets/img/about/main/inoma-about-1.jpg",
   },
+  {
+    // Co-founder Umair photo
+    from: firstExisting(["extras/umair-photo.jpg"]) ?? "public/assets/img/team/thumb.jpg",
+    to: "public/assets/img/team/thumb.jpg",
+  },
+  {
+    // Co-founder Faizan photo
+    from: firstExisting(["extras/faizan-photo.jpg"]) ?? "public/assets/img/team/thumb-2.jpg",
+    to: "public/assets/img/team/thumb-2.jpg",
+  },
 ];
 
 function copyFile(fromRel, toRel) {

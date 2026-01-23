@@ -3,6 +3,7 @@ interface MenuItem {
     title: string;
     link: string;
     has_dropdown: boolean;
+    is_unclickable?: boolean; // For menu items that should not be clickable (like "More")
     sub_menus?: {
         link: string;
         title: string;
@@ -32,7 +33,14 @@ const menu_data: MenuItem[] = [
         id: 5,
         title: "About",
         link: "/about",
+        has_dropdown: false,
+    },
+    {
+        id: 7,
+        title: "More",
+        link: "#",
         has_dropdown: true,
+        is_unclickable: true,
         sub_menus: [
             { link: "/team", title: "Team" },
             { link: "/pricing", title: "Pricing" },

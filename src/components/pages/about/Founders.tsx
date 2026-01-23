@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 
 const founders = [
     {
@@ -32,7 +33,15 @@ const Founders = () => {
                         <div key={idx} className="col-lg-4 col-md-5 col-sm-8 mb-30 d-flex justify-content-center">
                             <div className="td-team-4-wrap p-relative td-team-founder">
                                 <div className="td-team-4-thumb">
-                                    <img className="w-100" src={item.thumb} alt={item.name} />
+                                    <Image
+                                        className="w-100"
+                                        src={item.thumb}
+                                        alt={item.name}
+                                        width={438}
+                                        height={570}
+                                        sizes="(max-width: 768px) 100vw, (max-width: 991px) 50vw, 33vw"
+                                        style={{ height: "auto" }}
+                                    />
                                 </div>
                                 <div className="td-team-4-content text-center static-text">
                                     <span className="td-team-4-subtitle">{item.role}</span>

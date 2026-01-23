@@ -179,6 +179,7 @@ const Hero = ({ slides }: HeroProps) => {
                                     <li><Link href="/portfolio">Web</Link></li>
                                     <li><Link href="/portfolio">SEO</Link></li>
                                     <li><Link href="/portfolio">Marketing</Link></li>
+                                    <li><Link href="/portfolio">Email</Link></li>
                                 </ul>
                             </div>
                         </div>

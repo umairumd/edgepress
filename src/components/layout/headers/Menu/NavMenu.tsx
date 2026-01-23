@@ -8,14 +8,25 @@ const NavMenu = () => {
         <ul className="navigation">
             {menu_data.map((menu) => (
                 <li key={menu.id} className={menu.has_dropdown ? "menu-item-has-children" : ""}>
-                    <Link href={menu.link}>
-                        {menu.title}
-                        {menu.has_dropdown ? (
-                            <span className="tdmenu__dropdown-indicator" aria-hidden="true">
-                                <IconAngleDown />
-                            </span>
-                        ) : null}
-                    </Link>
+                    {menu.is_unclickable ? (
+                        <span className="tdmenu__unclickable" style={{ cursor: "default" }} onClick={(e) => e.preventDefault()}>
+                            {menu.title}
+                            {menu.has_dropdown ? (
+                                <span className="tdmenu__dropdown-indicator" aria-hidden="true">
+                                    <IconAngleDown />
+                                </span>
+                            ) : null}
+                        </span>
+                    ) : (
+                        <Link href={menu.link}>
+                            {menu.title}
+                            {menu.has_dropdown ? (
+                                <span className="tdmenu__dropdown-indicator" aria-hidden="true">
+                                    <IconAngleDown />
+                                </span>
+                            ) : null}
+                        </Link>
+                    )}
 
                     {menu.has_dropdown && menu.sub_menus && (
                         <ul className="sub-menu">
