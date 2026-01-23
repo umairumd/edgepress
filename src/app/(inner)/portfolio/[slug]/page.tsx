@@ -4,6 +4,7 @@ import { getPortfolioItem, getPortfolioItems } from "@/lib/wp";
 import Image from "next/image";
 import { getSiteUrl } from "@/lib/siteUrl";
 import Cta from "@/components/common/Cta";
+import DisableRightClick from "@/components/common/DisableRightClick";
 import parse, { Element } from "html-react-parser";
 import PortfolioLongImage from "@/components/pages/portfolio-details/PortfolioLongImage";
 import PortfolioFocusMode from "@/components/pages/portfolio-details/PortfolioFocusMode";
@@ -138,6 +139,7 @@ export default async function PortfolioDetailsPage({ params }: { params: Promise
 
     return (
         <main className="td-has-cta-footer">
+            <DisableRightClick />
             <PortfolioFocusMode />
             <div className="td-portfolio-entry-area pb-120 pt-120">
                 <div className="container">

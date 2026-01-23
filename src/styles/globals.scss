@@ -628,6 +628,19 @@ img {
     }
 }
 
+/* Portfolio detail pages: disable image dragging and right-click on images */
+.td-portfolio-entry-area img,
+.td-portfolio-long-image__slice,
+.td-portfolio-entry-image {
+    -webkit-user-drag: none !important;
+    -khtml-user-drag: none !important;
+    -moz-user-drag: none !important;
+    -o-user-drag: none !important;
+    user-drag: none !important;
+    -webkit-touch-callout: none !important;
+    pointer-events: auto !important; /* Keep pointer events for hover effects */
+}
+
 /* Portfolio detail: stitched long-image slices */
 .td-portfolio-long-image {
     width: 100%;
