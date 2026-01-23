@@ -10,7 +10,7 @@ type Props = {
 };
 
 export default function VideoPopup({ isOpen, onClose, videoId }: Props) {
-  const src = useMemo(() => `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&rel=0`, [videoId]);
+  const src = useMemo(() => `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&rel=0`, [videoId]);
 
   useEffect(() => {
     if (!isOpen) return;

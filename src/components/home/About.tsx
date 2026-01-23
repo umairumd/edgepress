@@ -60,10 +60,29 @@ const About = () => {
                                         left: "50%",
                                         transform: "translate(-50%, -50%)",
                                         zIndex: 2,
+                                        width: "80px",
+                                        height: "80px",
+                                        borderRadius: "50%",
+                                        background: "rgba(255, 255, 255, 0.95)",
+                                        border: "none",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        cursor: "pointer",
+                                        boxShadow: "0 8px 24px rgba(0, 0, 0, 0.15)",
+                                        transition: "transform 0.2s ease, box-shadow 0.2s ease",
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        e.currentTarget.style.transform = "translate(-50%, -50%) scale(1.1)";
+                                        e.currentTarget.style.boxShadow = "0 12px 32px rgba(0, 0, 0, 0.2)";
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.currentTarget.style.transform = "translate(-50%, -50%) scale(1)";
+                                        e.currentTarget.style.boxShadow = "0 8px 24px rgba(0, 0, 0, 0.15)";
                                     }}
                                 >
-                                    <svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                        <path d="M20 12L0.5 23.2583V0.74167L20 12Z" fill="#1C1D1F" />
+                                    <svg width="24" height="28" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style={{ marginLeft: "4px" }}>
+                                        <path d="M20 12L0.5 23.2583V0.74167L20 12Z" fill="#0277b5" />
                                     </svg>
                                 </button>
                             </div>

@@ -32,7 +32,8 @@ export default function PortfolioLongImage({
   // If the provided height is small, treat the total height as unknown and keep loading until API returns 416.
   const trustHeight = Boolean(height && height >= 2200);
   const knownSlices = trustHeight && height ? Math.ceil(height / effectiveSliceH) : null;
-  const initialTarget = Math.min(knownSlices ?? 3, 3);
+  // Load all slices immediately if we know the count, otherwise load aggressively
+  const initialTarget = knownSlices ?? 10; // Increased from 3 to load more slices upfront
   // Always load the first slice first; once it completes, we render more slices.
   const [count, setCount] = useState<number>(1);
   const [done, setDone] = useState<boolean>(false); // used only for unknown-height stop
@@ -58,7 +59,30 @@ export default function PortfolioLongImage({
       `${sliceUrl(y, h, 3200)} 3200w`,
     ].join(", ");
 
-  // Load more slices as user scrolls; stop when we hit total (if known) or when the API returns 416.
+  // Load all slices aggressively once first slice loads
+  useEffect(() => {
+    if (!firstLoaded) return;
+    const reachedKnownEnd = Boolean(knownSlices && count >= knownSlices);
+    if (done || reachedKnownEnd) return;
+    
+    // If we know the total slices, load them all immediately
+    if (knownSlices && count < knownSlices) {
+      setCount(knownSlices);
+      return;
+    }
+    
+    // For unknown height, load more slices aggressively
+    // Start loading more slices immediately after first loads
+    const timer = setTimeout(() => {
+      if (!done && count < 60) {
+        setCount((c) => Math.min(c + 5, 60)); // Load 5 more slices at a time
+      }
+    }, 200); // Small delay to avoid overwhelming the network
+    
+    return () => clearTimeout(timer);
+  }, [firstLoaded, done, knownSlices, count]);
+
+  // Also use IntersectionObserver as fallback for very long images
   useEffect(() => {
     if (!firstLoaded) return;
     const reachedKnownEnd = Boolean(knownSlices && count >= knownSlices);
@@ -71,7 +95,7 @@ export default function PortfolioLongImage({
         const e = entries[0];
         if (!e?.isIntersecting) return;
         setCount((c) => {
-          const next = c + 2; // bump by 2 so you don't see "only one slice"
+          const next = c + 3; // Load 3 more slices when sentinel is visible
           const cap = knownSlices ?? 60;
           return Math.min(next, cap);
         });
@@ -80,17 +104,21 @@ export default function PortfolioLongImage({
     );
     io.observe(el);
     return () => io.disconnect();
-  }, [done, knownSlices, count]);
+  }, [done, knownSlices, count, firstLoaded]);
 
   const visibleCount = firstLoaded ? count : 1;
 
   return (
     <div className="td-portfolio-long-image" data-slices={knownSlices ?? count}>
-      {!firstLoaded ? <div className="td-portfolio-long-image__loader" aria-label="Loading case study" /> : null}
+      {!firstLoaded ? (
+        <div className="td-portfolio-long-image__loader" aria-label="Loading case study">
+          <div className="td-portfolio-long-image__loader-spinner"></div>
+        </div>
+      ) : null}
       {Array.from({ length: visibleCount }).map((_, i) => {
         const y = i * effectiveSliceH;
         const h = height ? Math.min(effectiveSliceH, height - y) : effectiveSliceH;
-        const eager = i === 0;
+        const eager = i === 0 || i < 5; // Load first 5 slices eagerly
         const reachedKnownEnd = Boolean(knownSlices && count >= knownSlices);
         return (
           <img
@@ -113,12 +141,16 @@ export default function PortfolioLongImage({
             onLoad={() => {
               if (i === 0) {
                 setFirstLoaded(true);
+                // Load all known slices immediately, or at least 10 for unknown height
                 setCount((c) => Math.max(c, initialTarget));
               }
-              // If the user is scrolling fast, make sure we don't stall after the first slice.
+              // Continue loading more slices if we haven't reached the end
               if (!done && !reachedKnownEnd && i === count - 1) {
                 const cap = knownSlices ?? 60;
-                if (count < cap) setCount((c) => Math.min(c + 1, cap));
+                if (count < cap) {
+                  // Load more slices immediately after each slice loads
+                  setCount((c) => Math.min(c + 2, cap));
+                }
               }
             }}
           />
