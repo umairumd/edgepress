@@ -4,7 +4,9 @@ import Link from "next/link";
 import { useState } from "react";
 import Image from "next/image";
 import { IconPhone, IconEnvelope, IconLocationDot } from "@/components/icons";
-import logoLight from "../../../../extras/inoma-logo-for-dark.png";
+
+// Use tracked public assets (do not depend on gitignored `extras/`).
+const LOGO_ON_DARK_BG_SRC = "/assets/img/logo/inoma-logo-light.png";
 
 const ContactMap = () => {
     const [isLoaded, setIsLoaded] = useState(false);
@@ -18,10 +20,12 @@ const ContactMap = () => {
                             <div className="td-contact-map-wrap">
                                 <Image
                                     className="mb-60 contact-card-logo"
-                                    src={logoLight}
+                                    src={LOGO_ON_DARK_BG_SRC}
                                     alt="Inoma Digital"
                                     sizes="(max-width: 768px) 200px, 220px"
                                     style={{ width: "220px", height: "auto" }}
+                                    width={220}
+                                    height={60}
                                 />
                                 <h6 className="mb-25">Contact Info</h6>
                                 <div className="td-contact-info-item d-flex align-items-center mb-10">

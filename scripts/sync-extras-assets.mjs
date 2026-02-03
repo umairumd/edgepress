@@ -21,16 +21,16 @@ const COPY_MAP = [
     to: "public/assets/img/hero/hero-6/bg.jpg",
   },
   {
-    // Dark logo (used on non-sticky home): support either exact filenames or legacy ones.
+    // Dark logo (used on sticky header + inner pages): prefer the user's `extras/inoma-logo.png`.
     from:
       firstExisting([
-        "extras/inoma-logo-dark.png",
         "extras/inoma-logo.png",
+        "extras/inoma-logo-dark.png",
       ]) ?? "public/assets/img/logo/inoma-logo-dark.png",
     to: "public/assets/img/logo/inoma-logo-dark.png",
   },
   {
-    // Light logo (used on sticky header + mobile offcanvas): support either exact filenames or legacy ones.
+    // Light logo (used on dark backgrounds e.g. home non-sticky header): support either exact filenames or legacy ones.
     from:
       firstExisting([
         "extras/inoma-logo-light.png",
@@ -77,6 +77,11 @@ const COPY_MAP = [
     // Co-founder Faizan photo
     from: firstExisting(["extras/faizan-photo.jpg"]) ?? "public/assets/img/team/thumb-2.jpg",
     to: "public/assets/img/team/thumb-2.jpg",
+  },
+  {
+    // Contact page – USA office image (same size as Pakistan/UAE)
+    from: firstExisting(["extras/usa.webp"]) ?? "public/assets/img/contact/usa.webp",
+    to: "public/assets/img/contact/usa.webp",
   },
 ];
 

@@ -3,6 +3,7 @@ import BreadcrumbTwo from "@/components/common/BreadcrumbTwo";
 import TeamArea from "@/components/pages/team/TeamArea";
 import Brand from "@/components/pages/team/Brand";
 import Cta from "@/components/common/Cta";
+import { getTeamMembers } from "@/lib/wp";
 
 export const metadata: Metadata = {
   title: "Team",
@@ -10,7 +11,10 @@ export const metadata: Metadata = {
   alternates: { canonical: "/team" },
 };
 
-export default function TeamPage() {
+export const revalidate = 3600;
+
+export default async function TeamPage() {
+  const members = await getTeamMembers(50);
   return (
     <main>
       <BreadcrumbTwo
@@ -22,7 +26,7 @@ export default function TeamPage() {
         }
         desc="We are a group of creative and innovative professionals dedicated to delivering top-notch digital solutions for your business growth."
       />
-      <TeamArea />
+      <TeamArea members={members} />
       <Brand />
       <Cta />
     </main>

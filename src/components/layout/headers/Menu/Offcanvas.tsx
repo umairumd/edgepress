@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import MobileMenu from "./MobileMenu";
-import logoDark from "../../../../../extras/inoma-logo.png";
 import {
     IconXmark,
     IconSearch,
@@ -11,6 +10,9 @@ import {
     IconLinkedinIn,
     IconBehance
 } from "@/components/icons";
+
+// Use tracked public assets (do not depend on gitignored `extras/`).
+const LOGO_ON_LIGHT_BG_SRC = "/assets/img/logo/inoma-logo-dark.png";
 
 interface OffcanvasProps {
     offCanvas: boolean;
@@ -28,10 +30,8 @@ const Offcanvas = ({ offCanvas, setOffCanvas }: OffcanvasProps) => {
                     <div className="nav-logo">
                         <Link href="/">
                             <img
-                                src={logoDark.src}
+                                src={LOGO_ON_LIGHT_BG_SRC}
                                 alt="Inoma Digital"
-                                width={logoDark.width}
-                                height={logoDark.height}
                                 loading="eager"
                                 decoding="async"
                             />

@@ -4,8 +4,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import NavMenu from "./headers/Menu/NavMenu";
 import Offcanvas from "./headers/Menu/Offcanvas";
 import UseSticky from "@/hooks/UseSticky";
-import logoDark from "../../../extras/inoma-logo.png";
-import logoLight from "../../../extras/inoma-logo-for-dark.png";
+
+// Use tracked public assets (do not depend on gitignored `extras/`).
+const LOGO_ON_DARK_BG_SRC = "/assets/img/logo/inoma-logo-light.png";
+const LOGO_ON_LIGHT_BG_SRC = "/assets/img/logo/inoma-logo-dark.png";
 
 type HeaderSixProps = {
     /** Home keeps dark-at-top + white-when-sticky; Default uses Home-sticky styling on all non-home pages. */
@@ -98,10 +100,8 @@ const HeaderSix = ({ variant = "home" }: HeaderSixProps) => {
                                     <Link className="logo-1" href="/">
                                         {/* logo-1 = shown on non-sticky (dark header on Home) */}
                                         <img
-                                            src={logoLight.src}
+                                            src={variant === "home" ? LOGO_ON_DARK_BG_SRC : LOGO_ON_LIGHT_BG_SRC}
                                             alt="Inoma Digital"
-                                            width={logoLight.width}
-                                            height={logoLight.height}
                                             loading="eager"
                                             decoding="async"
                                         />
@@ -109,10 +109,8 @@ const HeaderSix = ({ variant = "home" }: HeaderSixProps) => {
                                     <Link className="logo-2 d-none" href="/">
                                         {/* logo-2 = shown on sticky/white header */}
                                         <img
-                                            src={logoDark.src}
+                                            src={LOGO_ON_LIGHT_BG_SRC}
                                             alt="Inoma Digital"
-                                            width={logoDark.width}
-                                            height={logoDark.height}
                                             loading="eager"
                                             decoding="async"
                                         />
