@@ -1136,10 +1136,20 @@ type WpTeamMemberNode = {
 };
 
 const TEAM_ACF_GROUP_CANDIDATES = ["teamDetails", "teamFields", "acf", "acfFields"];
-const TEAM_ROLE_FIELD_CANDIDATES = ["role", "designation", "position", "jobTitle", "job_title", "title"];
+const TEAM_ROLE_FIELD_CANDIDATES = [
+  "role",
+  "designation",
+  "position",
+  "jobTitle",
+  "job_title",
+  "member_role",
+  "team_role",
+  "staff_role",
+  "title",
+];
 
 function getTeamMemberRole(node: WpTeamMemberNode): string | undefined {
-  // Try grouped ACF fields first
+  // Try grouped ACF fields first (e.g. teamDetails from "Team Details" field group)
   for (const groupKey of TEAM_ACF_GROUP_CANDIDATES) {
     const group = node?.[groupKey] as Record<string, unknown> | null | undefined;
     if (!group) continue;
@@ -1148,7 +1158,7 @@ function getTeamMemberRole(node: WpTeamMemberNode): string | undefined {
       if (typeof val === "string" && val.trim()) return val.trim();
     }
   }
-  // Try top-level fields
+  // Try top-level fields (ACF interface can expose fields on parent)
   for (const fieldKey of TEAM_ROLE_FIELD_CANDIDATES) {
     const val = node?.[fieldKey];
     if (typeof val === "string" && val.trim()) return val.trim();
@@ -1161,16 +1171,15 @@ function getTeamMemberRole(node: WpTeamMemberNode): string | undefined {
  * Supports Custom Post Types: "teamMembers", "team_members", "team".
  */
 export async function getTeamMembers(limit = 20): Promise<TeamMember[]> {
-  const cptCandidates = ["teamMembers", "team_members", "team", "teams"];
+  const cptCandidates = ["teamMembers", "team_members", "teamMember", "team", "teams"];
 
-  // Build ACF field selection dynamically
-  const acfFieldSelection = TEAM_ROLE_FIELD_CANDIDATES.join(" ");
-  const acfGroupSelections = TEAM_ACF_GROUP_CANDIDATES.map(
-    (g) => `${g} { ${acfFieldSelection} }`
-  ).join(" ");
+  // ACF "Team Details" group - request only "role" to avoid GraphQL validation
+  // errors. If your ACF field uses a different name (e.g. designation), add it
+  // here and in TEAM_ROLE_FIELD_CANDIDATES.
+  const teamDetailsSelection = "teamDetails { role }";
 
   for (const cptName of cptCandidates) {
-    // Try with ACF fields first
+    // Try with ACF teamDetails first (matches "Team Details" field group, GraphQL Type TeamDetails)
     const queryWithAcf = `
       query GetTeamMembers($limit: Int!) {
         ${cptName}(first: $limit, where: {orderby: {field: MENU_ORDER, order: ASC}}) {
@@ -1187,8 +1196,7 @@ export async function getTeamMembers(limit = 20): Promise<TeamMember[]> {
                 }
               }
             }
-            ${acfGroupSelections}
-            ${acfFieldSelection}
+            ${teamDetailsSelection}
           }
         }
       }

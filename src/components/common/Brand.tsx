@@ -16,17 +16,10 @@ interface DataType {
 }
 
 const Brand = ({ style }: DataType) => {
-    const sizeFor = (src: string) => {
-        // Match actual asset dimensions to avoid distortion/CLS.
-        if (src.endsWith("logo-1.png")) return { w: 83, h: 44 };
-        if (src.endsWith("logo-2.png")) return { w: 93, h: 34 };
-        if (src.endsWith("logo-3.png")) return { w: 110, h: 22 };
-        if (src.endsWith("logo-4.png")) return { w: 128, h: 38 };
-        if (src.endsWith("logo-5.png")) return { w: 128, h: 38 };
-        if (src.endsWith("logo-6.png")) return { w: 128, h: 30 };
-        if (src.endsWith("logo-7.png")) return { w: 128, h: 30 };
-        if (src.endsWith("logo-8.png")) return { w: 76, h: 44 };
-        return { w: 128, h: 38 };
+    const sizeFor = (index: number) => {
+        // Bottom row (5, 6, 7, 8) ~15% larger than top row
+        if (index >= 4) return { w: 207, h: 207 }; // 180 * 1.15
+        return { w: 140, h: 140 };
     };
 
     return (
@@ -39,9 +32,9 @@ const Brand = ({ style }: DataType) => {
                                 <Image
                                     src={brand}
                                     alt={`Client logo ${i + 1}`}
-                                    width={sizeFor(brand).w}
-                                    height={sizeFor(brand).h}
-                                    className="td-brand-logo"
+                                    width={sizeFor(i).w}
+                                    height={sizeFor(i).h}
+                                    className={`td-brand-logo ${i >= 4 && i <= 6 ? "td-brand-logo--bottom-row" : ""} ${i === 7 ? "td-brand-logo--bottom-row-last" : ""}`}
                                     sizes="(max-width: 768px) 50vw, 25vw"
                                     style={{ width: "auto", height: "auto", maxWidth: "100%" }}
                                 />

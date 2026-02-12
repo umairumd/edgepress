@@ -1,0 +1,189 @@
+<!--
+  WordPress FAQ Accordion Snippet for Next.js Blog
+  ================================================
+  Paste this into your WordPress post (HTML/Code block).
+  The accordion works on the Next.js site without any <script> —
+  WpContent component attaches click handlers automatically.
+
+  IMPORTANT: Do NOT include <script> tags for the accordion.
+  Scripts in pasted HTML do not run when content is rendered via
+  dangerouslySetInnerHTML. The Next.js app handles interactivity.
+-->
+
+<h2><b>Frequently Asked Questions</b></h2>
+
+<style>
+  :root {
+    --faq-accent: #0277b5;
+    --faq-text: #333;
+    --faq-border: #eaeaea;
+  }
+
+  .faq-container {
+    max-width: 100%;
+    margin: 2rem 0;
+    border-top: 1px solid var(--faq-border);
+  }
+
+  .faq-item {
+    border-bottom: 1px solid var(--faq-border);
+    background: #fff;
+  }
+
+  .faq-question {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 12px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    text-align: left;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--faq-text);
+    transition: color 0.25s ease, background 0.25s ease;
+  }
+
+  .faq-question:hover,
+  .faq-question:focus {
+    color: var(--faq-accent);
+    background-color: rgba(2, 119, 181, 0.06);
+    outline: none;
+  }
+
+  .faq-icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin-left: 12px;
+    color: var(--faq-accent);
+    transition: transform 0.35s ease;
+  }
+  .faq-icon svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .faq-answer {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.3s ease;
+    padding: 0 12px;
+    color: #555;
+    line-height: 1.65;
+  }
+
+  .faq-answer-inner {
+    padding: 10px 0 20px;
+  }
+
+  .faq-item.faq-open .faq-answer {
+    max-height: 500px;
+    opacity: 1;
+  }
+
+  .faq-item.faq-open .faq-question {
+    color: var(--faq-accent);
+  }
+
+  .faq-item.faq-open .faq-icon {
+    transform: rotate(180deg);
+    color: var(--faq-accent);
+  }
+</style>
+
+<div class="faq-container">
+  <div class="faq-item">
+    <button class="faq-question" type="button" aria-expanded="false">
+      What Is SEO in Simple Words?
+      <span class="faq-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+    </button>
+    <div class="faq-answer">
+      <div class="faq-answer-inner">
+        SEO is the process of optimizing websites to improve visibility in organic search and attract relevant traffic.
+      </div>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question" type="button" aria-expanded="false">
+      Why Is SEO Important for Websites?
+      <span class="faq-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+    </button>
+    <div class="faq-answer">
+      <div class="faq-answer-inner">
+        SEO increases online visibility, drives qualified traffic, builds credibility, and supports long-term digital marketing growth.
+      </div>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question" type="button" aria-expanded="false">
+      How Long Does SEO Take to Show Results?
+      <span class="faq-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+    </button>
+    <div class="faq-answer">
+      <div class="faq-answer-inner">
+        SEO results vary, but most websites see noticeable improvements within 3–6 months, depending on competition and strategy.
+      </div>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question" type="button" aria-expanded="false">
+      What Are the Main Types of SEO?
+      <span class="faq-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+    </button>
+    <div class="faq-answer">
+      <div class="faq-answer-inner">
+        The main types of SEO are on-page SEO, off-page SEO, technical SEO, and local SEO.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Optional: JSON-LD for SEO (structured data). Safe to include. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What Is SEO in Simple Words?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "SEO is the process of optimizing websites to improve visibility in organic search and attract relevant traffic."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why Is SEO Important for Websites?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "SEO increases online visibility, drives qualified traffic, builds credibility, and supports long-term digital marketing growth."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How Long Does SEO Take to Show Results?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "SEO results vary, but most websites see noticeable improvements within 3–6 months, depending on competition and strategy."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What Are the Main Types of SEO?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The main types of SEO are on-page SEO, off-page SEO, technical SEO, and local SEO."
+      }
+    }
+  ]
+}
+</script>

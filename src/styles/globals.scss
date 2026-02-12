@@ -802,6 +802,15 @@ img {
     background-color: #0277b5 !important;
 }
 
+/* FAQ accordion: .faq-open format (WordPress paste snippet) - no JS required, WpContent handles clicks */
+.td-wp-content .faq-container .faq-item.faq-open .faq-answer {
+    max-height: 500px !important;
+    opacity: 1 !important;
+}
+.td-wp-content .faq-container .faq-item.faq-open .faq-icon {
+    transform: rotate(180deg);
+}
+
 /* AGGRESSIVE FAQ OVERRIDES - Highest specificity to override any WordPress/template CSS */
 /* Target FAQ questions when active - multiple selector patterns for maximum coverage */
 .td-wp-content .faq-container .faq-item button.faq-question[aria-expanded="true"],
@@ -1436,29 +1445,46 @@ img {
     /* item-3 negative right margin makes its card appear larger (aspect-ratio scales with width) */
     .td-portfolio-area .td-portfolio-6-thumb-wrap.item-3 { margin-right: 0 !important; }
 }
+/* Home page Testimonial: Team proportions scaled up (150/194/250), balanced spacing */
+.td-testimonial-brands-wrap {
+    padding-top: 24px !important;
+    padding-bottom: 24px !important;
+}
+@media (max-width: 767px) {
+    .td-testimonial-brands-wrap {
+        display: none !important;
+    }
+}
+.td-testimonial-6-brands-slider .swiper-slide {
+    width: 280px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .td-testimonial-6-brands-slider .brands-logo img {
-    width: 100% !important;
-    height: auto !important;
+    width: auto !important;
     display: block;
+    object-fit: contain;
+}
+.td-testimonial-6-brands-slider .brands-logo[data-h="150"] img {
+    height: 150px !important;
+}
+.td-testimonial-6-brands-slider .brands-logo[data-h="194"] img {
+    height: 194px !important;
+}
+.td-testimonial-6-brands-slider .brands-logo[data-h="250"] img {
+    height: 250px !important;
 }
 
-/* Home: Clients Feedback avatar "pill" should be horizontal + centered on mobile */
+/* Home: Clients Feedback avatar "pill" – remove excess margin, apply balanced padding */
+.td-testimonial-6-thumb-active .swiper-wrapper {
+    margin-top: 0 !important;
+    padding-top: 20px !important;
+    padding-bottom: 20px !important;
+}
 @media (max-width: 767px) {
-    .td-testimonial-6-thumb-active {
-        float: none !important;
-        margin: 24px auto 0 !important;
-        width: fit-content !important; /* shrink-wrap pill to avatars */
-        max-width: calc(100vw - 32px);
-        display: inline-flex;
-        justify-content: center;
-    }
-    .td-testimonial-6-thumb-active .swiper-wrapper {
-        flex-direction: row !important;
-        width: fit-content !important;
-        padding: 14px 16px !important;
-        gap: 14px !important;
-        justify-content: center !important;
-        align-items: center !important;
+    .td-testimonial-6-slider {
+        display: none !important;
     }
 }
 
@@ -1522,19 +1548,80 @@ img {
     }
 }
 
-/* Brands strip (Service page): keep Lighthouse sizing, but render at the original visual size */
+/* Brands strip (Service page): flex centering + larger logos */
+.td-brands-7-item {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 1 !important;
+    min-height: 150px !important;
+}
 .td-brands-7-item .td-brand-logo {
-    height: 56px !important; /* upscale small intrinsic PNGs (balanced) */
+    height: 120px !important;
     width: auto !important;
-    max-width: 82% !important;
-    display: inline-block;
-    vertical-align: middle;
+    max-width: 90% !important;
+    display: block !important;
+    object-fit: contain !important;
 }
 
-/* Ensure next/image internal img can't collapse back to intrinsic size */
+/* Bottom row (logos 5, 6, 7, 8): larger for visibility */
+.td-brands-7-item .td-brand-logo--bottom-row,
+.td-brands-7-item img.td-brand-logo--bottom-row {
+    height: 200px !important;
+}
+.td-brands-7-item .td-brand-logo--bottom-row-last,
+.td-brands-7-item img.td-brand-logo--bottom-row-last {
+    height: 155px !important;
+}
+
+/* Ensure next/image img inherits logo sizing */
 .td-brands-7-item img {
-    height: 56px !important;
+    height: 120px !important;
     width: auto !important;
+    object-fit: contain !important;
+}
+.td-brands-7-item img.td-brand-logo--bottom-row {
+    height: 200px !important;
+}
+.td-brands-7-item img.td-brand-logo--bottom-row-last {
+    height: 155px !important;
+}
+
+/* Team + Testimonial: logo marquee (right-to-left crawl) */
+.td-brand-marquee-area .td-brand-marquee {
+    overflow: hidden;
+}
+/* Team page: bigger logos, more space, service-page proportions */
+.td-brand-marquee-area .td-brand-marquee-track {
+    display: flex;
+    align-items: center;
+    gap: 72px;
+    padding: 0 24px;
+    animation: td-logo-marquee-rtl 40s linear infinite;
+    width: max-content;
+}
+.td-brand-marquee-area .td-brand-marquee-item {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.td-brand-marquee-area .td-brand-marquee-item img {
+    width: auto !important;
+    object-fit: contain;
+}
+.td-brand-marquee-area .td-brand-marquee-item[data-h="120"] img {
+    height: 120px !important;
+}
+.td-brand-marquee-area .td-brand-marquee-item[data-h="155"] img {
+    height: 155px !important;
+}
+.td-brand-marquee-area .td-brand-marquee-item[data-h="200"] img {
+    height: 200px !important;
+}
+@keyframes td-logo-marquee-rtl {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
 }
 
 /* Pricing bullets: teal checks for clearer scanning */

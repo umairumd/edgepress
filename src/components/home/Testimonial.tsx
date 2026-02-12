@@ -12,34 +12,25 @@ const avatar_data: string[] = [
     "/assets/img/testimonial/tes-6/02.png",
     "/assets/img/testimonial/tes-6/03.png",
 ];
+// Same logos as Service page Brand (excl. logo-6 per request)
 const brand_data: string[] = [
-    "/assets/img/brand/brands-6/logo.png",
-    "/assets/img/brand/brands-6/logo-2.png",
-    "/assets/img/brand/brands-6/logo-3.png",
-    "/assets/img/brand/brands-6/logo-4.png",
-    "/assets/img/brand/brands-6/logo-5.png",
-    "/assets/img/brand/brands-6/logo-6.png",
-    "/assets/img/brand/brands-6/logo-7.png",
-    "/assets/img/brand/brands-6/logo-8.png",
-    "/assets/img/brand/brands-6/logo-4.png",
-    "/assets/img/brand/brands-6/logo-5.png",
-    "/assets/img/brand/brands-6/logo-6.png",
-    "/assets/img/brand/brands-6/logo-7.png",
+    "/assets/img/brand/brand-7/logo-1.png",
+    "/assets/img/brand/brand-7/logo-2.png",
+    "/assets/img/brand/brand-7/logo-3.png",
+    "/assets/img/brand/brand-7/logo-4.png",
+    "/assets/img/brand/brand-7/logo-5.png",
+    "/assets/img/brand/brand-7/logo-7.png",
+    "/assets/img/brand/brand-7/logo-8.png",
 ];
 
 // Ensure enough items for Swiper loop with slidesPerView:'auto' on wide screens (avoids console warnings)
-const brand_slider = brand_data.length < 24 ? [...brand_data, ...brand_data] : brand_data;
+const brand_slider = [...brand_data, ...brand_data, ...brand_data];
 
-const brandSizeFor = (src: string) => {
-    if (src.endsWith("/logo.png")) return { w: 78, h: 22 };
-    if (src.endsWith("/logo-2.png")) return { w: 100, h: 26 };
-    if (src.endsWith("/logo-3.png")) return { w: 94, h: 26 };
-    if (src.endsWith("/logo-4.png")) return { w: 78, h: 22 };
-    if (src.endsWith("/logo-5.png")) return { w: 112, h: 22 };
-    if (src.endsWith("/logo-6.png")) return { w: 110, h: 24 };
-    if (src.endsWith("/logo-7.png")) return { w: 111, h: 30 };
-    if (src.endsWith("/logo-8.png")) return { w: 94, h: 26 };
-    return { w: 100, h: 26 };
+// Team page proportions (120, 155, 200) scaled up ~1.25x for home
+const logoHeightFor = (index: number) => {
+    if (index <= 3) return 150;   // logos 1-4
+    if (index <= 5) return 250;   // logos 5, 7
+    return 194;                   // logo 8
 };
 
 interface DataType {
@@ -97,13 +88,17 @@ const setting3 = {
     loop: true,
     freeMode: true,
     slidesPerView: 'auto' as const,
-    spaceBetween: 30,
+    spaceBetween: 20, // mobile
     centeredSlides: true,
     allowTouchMove: false,
     speed: 6000,
     autoplay: {
         delay: 1,
         disableOnInteraction: true,
+        reverseDirection: true, // crawl right to left
+    },
+    breakpoints: {
+        768: { spaceBetween: 48 }, // desktop
     },
 };
 
@@ -121,7 +116,7 @@ const Testimonial = ({ testimonials }: TestimonialProps) => {
         : fallback_data;
 
     return (
-        <div className="td-testimonial-area td-testimonial-6-bg pt-155 pb-160">
+        <div className="td-testimonial-area td-testimonial-6-bg pt-155">
             <div className="container">
                 <div className="row align-items-end">
                     <div className="col-lg-8">
@@ -166,29 +161,33 @@ const Testimonial = ({ testimonials }: TestimonialProps) => {
                     </div>
                 </div>
             </div>
-            <div className="pt-130">
+            <div className="pt-24 pb-24 td-testimonial-brands-wrap">
                 <div className="container-fluid container-1650">
                     <div className="row">
                         <div className="col-12">
                             <Swiper {...setting3} modules={[Autoplay]} onSwiper={(swiper) => {
                                 swiper.wrapperEl.classList.add("slide-transition");
                             }} className="swiper-container td-testimonial-6-brands-slider">
-                                {brand_slider.map((brand, i) => (
-                                    <SwiperSlide key={i} className="swiper-slide">
-                                        <div className="brands-logo">
-                                            <Link href="/portfolio" aria-label="View portfolio">
-                                                <Image
-                                                    src={brand}
-                                                    alt="Partner brand logo"
-                                                    width={brandSizeFor(brand).w}
-                                                    height={brandSizeFor(brand).h}
-                                                    sizes="(max-width: 768px) 120px, 140px"
-                                                    style={{ width: "auto", height: "auto" }}
-                                                />
-                                            </Link>
-                                        </div>
-                                    </SwiperSlide>
-                                ))}
+                                {brand_slider.map((brand, i) => {
+                                    const origIdx = i % brand_data.length;
+                                    const h = logoHeightFor(origIdx);
+                                    return (
+                                        <SwiperSlide key={i} className="swiper-slide">
+                                            <div className="brands-logo" data-h={h}>
+                                                <Link href="/portfolio" aria-label="View portfolio">
+                                                    <Image
+                                                        src={brand}
+                                                        alt="Partner brand logo"
+                                                        width={250}
+                                                        height={h}
+                                                        sizes="(max-width: 768px) 150px, 250px"
+                                                        style={{ width: "auto", height: h }}
+                                                    />
+                                                </Link>
+                                            </div>
+                                        </SwiperSlide>
+                                    );
+                                })}
                             </Swiper>
                         </div>
                     </div>

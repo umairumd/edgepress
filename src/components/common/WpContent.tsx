@@ -55,45 +55,50 @@ export default function WpContent({ html, className }: Props) {
         e.preventDefault();
       }
 
-      // Check if currently open
-      const isOpen = panel.classList.contains("show") || panel.classList.contains("active") || btn.getAttribute("aria-expanded") === "true";
+      // Check if currently open (support faq-open on item, or show/active on panel)
+      const isOpen =
+        (isFAQ && (item.classList.contains("faq-open") || btn.getAttribute("aria-expanded") === "true")) ||
+        (!isFAQ && (panel.classList.contains("show") || panel.classList.contains("active") || btn.getAttribute("aria-expanded") === "true"));
 
       // Close siblings (match typical "only one open" accordion behavior)
       if (container) {
-        const openSelector = isFAQ 
-          ? ".faq-item .faq-answer.show, .faq-item .faq-answer.active"
-          : ".accordion-items .accordion-collapse.show";
-        
-        container.querySelectorAll<HTMLElement>(openSelector).forEach((openPanel) => {
-          if (openPanel === panel) return;
-          openPanel.classList.remove("show", "active");
-          const siblingItem = openPanel.closest<HTMLElement>(isFAQ ? ".faq-item" : ".accordion-items");
-          const siblingBtn = siblingItem?.querySelector<HTMLElement>(isFAQ ? ".faq-question" : ".accordion-buttons");
-          if (siblingBtn) {
-            if (isFAQ) {
-              siblingBtn.setAttribute("aria-expanded", "false");
-            } else {
+        if (isFAQ) {
+          container.querySelectorAll<HTMLElement>(".faq-item.faq-open").forEach((siblingItem) => {
+            if (siblingItem === item) return;
+            siblingItem.classList.remove("faq-open");
+            const siblingBtn = siblingItem.querySelector<HTMLElement>(".faq-question");
+            if (siblingBtn) siblingBtn.setAttribute("aria-expanded", "false");
+          });
+        } else {
+          container.querySelectorAll<HTMLElement>(".accordion-items .accordion-collapse.show").forEach((openPanel) => {
+            if (openPanel === panel) return;
+            openPanel.classList.remove("show", "active");
+            const siblingItem = openPanel.closest<HTMLElement>(".accordion-items");
+            const siblingBtn = siblingItem?.querySelector<HTMLElement>(".accordion-buttons");
+            if (siblingBtn) {
               siblingBtn.classList.add("collapsed");
               siblingBtn.setAttribute("aria-expanded", "false");
             }
-          }
-        });
+          });
+        }
       }
 
       // Toggle current
       if (isOpen) {
-        panel.classList.remove("show", "active");
         if (isFAQ) {
+          item.classList.remove("faq-open");
           btn.setAttribute("aria-expanded", "false");
         } else {
+          panel.classList.remove("show", "active");
           btn.classList.add("collapsed");
           btn.setAttribute("aria-expanded", "false");
         }
       } else {
-        panel.classList.add("show", "active");
         if (isFAQ) {
+          item.classList.add("faq-open");
           btn.setAttribute("aria-expanded", "true");
         } else {
+          panel.classList.add("show", "active");
           btn.classList.remove("collapsed");
           btn.setAttribute("aria-expanded", "true");
         }
