@@ -7,7 +7,8 @@ export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Blog",
-  description: "Insights, strategies, and practical guidance from Inoma Digital — focused on growth and execution.",
+  description:
+    "Explore practical articles on digital strategy, marketing tips, SEO trends, development guides, and business growth to help teams make smarter decisions.",
   alternates: { canonical: "/blog" },
 };
 

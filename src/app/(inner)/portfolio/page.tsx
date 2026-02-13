@@ -6,8 +6,9 @@ import { getPortfolioItems } from "@/lib/wp";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-    title: "Portfolio",
-    description: "Browse selected work by Inoma Digital — strategy-led projects built for real business results.",
+  title: "Portfolio",
+  description:
+    "Explore Inoma Digital's portfolio to see how our web design, development, SEO, branding, and digital marketing solutions drive real business results.",
     alternates: { canonical: "/portfolio" },
 };
 

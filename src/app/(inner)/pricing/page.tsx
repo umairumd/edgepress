@@ -4,9 +4,9 @@ import PricingArea from "@/components/pages/pricing/PricingArea";
 import Faq from "@/components/pages/services/service-details/Faq";
 
 export const metadata: Metadata = {
-    title: "Pricing",
-    description:
-        "Choose an outcome-based package built as a complete growth system — designed for visibility, demand generation, and long-term scale.",
+  title: "Pricing",
+  description:
+    "Explore Inoma Digital's pricing for digital marketing, development, and strategy services. Choose transparent plans built to scale your business online.",
     alternates: { canonical: "/pricing" },
 };
 

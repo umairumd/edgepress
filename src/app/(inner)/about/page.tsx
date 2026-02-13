@@ -7,8 +7,9 @@ import Awards from "@/components/pages/about/Awards";
 import { getTestimonials } from "@/lib/wp";
 
 export const metadata: Metadata = {
-    title: "About",
-    description: "Learn about Inoma Digital — a strategy-led growth and creative partner helping brands design, build, and grow with clarity.",
+  title: "About",
+  description:
+    "Learn more about Inoma Digital, a digital agency helping brands grow online through smart strategy, SEO, development, and performance-driven marketing.",
     alternates: { canonical: "/about" },
 };
 

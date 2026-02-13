@@ -5,10 +5,10 @@ import ContactArea from "@/components/pages/contact/ContactArea";
 import ContactBranch from "@/components/pages/contact/ContactBranch";
 
 export const metadata: Metadata = {
-    title: "Contact",
-    description:
-        "Reach out to Inoma Digital. Book a strategy call or contact us directly to discuss your goals and the best next steps.",
-    alternates: { canonical: "/contact" },
+  title: "Contact",
+  description:
+    "Reach out to Inoma Digital for expert support in web, SEO, marketing, and growth strategy. Connect with our team to start your digital transformation.",
+  alternates: { canonical: "/contact" },
 };
 
 export default function ContactPage() {

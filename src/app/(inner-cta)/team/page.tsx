@@ -7,7 +7,8 @@ import { getTeamMembers } from "@/lib/wp";
 
 export const metadata: Metadata = {
   title: "Team",
-  description: "Meet the people behind Inoma Digital — a strategy-led team focused on delivering measurable growth.",
+  description:
+    "Meet the team behind Inoma Digital. Our creative and technical professionals deliver strategic digital solutions that drive sustainable business growth.",
   alternates: { canonical: "/team" },
 };
 

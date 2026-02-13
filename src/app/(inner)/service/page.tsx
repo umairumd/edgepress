@@ -5,9 +5,9 @@ import ServiceItem from "@/components/pages/services/service/ServiceItem";
 import Brand from "@/components/common/Brand";
 
 export const metadata: Metadata = {
-    title: "Services",
-    description:
-        "Explore Inoma Digital services: strategy, design, development, marketing, SEO, and more — all aligned to measurable growth outcomes.",
+  title: "Services",
+  description:
+    "Discover Inoma Digital's full suite of digital services, strategy, SEO, web design, and marketing solutions built to scale your digital presence.",
     alternates: { canonical: "/service" },
 };
 

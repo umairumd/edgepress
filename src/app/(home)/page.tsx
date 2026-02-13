@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Hero from "@/components/home/Hero";
 import About from "@/components/home/About";
 import Service from "@/components/home/Service";
@@ -10,6 +11,15 @@ import Team from "@/components/home/Team";
 import Counter from "@/components/home/Counter";
 import Cta from "@/components/common/Cta";
 import { getFeaturedPortfolios, getHeroSlides, getTestimonials, getTeamMembers } from "@/lib/wp";
+
+export const metadata: Metadata = {
+  title: {
+    absolute: "Inoma Digital | Full-Service Digital Marketing & Growth Agency",
+  },
+  description:
+    "Inoma Digital is a full-service digital agency that helps businesses grow through marketing, SEO, social media, development, and brand creativity.",
+  alternates: { canonical: "/" },
+};
 
 // Revalidate homepage every hour to pick up new featured portfolios and hero slides
 export const revalidate = 3600;
