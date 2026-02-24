@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import BreadcrumbTwo from "@/components/common/BreadcrumbTwo";
 import PricingArea from "@/components/pages/pricing/PricingArea";
+import PricingComparisonTable from "@/components/pricing/PricingComparisonTable";
 import Faq from "@/components/pages/services/service-details/Faq";
 
 export const metadata: Metadata = {
@@ -19,6 +20,7 @@ export default function PricingPage() {
                 desc="Pick the perfect plan for your business needs. We offer flexible pricing options designed to help you scale and succeed in the digital landscape."
             />
             <PricingArea />
+            <PricingComparisonTable />
             <Faq style={true} page="inner_faq" />
         </main>
     );

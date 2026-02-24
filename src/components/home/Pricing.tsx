@@ -22,13 +22,20 @@ const Pricing = () => {
                                     <span className="package mb-35 d-inline-block">{item.title}</span>
                                     <p className="para mb-35">{item.desc}</p>
                                     {/* Homepage: do not show prices */}
-                                    <Link className={`price-btn ${item.active || ''}`} href="/contact">Get Started</Link>
+                                    <Link className={`price-btn ${item.active || ''}`} href="/pricing">Explore Plan</Link>
                                 </div>
                                 <div className="td-pricing-6-list">
                                     <ul>
-                                        {item.list.map((list, i) => (
-                                            <li key={i}>{list}</li>
-                                        ))}
+                                        {item.list.map((list, i) => {
+                                            const colonIndex = list.indexOf(": ");
+                                            const label = colonIndex >= 0 ? list.slice(0, colonIndex + 1) : list;
+                                            const detail = colonIndex >= 0 ? list.slice(colonIndex + 2) : "";
+                                            return (
+                                                <li key={i}>
+                                                    {detail ? <><strong className="td-pricing-list-label">{label}</strong> {detail}</> : list}
+                                                </li>
+                                            );
+                                        })}
                                     </ul>
                                 </div>
                             </div>

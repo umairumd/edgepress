@@ -1,4 +1,6 @@
 // Global overrides (base template styles come from /public/assets/css/*.css)
+// Theme layout pricing (includes .td-pricing-comparison-area) — not in public main.css
+@use './scss/layout/pricing';
 
 // Prevent horizontal scroll from image overflow
 html, body {
