@@ -148,7 +148,18 @@
     .td-pricing-comparison-table {
         width: 100%;
         min-width: 1150px;
+        table-layout: fixed;
         border-collapse: collapse;
+        th:nth-child(1),
+        td:nth-child(1) { width: 130px; min-width: 130px; }
+        th:nth-child(2),
+        td:nth-child(2) { width: 220px; min-width: 220px; }
+        th:nth-child(3),
+        td:nth-child(3) { width: 266px; min-width: 266px; }
+        th:nth-child(4),
+        td:nth-child(4) { width: 267px; min-width: 267px; }
+        th:nth-child(5),
+        td:nth-child(5) { width: 267px; min-width: 267px; }
         th,
         td {
             padding: 14px 18px;
@@ -295,6 +306,36 @@
             .td-pricing-cta-box:hover {
                 background: #0369a3;
                 color: #ffffff;
+            }
+        }
+    }
+
+    /* Mobile: readable columns and scroll hint */
+    @media #{$xs} {
+        .td-pricing-comparison-scroll {
+            padding-inline-end: 8px;
+            margin-inline: -4px;
+            box-shadow: inset -20px 0 20px -12px rgba(6, 50, 49, 0.08);
+        }
+        .td-pricing-comparison-table {
+            th,
+            td {
+                padding: 10px 12px;
+            }
+            thead th:first-child {
+                padding-left: 16px;
+                border-radius: 14px 0 0 14px;
+            }
+            thead th:last-child {
+                padding-right: 16px;
+                border-radius: 0 14px 14px 0;
+            }
+            .td-pricing-service-area {
+                padding-left: 12px;
+                padding-right: 14px;
+            }
+            tbody td {
+                font-size: 13px;
             }
         }
     }
