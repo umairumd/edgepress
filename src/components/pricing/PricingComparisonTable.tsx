@@ -14,6 +14,59 @@ type ComparisonGroup = {
   rows: ComparisonRow[];
 };
 
+const deliverableTooltips: Record<string, string> = {
+  "Platforms Managed":
+    "We create and manage content across the agreed number of social media platforms (e.g., Instagram, Facebook, LinkedIn), ensuring consistent brand presence.",
+  "Posts / Month":
+    "Strategic content pieces published monthly to maintain visibility, engagement, and audience growth.",
+  "Short-Form Videos":
+    "Reels or short vertical videos designed to increase reach, improve engagement, and stay aligned with platform algorithms.",
+  "Community Management":
+    "Responding to comments and messages, maintaining brand tone, and improving audience interaction.",
+  "Content Writing":
+    "Caption writing, messaging structure, and copy aligned with your brand voice and business goals.",
+  "Posting/Scheduling":
+    "Content is uploaded, scheduled, and optimized at the right times for maximum visibility.",
+  "Ad Platforms":
+    "The number of advertising platforms (Meta, Google, etc.) we actively manage for your business.",
+  "Active Campaigns":
+    "Live ad campaigns structured around specific objectives (leads, traffic, conversions).",
+  "Ad Variations / Month":
+    "Multiple versions of creatives and copy tested to improve performance and reduce ad fatigue.",
+  "Optimization Frequency":
+    "How often campaigns are analyzed and adjusted to improve results and reduce wasted spend.",
+  "Conversion Tracking":
+    "Setup of tracking systems (Pixel, GA4, conversion events) to measure real results, not just clicks.",
+  "Campaigns / Month":
+    "Strategic email campaigns sent to your audience for promotions, nurturing, and retention.",
+  "Automation Flows":
+    "Pre-built email sequences (e.g., welcome, abandoned cart, follow-ups) that run automatically.",
+  "Audience Segmentation":
+    "Organizing subscribers into targeted groups for personalized communication and better conversion rates.",
+  "Keyword Research":
+    "Identifying high-impact search terms your target customers are actively searching for.",
+  "On-Page Optimization":
+    "Improving page titles, content structure, internal links, and technical elements for better rankings.",
+  "Blog Content":
+    "SEO-focused blog articles designed to attract organic traffic and establish authority.",
+  "Technical SEO":
+    "Backend optimizations that improve website speed, indexing, crawlability, and overall performance.",
+  "SEO Monitoring":
+    "Tracking keyword performance and search visibility using tools like Google Search Console.",
+  "Landing Pages":
+    "Dedicated pages designed to convert traffic into leads or sales.",
+  "Conversion Optimization (CRO)":
+    "Improving layout, messaging, and structure to increase the percentage of visitors who take action.",
+  "Website Support":
+    "Ongoing technical fixes, content updates, and minor improvements to keep your site running smoothly.",
+  "Performance Reports":
+    "Monthly reports showing growth metrics, traffic, ad performance, and key insights.",
+  "Strategy Calls":
+    "Dedicated calls to review performance, refine direction, and plan next steps.",
+  "Recommended Commitment":
+    "A minimum duration required to properly implement and measure growth strategies.",
+};
+
 const comparisonGroups: ComparisonGroup[] = [
   {
     serviceArea: "Social Media",
@@ -38,7 +91,7 @@ const comparisonGroups: ComparisonGroup[] = [
   },
   {
     serviceArea: "Paid Advertising",
-    serviceAreaSubtitle: "Ad spend separate",
+    serviceAreaSubtitle: "(Ad spend separate)",
     rows: [
       { deliverable: "Ad Platforms", brandFoundation: "-", growthPackage: "1", agencyPartner: "3" },
       { deliverable: "Active Campaigns", brandFoundation: "-", growthPackage: "1", agencyPartner: "3" },
@@ -96,7 +149,8 @@ export default function PricingComparisonTable() {
           <h2 className="td-section-page-title td-pricing-comparison-title">Package Details</h2>
         </div>
         <div className="td-pricing-comparison-scroll" role="region" aria-label="Pricing comparison table" tabIndex={0}>
-          <table className="td-pricing-comparison-table">
+          <div className="td-pricing-comparison-scroll-inner">
+            <table className="td-pricing-comparison-table">
             <thead>
               <tr>
                 <th scope="col" className="td-pricing-col-sticky">Service Area</th>
@@ -106,7 +160,7 @@ export default function PricingComparisonTable() {
                 <th scope="col">Agency Partner</th>
               </tr>
             </thead>
-            {comparisonGroups.map((group) => (
+            {comparisonGroups.map((group, groupIndex) => (
               <tbody key={group.serviceArea}>
                 {group.rows.map((row, rowIndex) => (
                   <tr key={`${group.serviceArea}-${row.deliverable}`} className={rowIndex === 0 ? "td-pricing-group-start" : ""}>
@@ -118,7 +172,27 @@ export default function PricingComparisonTable() {
                         )}
                       </th>
                     ) : null}
-                    <th scope="row" className="td-pricing-deliverable">{row.deliverable}</th>
+                    <th scope="row" className="td-pricing-deliverable">
+                      <span className="td-pricing-deliverable-cell">
+                        <span className="td-pricing-deliverable-label">{row.deliverable}</span>
+                        {deliverableTooltips[row.deliverable] && (
+                          <span
+                            className={`td-pricing-deliverable-tooltip-wrap${groupIndex === 0 && rowIndex === 0 ? " td-pricing-deliverable-tooltip-below" : ""}`}
+                            tabIndex={0}
+                            aria-label={`Info: ${deliverableTooltips[row.deliverable]}`}
+                          >
+                            <span className="td-pricing-deliverable-info-icon" aria-hidden>
+                              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false">
+                                <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5" fill="none" />
+                                <circle cx="8" cy="5.5" r="1" fill="currentColor" />
+                                <line x1="8" y1="8" x2="8" y2="11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                              </svg>
+                            </span>
+                            <span className="td-pricing-deliverable-tooltip" role="tooltip">{deliverableTooltips[row.deliverable]}</span>
+                          </span>
+                        )}
+                      </span>
+                    </th>
                     <td>{row.brandFoundation}</td>
                     <td>{row.growthPackage}</td>
                     <td>{row.agencyPartner}</td>
@@ -151,6 +225,7 @@ export default function PricingComparisonTable() {
               </tr>
             </tbody>
           </table>
+          </div>
         </div>
       </div>
     </section>

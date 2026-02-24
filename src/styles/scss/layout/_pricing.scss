@@ -135,38 +135,73 @@
         color: var(--td-heading-ink);
         font-weight: 700;
     }
+    /* Card around table only – same as package cards (.td-pricing-6-wrap); overflow hidden so bottom corners clip to radius */
     .td-pricing-comparison-scroll {
-        overflow-x: auto;
-        overflow-y: visible;
-        -webkit-overflow-scrolling: touch;
+        overflow: hidden;
         margin-top: 0.25rem;
         margin-bottom: 1.75rem;
         background: var(--td-common-white);
-        border-radius: 24px;
-        padding: 12px 0 0;
+        border: 1px solid rgba(6, 50, 49, 0.15);
+        border-radius: 15px;
+        padding: 12px;
+        box-shadow: 0 14px 40px rgba(6, 37, 57, 0.06);
+    }
+    .td-pricing-comparison-scroll-inner {
+        overflow-x: auto;
+        overflow-y: hidden;
+        border-radius: 0 0 15px 15px;
+        -webkit-overflow-scrolling: touch;
+        /* Space below table so inner’s rounded bottom (white) is visible */
+        padding-bottom: 15px;
+        margin-bottom: -15px;
+        background: var(--td-common-white);
     }
     .td-pricing-comparison-table {
         width: 100%;
-        min-width: 1150px;
+        min-width: 810px;
         table-layout: fixed;
         border-collapse: collapse;
         th:nth-child(1),
-        td:nth-child(1) { width: 130px; min-width: 130px; }
+        td:nth-child(1) { width: 170px; min-width: 170px; }
         th:nth-child(2),
-        td:nth-child(2) { width: 220px; min-width: 220px; }
+        td:nth-child(2) {
+            width: 300px;
+            min-width: 300px;
+        }
         th:nth-child(3),
-        td:nth-child(3) { width: 266px; min-width: 266px; }
+        td:nth-child(3) { width: 114px; min-width: 114px; }
         th:nth-child(4),
-        td:nth-child(4) { width: 267px; min-width: 267px; }
+        td:nth-child(4) { width: 113px; min-width: 113px; }
         th:nth-child(5),
-        td:nth-child(5) { width: 267px; min-width: 267px; }
+        td:nth-child(5) { width: 113px; min-width: 113px; }
         th,
         td {
             padding: 14px 18px;
             text-align: left;
             border-bottom: 1px solid rgba(6, 50, 49, 0.03);
+            border-left: none;
+            border-right: none;
             color: var(--td-common-black);
             vertical-align: middle;
+        }
+        /* Single vertical line between Deliverable and Brand Foundation (body only); gap at top and bottom only, continuous through rows */
+        tbody th.td-pricing-deliverable {
+            position: relative;
+        }
+        tbody th.td-pricing-deliverable::after {
+            content: "";
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: rgba(6, 50, 49, 0.1);
+        }
+        tbody:first-of-type tr:first-child th.td-pricing-deliverable::after {
+            top: 6px;
+        }
+        tbody:last-of-type tr:last-child th.td-pricing-deliverable::after {
+            bottom: 6px;
         }
         tbody td {
             font-size: 14px;
@@ -192,11 +227,11 @@
             vertical-align: middle;
         }
         thead th:first-child {
-            border-radius: 9999px 0 0 9999px;
+            border-radius: 15px 0 0 15px;
             padding-left: 24px;
         }
         thead th:last-child {
-            border-radius: 0 9999px 9999px 0;
+            border-radius: 0 15px 15px 0;
             padding-right: 24px;
         }
         thead + tbody tr:first-child td,
@@ -227,15 +262,92 @@
         }
         .td-pricing-service-area-sub {
             display: block;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 400;
-            color: var(--td-grey-2);
-            opacity: 0.65;
+            color: var(--td-grey-1);
             margin-top: 4px;
         }
         .td-pricing-deliverable {
             color: var(--td-grey-1);
             font-weight: 500;
+        }
+        .td-pricing-deliverable-cell {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .td-pricing-deliverable-tooltip-wrap {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: help;
+            outline: none;
+        }
+        .td-pricing-deliverable-info-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            color: rgba(6, 50, 49, 0.5);
+            transition: color 0.15s ease;
+        }
+        .td-pricing-deliverable-info-icon svg {
+            display: block;
+        }
+        .td-pricing-deliverable-tooltip-wrap:hover .td-pricing-deliverable-info-icon,
+        .td-pricing-deliverable-tooltip-wrap:focus .td-pricing-deliverable-info-icon {
+            color: var(--td-common-black);
+        }
+        .td-pricing-deliverable-tooltip {
+            position: absolute;
+            left: 50%;
+            bottom: calc(100% + 8px);
+            transform: translateX(-50%);
+            width: max-content;
+            max-width: 280px;
+            padding: 10px 12px;
+            background: var(--td-common-white);
+            border: 1px solid rgba(6, 50, 49, 0.12);
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(6, 37, 57, 0.12);
+            font-size: 13px;
+            font-weight: 400;
+            line-height: 1.4;
+            color: var(--td-common-black);
+            white-space: normal;
+            text-align: left;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0.15s ease, opacity 0.15s ease;
+            z-index: 200;
+            pointer-events: none;
+        }
+        .td-pricing-deliverable-tooltip-wrap:hover .td-pricing-deliverable-tooltip,
+        .td-pricing-deliverable-tooltip-wrap:focus .td-pricing-deliverable-tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+        .td-pricing-deliverable-tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: var(--td-common-white);
+        }
+        /* First row: show tooltip below so it isn’t clipped by card overflow */
+        .td-pricing-deliverable-tooltip-wrap.td-pricing-deliverable-tooltip-below .td-pricing-deliverable-tooltip {
+            bottom: auto;
+            top: calc(100% + 8px);
+        }
+        .td-pricing-deliverable-tooltip-wrap.td-pricing-deliverable-tooltip-below .td-pricing-deliverable-tooltip::after {
+            top: auto;
+            bottom: 100%;
+            border-top-color: transparent;
+            border-bottom-color: var(--td-common-white);
         }
         tbody tr.td-pricing-group-start td:nth-child(3),
         tbody tr.td-pricing-group-start td:nth-child(4),
@@ -269,6 +381,14 @@
         .td-pricing-cta-row td,
         .td-pricing-cta-row th {
             border-top: 1px solid rgba(6, 50, 49, 0.1);
+        }
+        .td-pricing-cta-row th:first-child,
+        .td-pricing-cta-row td:first-child {
+            border-radius: 0 0 0 15px;
+        }
+        .td-pricing-cta-row th:last-child,
+        .td-pricing-cta-row td:last-child {
+            border-radius: 0 0 15px 0;
         }
         .td-pricing-cta-row td:nth-child(3),
         .td-pricing-cta-row td:nth-child(5) {
@@ -310,13 +430,8 @@
         }
     }
 
-    /* Mobile: readable columns and scroll hint */
+    /* Mobile: readable columns */
     @media #{$xs} {
-        .td-pricing-comparison-scroll {
-            padding-inline-end: 8px;
-            margin-inline: -4px;
-            box-shadow: inset -20px 0 20px -12px rgba(6, 50, 49, 0.08);
-        }
         .td-pricing-comparison-table {
             th,
             td {
@@ -336,6 +451,10 @@
             }
             tbody td {
                 font-size: 13px;
+            }
+            .td-pricing-cta-row .td-pricing-cta-box {
+                padding: 5px 10px;
+                font-size: 10px;
             }
         }
     }
