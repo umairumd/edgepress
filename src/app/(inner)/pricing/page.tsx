@@ -13,10 +13,10 @@ export const metadata: Metadata = {
 
 export default function PricingPage() {
     return (
-        <main>
+        <main className="pricing-page">
             <BreadcrumbTwo
                 sub_title="OUR PRICING PLANS"
-                title={<>Our suitable pricing<br /> plans <span>for you</span></>}
+                title="Our Pricing"
                 desc="Pick the perfect plan for your business needs. We offer flexible pricing options designed to help you scale and succeed in the digital landscape."
             />
             <PricingArea />

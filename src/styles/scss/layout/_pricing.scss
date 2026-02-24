@@ -125,7 +125,7 @@
     margin-top: 0;
     margin-bottom: 2rem;
     &.pt-130 {
-        padding-top: 2rem;
+        padding-top: 1rem;
     }
     .td-pricing-comparison-title-wrap {
         margin-bottom: 2rem;
@@ -139,7 +139,7 @@
         overflow-x: auto;
         overflow-y: visible;
         -webkit-overflow-scrolling: touch;
-        margin-top: 0.5rem;
+        margin-top: 0.25rem;
         margin-bottom: 1.75rem;
         background: var(--td-common-white);
         border-radius: 24px;
@@ -298,4 +298,9 @@
             }
         }
     }
+}
+
+/* Pricing page: reduce gap between cards section and table section */
+.pricing-page .td-pricing-area.td-pricing-main-wrap {
+    padding-bottom: 4rem;
 }
