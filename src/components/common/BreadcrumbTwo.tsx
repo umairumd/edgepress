@@ -1,8 +1,8 @@
-import type { JSX } from "react";
+import type { ReactNode } from "react";
 
 interface DataType {
     sub_title: string;
-    title: JSX.Element;
+    title: ReactNode;
     desc: string;
 }
 
