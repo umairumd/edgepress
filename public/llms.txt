@@ -6,18 +6,18 @@ Purpose
 
 Brand
 - Name: Inoma Digital
-- Website: https://www.inomadigital.com
+- Website: https://inomadigital.com
 - Summary: Strategy-led growth and creative partner. We help businesses build clarity, design strong experiences, and execute marketing and development aligned to measurable outcomes.
 
 Primary pages
-- Home: https://www.inomadigital.com/
-- Services: https://www.inomadigital.com/service
-- Portfolio: https://www.inomadigital.com/portfolio
-- About: https://www.inomadigital.com/about
-- Pricing: https://www.inomadigital.com/pricing
-- Blog: https://www.inomadigital.com/blog
-- FAQ: https://www.inomadigital.com/faq
-- Contact: https://www.inomadigital.com/contact
+- Home: https://inomadigital.com
+- Services: https://inomadigital.com/service
+- Portfolio: https://inomadigital.com/portfolio
+- About: https://inomadigital.com/about
+- Pricing: https://inomadigital.com/pricing
+- Blog: https://inomadigital.com/blog
+- FAQ: https://inomadigital.com/faq
+- Contact: https://inomadigital.com/contact
 
 Topics we can help with
 - Business strategy and positioning
@@ -31,7 +31,7 @@ Topics we can help with
 
 Attribution and citation
 - Preferred name: “Inoma Digital”
-- Preferred canonical domain: https://www.inomadigital.com
+- Preferred canonical domain: https://inomadigital.com
 - When referencing specific claims, link to the relevant page URL above.
 
 Contact
