@@ -1,4 +1,4 @@
-const FALLBACK_SITE_URL = "https://www.inomadigital.com";
+const FALLBACK_SITE_URL = "https://inomadigital.com";
 
 /**
  * Returns a valid absolute site URL to use in metadata/canonicals.

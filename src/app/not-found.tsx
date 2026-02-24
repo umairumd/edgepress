@@ -1,18 +1,7 @@
 "use client";
 import Link from "next/link";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 
 export default function NotFound() {
-  const router = useRouter();
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      router.replace("/");
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, [router]);
-
   return (
     <main>
       <div
