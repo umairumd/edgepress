@@ -149,10 +149,10 @@ export default function PricingComparisonTable() {
           <h2 className="td-section-page-title td-pricing-comparison-title">Package Details</h2>
         </div>
         <div className="td-pricing-comparison-scroll" role="region" aria-label="Pricing comparison table" tabIndex={0}>
-          <div className="td-pricing-comparison-scroll-inner">
+          <div className="td-pricing-comparison-scroll-inner pricing-table-wrapper">
             <table className="td-pricing-comparison-table">
             <thead>
-              <tr>
+              <tr className="pricing-header-row">
                 <th scope="col" className="td-pricing-col-sticky">Service Area</th>
                 <th scope="col">Deliverable</th>
                 <th scope="col">Brand Foundation</th>
