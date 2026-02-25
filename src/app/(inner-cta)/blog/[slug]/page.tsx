@@ -7,11 +7,26 @@ import Cta from "@/components/common/Cta";
 import { getSiteUrl } from "@/lib/siteUrl";
 
 const SITE_URL = getSiteUrl();
+/** Canonical domain (non-www) for metadata. */
+const CANONICAL_ORIGIN = "https://inomadigital.com";
 export const revalidate = 300;
 
 function stripHtml(html?: string) {
   if (!html) return "";
   return html.replace(/<[^>]*>?/gm, "").trim();
+}
+
+/** Normalize a URL to the canonical domain (non-www), preserving path and query. */
+function normalizeCanonical(url: string, canonicalOrigin: string): string {
+  try {
+    const u = new URL(url);
+    const origin = new URL(canonicalOrigin);
+    u.protocol = origin.protocol;
+    u.hostname = origin.hostname;
+    return u.toString();
+  } catch {
+    return url;
+  }
 }
 
 export async function generateStaticParams() {
@@ -28,7 +43,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     : post?.excerpt
       ? stripHtml(post.excerpt)
       : "Read our latest insights.";
-  const canonical = post?.seo?.canonical || `${SITE_URL}/blog/${slug}`;
+  const canonical = post?.seo?.canonical
+    ? normalizeCanonical(post.seo.canonical, CANONICAL_ORIGIN)
+    : `${SITE_URL}/blog/${slug}`;
   const image = post?.seo?.opengraphImage?.url || post?.featuredImage?.url;
   const ogTitle = post?.seo?.opengraphTitle ? stripHtml(post.seo.opengraphTitle) : title;
   const ogDesc = post?.seo?.opengraphDescription ? stripHtml(post.seo.opengraphDescription) : description;
