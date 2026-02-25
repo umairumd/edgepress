@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { GoogleTagManager } from "@next/third-parties/google";
+import Script from "next/script";
 import "@/styles/globals.scss";
 import LayoutWrapper from "@/components/common/LayoutWrapper";
 import { fontVarsClassName } from "./fonts";
@@ -110,7 +110,20 @@ export default function RootLayout({
         />
       </head>
       <body suppressHydrationWarning>
-        <GoogleTagManager gtmId="GTM-MMSWN6S" />
+        <Script id="gtm-init" strategy="lazyOnload">
+          {`
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+    'gtm.start': new Date().getTime(),
+    event: 'gtm.js'
+  });
+`}
+        </Script>
+        <Script
+          id="gtm"
+          src="https://www.googletagmanager.com/gtm.js?id=GTM-MMSWN6S"
+          strategy="lazyOnload"
+        />
         <LayoutWrapper>
           {children}
         </LayoutWrapper>

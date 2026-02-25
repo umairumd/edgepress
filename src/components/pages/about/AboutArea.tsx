@@ -18,15 +18,15 @@ const AboutArea = () => {
                         </div>
                     </div>
                     <div className="col-lg-5">
-                        <div className="td-about-main-thumb mb-40 fix td-rounded-10 wow fadeInLeft" data-wow-delay=".5s" data-wow-duration="1s">
+                        <div className="td-about-main-thumb mb-40 fix td-rounded-10">
                             <Image
-                                data-speed=".9"
                                 className="w-100 td-rounded-10"
                                 src="/assets/img/about/main/inoma-about-1.jpg"
                                 alt="About Inoma Digital - Full-service digital agency with 7+ years of experience"
                                 width={650}
                                 height={650}
                                 priority
+                                fetchPriority="high"
                                 sizes="(max-width: 992px) 100vw, 40vw"
                                 style={{ height: "auto" }}
                             />
@@ -46,11 +46,11 @@ const AboutArea = () => {
                                     <div className="td-about-main-text mt-30">
                                         <p className="mb-30">A digital agency built on systems, clarity, and long-term results. Helping businesses through strategy, design, technology, and marketing.</p>
                                         <div className="td-btn-group">
-                                            <Link className="td-btn-circle about-brand-circle" href="/contact">
+                                            <Link className="td-btn-circle about-brand-circle" href="/contact" aria-label="Contact us">
                                                 <IconArrowRight />
                                             </Link>
                                             <Link className="td-btn-2 td-btn-primary about-brand-btn" href="/contact">EXPLORE MORE</Link>
-                                            <Link className="td-btn-circle about-brand-circle" href="/contact">
+                                            <Link className="td-btn-circle about-brand-circle" href="/contact" aria-label="Contact us">
                                                 <IconArrowRight />
                                             </Link>
                                         </div>
