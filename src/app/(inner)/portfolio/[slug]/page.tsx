@@ -17,6 +17,20 @@ function stripHtml(html?: string) {
     return html.replace(/<[^>]*>?/gm, "").trim();
 }
 
+/** Normalize a URL to the canonical origin (from SITE_URL), preserving pathname, search, and hash. */
+function normalizeCanonical(url: string, canonicalOrigin: string, fallback: string): string {
+    try {
+        const u = new URL(url);
+        const origin = new URL(canonicalOrigin);
+        u.protocol = origin.protocol;
+        u.hostname = origin.hostname;
+        u.port = origin.port;
+        return u.toString();
+    } catch {
+        return fallback;
+    }
+}
+
 export async function generateStaticParams() {
     // Fetch enough slugs so new items aren't silently omitted from static params.
     const items = await getPortfolioItems(200);
@@ -32,7 +46,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         : item?.excerpt
             ? stripHtml(item.excerpt)
             : "Project details.";
-    const canonical = item?.seo?.canonical || `${SITE_URL}/portfolio/${slug}`;
+    const canonicalOrigin = new URL(SITE_URL).origin;
+    const fallbackCanonical = `${SITE_URL}/portfolio/${slug}`;
+    const canonical = item?.seo?.canonical
+        ? normalizeCanonical(item.seo.canonical, canonicalOrigin, fallbackCanonical)
+        : fallbackCanonical;
     const image = item?.seo?.opengraphImage?.url || item?.featuredImage?.url;
     const ogTitle = item?.seo?.opengraphTitle ? stripHtml(item.seo.opengraphTitle) : title;
     const ogDesc = item?.seo?.opengraphDescription ? stripHtml(item.seo.opengraphDescription) : description;

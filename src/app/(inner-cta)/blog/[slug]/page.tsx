@@ -7,8 +7,6 @@ import Cta from "@/components/common/Cta";
 import { getSiteUrl } from "@/lib/siteUrl";
 
 const SITE_URL = getSiteUrl();
-/** Canonical domain (non-www) for metadata. */
-const CANONICAL_ORIGIN = "https://inomadigital.com";
 export const revalidate = 300;
 
 function stripHtml(html?: string) {
@@ -16,16 +14,17 @@ function stripHtml(html?: string) {
   return html.replace(/<[^>]*>?/gm, "").trim();
 }
 
-/** Normalize a URL to the canonical domain (non-www), preserving path and query. */
-function normalizeCanonical(url: string, canonicalOrigin: string): string {
+/** Normalize a URL to the canonical origin (from SITE_URL), preserving pathname, search, and hash. */
+function normalizeCanonical(url: string, canonicalOrigin: string, fallback: string): string {
   try {
     const u = new URL(url);
     const origin = new URL(canonicalOrigin);
     u.protocol = origin.protocol;
     u.hostname = origin.hostname;
+    u.port = origin.port;
     return u.toString();
   } catch {
-    return url;
+    return fallback;
   }
 }
 
@@ -43,9 +42,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     : post?.excerpt
       ? stripHtml(post.excerpt)
       : "Read our latest insights.";
+  const canonicalOrigin = new URL(SITE_URL).origin;
+  const fallbackCanonical = `${SITE_URL}/blog/${slug}`;
   const canonical = post?.seo?.canonical
-    ? normalizeCanonical(post.seo.canonical, CANONICAL_ORIGIN)
-    : `${SITE_URL}/blog/${slug}`;
+    ? normalizeCanonical(post.seo.canonical, canonicalOrigin, fallbackCanonical)
+    : fallbackCanonical;
   const image = post?.seo?.opengraphImage?.url || post?.featuredImage?.url;
   const ogTitle = post?.seo?.opengraphTitle ? stripHtml(post.seo.opengraphTitle) : title;
   const ogDesc = post?.seo?.opengraphDescription ? stripHtml(post.seo.opengraphDescription) : description;
