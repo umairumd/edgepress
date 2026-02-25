@@ -72,16 +72,6 @@ const Hero = ({ slides }: HeroProps) => {
         }));
     }, [slides]);
 
-    // Swiper loop needs ~2x visible slides for smooth looping.
-    // With 208px slides + 30px gap, ~8-11 are visible on desktop.
-    // Use 16 slides (2x visible) - balance between smooth loop and DOM size.
-    const slidesLoop = useMemo(() => {
-        const minSlides = 16;
-        const out: typeof slideData = [];
-        while (out.length < minSlides) out.push(...slideData);
-        return out;
-    }, [slideData]);
-
     useEffect(() => {
         // Cleanup on unmount
         return () => {
@@ -92,7 +82,7 @@ const Hero = ({ slides }: HeroProps) => {
 
     const setting = {
         loop: true,
-        loopAdditionalSlides: 4,
+        loopAdditionalSlides: 0,
         slidesPerView: 'auto' as const,
         spaceBetween: 30,
         centeredSlides: false,
@@ -196,7 +186,7 @@ const Hero = ({ slides }: HeroProps) => {
                                     modules={[Autoplay]}
                                     className="swiper-container td-hero-6-slider"
                                 >
-                                    {slidesLoop.map((slide, i) => {
+                                    {slideData.map((slide, i) => {
                                         // First 2 slides are prioritized for LCP
                                         const isLCPCandidate = i < 2;
                                         return (
