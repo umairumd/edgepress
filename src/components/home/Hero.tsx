@@ -93,7 +93,7 @@ const Hero = ({ slides }: HeroProps) => {
         observeParents: true,
         resizeObserver: true,
         autoplay: {
-            delay: 0,
+            delay: 2000,
             disableOnInteraction: false,
             pauseOnMouseEnter: false,
             waitForTransition: true,
