@@ -17,20 +17,6 @@ const PricingArea = () => {
                                     {item.priceNote && <div className="td-pricing-note mb-25">{item.priceNote}</div>}
                                     <Link className={`price-btn ${item.active ? item.active : ""}`} href="/contact">Get Started</Link>
                                 </div>
-                                <div className="td-pricing-6-list">
-                                    <ul>
-                                        {item.list.map((list, i) => {
-                                            const colonIndex = list.indexOf(": ");
-                                            const label = colonIndex >= 0 ? list.slice(0, colonIndex + 1) : list;
-                                            const detail = colonIndex >= 0 ? list.slice(colonIndex + 2) : "";
-                                            return (
-                                                <li key={i}>
-                                                    {detail ? <><strong className="td-pricing-list-label">{label}</strong> {detail}</> : list}
-                                                </li>
-                                            );
-                                        })}
-                                    </ul>
-                                </div>
                             </div>
                         </div>
                     ))}

@@ -102,6 +102,8 @@ const HeaderSix = ({ variant = "home" }: HeaderSixProps) => {
                                         <img
                                             src={variant === "home" ? LOGO_ON_DARK_BG_SRC : LOGO_ON_LIGHT_BG_SRC}
                                             alt="Inoma Digital"
+                                            width={180}
+                                            height={40}
                                             loading="eager"
                                             decoding="async"
                                         />
@@ -111,6 +113,8 @@ const HeaderSix = ({ variant = "home" }: HeaderSixProps) => {
                                         <img
                                             src={LOGO_ON_LIGHT_BG_SRC}
                                             alt="Inoma Digital"
+                                            width={180}
+                                            height={40}
                                             loading="eager"
                                             decoding="async"
                                         />

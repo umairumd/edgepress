@@ -85,7 +85,6 @@
         }
         &-top{
             padding: 45px 80px 40px 50px;
-            border-bottom: 1px solid rgba(6, 50, 49, 0.15);
             @media #{$xl,$lg,$md,$sm,$xs} {
                 padding: 45px 40px 40px 50px;
             }

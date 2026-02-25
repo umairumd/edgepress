@@ -61,9 +61,6 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/inoma-favicon.jpg" type="image/jpeg" />
         <link rel="apple-touch-icon" href="/inoma-favicon.jpg" />
-        {/* Preconnect to WordPress media origin for faster image loading */}
-        <link rel="preconnect" href="https://cms.inomadigital.com" />
-        <link rel="dns-prefetch" href="https://cms.inomadigital.com" />
         {/* Hero background is now pure CSS gradient - no preload needed */}
         {/* Critical CSS - loaded synchronously */}
         <link rel="stylesheet" href="/assets/css/bootstrap.min.css" />
