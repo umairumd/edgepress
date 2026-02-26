@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /*?*
+Disallow: /feed/
+Disallow: */feed/
+Disallow: /comments/
+Disallow: /search/
+
+Sitemap: https://inomadigital.com/sitemap.xml
