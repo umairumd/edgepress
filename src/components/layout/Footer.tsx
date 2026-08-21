@@ -5,11 +5,11 @@ import { useRouter } from "next/navigation";
 import { useState, FormEvent } from "react";
 import { IconPhone, IconEnvelope } from "@/components/icons";
 
-interface FooterSixProps {
+interface FooterProps {
     style?: boolean;
 }
 
-const FooterSix = ({ style }: FooterSixProps = {}) => {
+const Footer = ({ style }: FooterProps = {}) => {
     const router = useRouter();
     const [footerEmail, setFooterEmail] = useState("");
 
@@ -142,4 +142,4 @@ const FooterSix = ({ style }: FooterSixProps = {}) => {
     )
 }
 
-export default FooterSix;
+export default Footer;

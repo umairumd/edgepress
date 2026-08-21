@@ -1,5 +1,5 @@
-import HeaderSix from "@/components/layout/HeaderSix";
-import FooterSix from "@/components/layout/FooterSix";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 
 export default function InnerCtaLayout({
   children,
@@ -8,15 +8,13 @@ export default function InnerCtaLayout({
 }) {
   return (
     <>
-      <HeaderSix variant="default" />
+      <Header variant="default" />
       <div id="smooth-wrapper">
         <div id="smooth-content">
           {children}
-          <FooterSix style />
+          <Footer style />
         </div>
       </div>
     </>
   );
 }
-
-

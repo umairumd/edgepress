@@ -6,6 +6,7 @@ import { fontVarsClassName } from "./fonts";
 import { getSiteUrl } from "@/lib/siteUrl";
 
 const SITE_URL = getSiteUrl();
+const GTM_ID = (process.env.GTM_ID || "").trim();
 
 export const metadata: Metadata = {
   // Don't throw during build if SITE_URL is misconfigured.
@@ -108,20 +109,24 @@ export default function RootLayout({
         />
       </head>
       <body suppressHydrationWarning>
-        <Script id="gtm-init" strategy="lazyOnload">
-          {`
+        {GTM_ID ? (
+          <>
+            <Script id="gtm-init" strategy="lazyOnload">
+              {`
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({
     'gtm.start': new Date().getTime(),
     event: 'gtm.js'
   });
 `}
-        </Script>
-        <Script
-          id="gtm"
-          src="https://www.googletagmanager.com/gtm.js?id=GTM-MMSWN6S"
-          strategy="lazyOnload"
-        />
+            </Script>
+            <Script
+              id="gtm"
+              src={`https://www.googletagmanager.com/gtm.js?id=${GTM_ID}`}
+              strategy="lazyOnload"
+            />
+          </>
+        ) : null}
         <LayoutWrapper>
           {children}
         </LayoutWrapper>

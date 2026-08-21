@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 
-// Email configuration - uses verified domain
-const RECIPIENT_EMAIL = "theinomadigital@gmail.com";
-const FROM_EMAIL = "Inoma Digital <noreply@inomadigital.com>";
+const RECIPIENT_EMAIL = (process.env.CONTACT_TO_EMAIL || "").trim();
+const FROM_EMAIL = (process.env.CONTACT_FROM_EMAIL || "").trim();
 
 // Lazy initialization to avoid build-time errors
 let resend: Resend | null = null;
@@ -27,6 +26,13 @@ interface ContactFormData {
 
 export async function POST(request: NextRequest) {
     try {
+        if (!RECIPIENT_EMAIL || !FROM_EMAIL) {
+            return NextResponse.json(
+                { error: "Contact email is not configured. Set CONTACT_TO_EMAIL and CONTACT_FROM_EMAIL." },
+                { status: 500 }
+            );
+        }
+
         const body: ContactFormData = await request.json();
 
         // Validate required fields
@@ -135,4 +141,3 @@ function escapeHtml(text: string): string {
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
 }
-

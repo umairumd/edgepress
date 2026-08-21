@@ -1,5 +1,5 @@
-import HeaderSix from "@/components/layout/HeaderSix";
-import FooterSix from "@/components/layout/FooterSix";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 
 export default function InnerLayout({
     children,
@@ -8,11 +8,11 @@ export default function InnerLayout({
 }) {
     return (
         <>
-            <HeaderSix variant="default" />
+            <Header variant="default" />
             <div id="smooth-wrapper">
                 <div id="smooth-content">
                     {children}
-                    <FooterSix />
+                    <Footer />
                 </div>
             </div>
         </>

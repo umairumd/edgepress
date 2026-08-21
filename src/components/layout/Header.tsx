@@ -9,12 +9,12 @@ import UseSticky from "@/hooks/UseSticky";
 const LOGO_ON_DARK_BG_SRC = "/assets/img/logo/inoma-logo-light.png";
 const LOGO_ON_LIGHT_BG_SRC = "/assets/img/logo/inoma-logo-dark.png";
 
-type HeaderSixProps = {
+type HeaderProps = {
     /** Home keeps dark-at-top + white-when-sticky; Default uses Home-sticky styling on all non-home pages. */
     variant?: "home" | "default";
 };
 
-const HeaderSix = ({ variant = "home" }: HeaderSixProps) => {
+const Header = ({ variant = "home" }: HeaderProps) => {
 
     const { sticky, hidden } = UseSticky();
     const [offCanvas, setOffCanvas] = useState<boolean>(false);
@@ -166,4 +166,4 @@ const HeaderSix = ({ variant = "home" }: HeaderSixProps) => {
     )
 }
 
-export default HeaderSix;
+export default Header;

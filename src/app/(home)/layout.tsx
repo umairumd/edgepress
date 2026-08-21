@@ -1,6 +1,6 @@
 import "swiper/swiper-bundle.css";
-import HeaderSix from "@/components/layout/HeaderSix";
-import FooterSix from "@/components/layout/FooterSix";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 
 export default function HomeLayout({
     children,
@@ -9,11 +9,11 @@ export default function HomeLayout({
 }) {
     return (
         <>
-            <HeaderSix />
+            <Header />
             <div id="smooth-wrapper">
                 <div id="smooth-content">
                     {children}
-                    <FooterSix style />
+                    <Footer style />
                 </div>
             </div>
         </>
