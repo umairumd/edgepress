@@ -6,10 +6,18 @@ import { getSiteUrl } from "@/lib/siteUrl";
 const SITE_URL = getSiteUrl();
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const staticRoutes = ["", "/about", "/service", "/portfolio", "/portfolio/details", "/team", "/pricing", "/faq", "/contact", "/blog"].map((route) => ({
-    url: `${SITE_URL}${route || "/"}`,
-    lastModified: new Date(),
-  }));
+  const staticRoutes: MetadataRoute.Sitemap = [
+    ...["", "/about", "/service", "/portfolio", "/portfolio/details", "/team", "/pricing", "/faq", "/contact", "/blog"].map((route) => ({
+      url: `${SITE_URL}${route || "/"}`,
+      lastModified: new Date(),
+    })),
+    {
+      url: `${SITE_URL}/privacy-policy`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.3,
+    },
+  ];
 
   let dynamicRoutes: MetadataRoute.Sitemap = [];
 

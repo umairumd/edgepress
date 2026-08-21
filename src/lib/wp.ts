@@ -1514,3 +1514,46 @@ export async function getTeamMembers(limit = 20): Promise<TeamMember[]> {
   return [];
 }
 
+// ============================================================================
+// PAGES
+// ============================================================================
+
+export type WpPage = {
+  slug: string;
+  title: string;
+  content?: string;
+};
+
+/**
+ * Fetch the Privacy Policy WordPress page by slug.
+ * WPGraphQL PageIdType supports URI (not SLUG) on this schema.
+ */
+export async function getPrivacyPolicy(): Promise<WpPage | null> {
+  type PageResponse = {
+    page: { slug?: string | null; title?: string | null; content?: string | null } | null;
+  };
+
+  const query = `
+    query GetPrivacyPolicy($id: ID!) {
+      page(id: $id, idType: URI) {
+        slug
+        title
+        content
+      }
+    }
+  `;
+
+  for (const id of ["privacy-policy", "/privacy-policy"]) {
+    const data = await wpFetch<PageResponse>(query, { id });
+    if (data?.page) {
+      return {
+        slug: data.page.slug ?? "privacy-policy",
+        title: data.page.title ?? "Privacy Policy",
+        content: data.page.content ?? undefined,
+      };
+    }
+  }
+
+  return null;
+}
+

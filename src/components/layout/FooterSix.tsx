@@ -42,7 +42,7 @@ const FooterSix = ({ style }: FooterSixProps = {}) => {
                         </div>
                         <div className="col-lg-2 col-md-6 col-sm-6">
                             <div className="td-footer-widget mb-30">
-                                <h3 className="td-footer-title mb-30">Quick Link</h3>
+                                <h3 className="td-footer-title mb-30">Navigation</h3>
                                 <ul className="td-footer-widget-list">
                                     <li><Link href="/about">About</Link></li>
                                     <li><Link href="/team">Team</Link></li>
@@ -53,11 +53,12 @@ const FooterSix = ({ style }: FooterSixProps = {}) => {
                         </div>
                         <div className="col-lg-3 col-md-6">
                             <div className="td-footer-widget ml-80 mb-30">
-                                <h3 className="td-footer-title mb-30">Services</h3>
+                                <h3 className="td-footer-title mb-30">Quick Links</h3>
                                 <ul className="td-footer-widget-list">
                                     <li><Link href="/service">All Services</Link></li>
                                     <li><Link href="/pricing">Pricing</Link></li>
                                     <li><Link href="/blog">Blog</Link></li>
+                                    <li><Link href="/privacy-policy">Privacy Policy</Link></li>
                                 </ul>
                             </div>
                         </div>
@@ -100,7 +101,7 @@ const FooterSix = ({ style }: FooterSixProps = {}) => {
                                 <div className="row align-items-center">
                                     <div className="col-lg-6 col-md-8">
                                         <div className="td-footer-copyright mb-20">
-                                            <p>© 2025 <Link href="/">Inoma Digital.</Link> All Rights Reserved.</p>
+                                            <p>© {new Date().getFullYear()} <Link href="/">Inoma Digital.</Link> All Rights Reserved.</p>
                                         </div>
                                     </div>
                                     <div className="col-lg-6 col-md-4">
