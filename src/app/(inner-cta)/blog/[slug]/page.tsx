@@ -5,28 +5,10 @@ import BlogSidebarArea from "@/components/pages/blog-sidebar/BlogSidebarArea";
 import BlogRelated from "@/components/pages/blog-sidebar/BlogRelated";
 import Cta from "@/components/common/Cta";
 import { getSiteUrl } from "@/lib/siteUrl";
+import { stripHtml, normalizeCanonical } from "@/lib/utils";
 
 const SITE_URL = getSiteUrl();
 export const revalidate = 300;
-
-function stripHtml(html?: string) {
-  if (!html) return "";
-  return html.replace(/<[^>]*>?/gm, "").trim();
-}
-
-/** Normalize a URL to the canonical origin (from SITE_URL), preserving pathname, search, and hash. */
-function normalizeCanonical(url: string, canonicalOrigin: string, fallback: string): string {
-  try {
-    const u = new URL(url);
-    const origin = new URL(canonicalOrigin);
-    u.protocol = origin.protocol;
-    u.hostname = origin.hostname;
-    u.port = origin.port;
-    return u.toString();
-  } catch {
-    return fallback;
-  }
-}
 
 export async function generateStaticParams() {
   const posts = await getPosts(30);

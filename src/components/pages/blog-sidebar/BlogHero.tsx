@@ -15,15 +15,6 @@ type Props = {
           };
 };
 
-function formatDate(date?: string) {
-    if (!date) return "";
-    try {
-        return new Date(date).toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" });
-    } catch {
-        return date;
-    }
-}
-
 const BlogHero = ({ featuredImage, title }: Props) => {
     const img =
         typeof featuredImage === "string"

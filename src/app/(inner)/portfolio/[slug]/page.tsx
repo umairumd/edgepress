@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getPortfolioItem, getPortfolioItems } from "@/lib/wp";
 import Image from "next/image";
 import { getSiteUrl } from "@/lib/siteUrl";
+import { stripHtml, normalizeCanonical, formatDate } from "@/lib/utils";
 import Cta from "@/components/common/Cta";
 import DisableRightClick from "@/components/common/DisableRightClick";
 import parse, { Element } from "html-react-parser";
@@ -11,25 +12,6 @@ import PortfolioFocusMode from "@/components/pages/portfolio-details/PortfolioFo
 
 const SITE_URL = getSiteUrl();
 export const revalidate = 300;
-
-function stripHtml(html?: string) {
-    if (!html) return "";
-    return html.replace(/<[^>]*>?/gm, "").trim();
-}
-
-/** Normalize a URL to the canonical origin (from SITE_URL), preserving pathname, search, and hash. */
-function normalizeCanonical(url: string, canonicalOrigin: string, fallback: string): string {
-    try {
-        const u = new URL(url);
-        const origin = new URL(canonicalOrigin);
-        u.protocol = origin.protocol;
-        u.hostname = origin.hostname;
-        u.port = origin.port;
-        return u.toString();
-    } catch {
-        return fallback;
-    }
-}
 
 export async function generateStaticParams() {
     // Fetch enough slugs so new items aren't silently omitted from static params.
@@ -179,11 +161,7 @@ export default async function PortfolioDetailsPage({ params }: { params: Promise
                                         ) : null}
                                         {item.date ? (
                                             <time className="td-portfolio-entry-meta-date" dateTime={item.date}>
-                                                {new Date(item.date).toLocaleDateString("en-US", {
-                                                    year: "numeric",
-                                                    month: "short",
-                                                    day: "numeric",
-                                                })}
+                                                {formatDate(item.date, "short")}
                                             </time>
                                         ) : null}
                                     </div>

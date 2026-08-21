@@ -1,3 +1,5 @@
+import { stripHtml } from "@/lib/utils";
+
 const WP_ENDPOINT = (process.env.WP_GRAPHQL_ENDPOINT || "").trim() || undefined;
 
 type WPImage = {
@@ -1343,10 +1345,6 @@ function getTestimonialDesignation(node: WpTestimonialNode): string | undefined 
     if (typeof val === "string" && val.trim()) return val.trim();
   }
   return undefined;
-}
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "").trim();
 }
 
 /**

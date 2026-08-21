@@ -2,20 +2,12 @@ import Link from "next/link";
 import { Post } from "@/lib/wp";
 import Image from "next/image";
 import BlogPagination from "@/components/common/BlogPagination";
+import { formatDate } from "@/lib/utils";
 
 type BlogAreaProps = {
     posts?: Post[];
     pagination?: { currentPage: number; totalPages: number };
 };
-
-function formatDate(date?: string) {
-    if (!date) return "";
-    try {
-        return new Date(date).toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" }).toUpperCase();
-    } catch {
-        return date;
-    }
-}
 
 const BlogArea = ({ posts, pagination }: BlogAreaProps) => {
     const items =
@@ -25,7 +17,7 @@ const BlogArea = ({ posts, pagination }: BlogAreaProps) => {
                   thumb: p.featuredImage?.url ?? "/assets/img/blog/thumb.jpg",
                   title: p.title,
                   tag: p.category ?? "Blog",
-                  date: formatDate(p.date),
+                  date: formatDate(p.date, "upper-short"),
               }))
             : [];
 

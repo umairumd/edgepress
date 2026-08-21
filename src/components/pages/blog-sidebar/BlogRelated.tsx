@@ -2,20 +2,12 @@ import Link from "next/link";
 import { Post } from "@/lib/wp";
 import type { ReactNode } from "react";
 import Image from "next/image";
+import { formatDate } from "@/lib/utils";
 
 type Props = {
     items?: Post[];
     footerContent?: ReactNode;
 };
-
-function formatDate(date?: string) {
-    if (!date) return "";
-    try {
-        return new Date(date).toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" }).toUpperCase();
-    } catch {
-        return date;
-    }
-}
 
 const BlogRelated = ({ items, footerContent }: Props) => {
     const data = (items && items.length ? items : []).slice(0, 3);
@@ -61,7 +53,7 @@ const BlogRelated = ({ items, footerContent }: Props) => {
                                     <div className="td-blog-cetagory d-flex align-items-center">
                                         <span className="cetagory">{item.category ?? "Blog"}</span>
                                         <span className="td-border ml-20 mr-15 d-inline-block"></span>
-                                        <span className="dates">{formatDate(item.date)}</span>
+                                        <span className="dates">{formatDate(item.date, "upper-short")}</span>
                                     </div>
                                 </div>
                             </div>

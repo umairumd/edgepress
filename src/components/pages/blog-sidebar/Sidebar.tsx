@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Category, Post } from "@/lib/wp";
 import Image from "next/image";
 import { IconFacebookF, IconTwitter, IconLinkedinIn, IconWhatsapp } from "@/components/icons";
+import { formatDate } from "@/lib/utils";
 
 type SidebarProps = {
   featuredPosts?: Post[];
@@ -10,15 +11,6 @@ type SidebarProps = {
   currentUrl?: string;
   shareTitle?: string;
 };
-
-function formatDate(date?: string) {
-  if (!date) return "";
-  try {
-    return new Date(date).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" });
-  } catch {
-    return date;
-  }
-}
 
 const Sidebar = ({ featuredPosts, recentPosts, categories, currentUrl, shareTitle }: SidebarProps) => {
   const hasFeatured = featuredPosts && featuredPosts.length > 0;
@@ -83,7 +75,7 @@ const Sidebar = ({ featuredPosts, recentPosts, categories, currentUrl, shareTitl
                       />
                     </div>
                     <div className="td-blog-sidebar-featured-body">
-                      <span className="td-blog-postbox-post-date">{formatDate(item.date)}</span>
+                      <span className="td-blog-postbox-post-date">{formatDate(item.date, "numeric-short")}</span>
                       <h4 className="td-blog-sidebar-featured-title">{item.title}</h4>
                     </div>
                   </Link>
@@ -130,7 +122,7 @@ const Sidebar = ({ featuredPosts, recentPosts, categories, currentUrl, shareTitl
                     />
                   </Link>
                   <div className="td-blog-postbox-post-content">
-                    <span className="td-blog-postbox-post-date">{formatDate(item.date)}</span>
+                    <span className="td-blog-postbox-post-date">{formatDate(item.date, "numeric-short")}</span>
                     <h4 className="td-blog-postbox-post-title"><Link href={`/blog/${item.slug}`}>{item.title}</Link></h4>
                   </div>
                 </div>

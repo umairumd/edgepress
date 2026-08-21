@@ -4,6 +4,7 @@ import { Category, Post } from "@/lib/wp";
 import Image from "next/image";
 import { IconArrowLeft, IconArrowRight } from "@/components/icons";
 import WpContent from "@/components/common/WpContent";
+import { formatDate } from "@/lib/utils";
 
 type NavPost = {
   slug: string;
@@ -32,15 +33,6 @@ type Props = {
   nextPost?: NavPost | null;
 };
 
-function formatDate(date?: string) {
-  if (!date) return "";
-  try {
-    return new Date(date).toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" });
-  } catch {
-    return date;
-  }
-}
-
 const BlogSidebarArea = ({
   contentHtml,
   title,
@@ -68,7 +60,7 @@ const BlogSidebarArea = ({
           <div className="col-lg-8">
             <div className="td-blog-sidebar-left-content mr-70 mb-40">
               <div className="td-blog-details-meta mb-15">
-                {date && <span className="date mr-20">{formatDate(date)}</span>}
+                {date && <span className="date mr-20">{formatDate(date, "long")}</span>}
                 {category && <span className="category td-blog-detail-category-pill mr-20">{category}</span>}
               </div>
 
