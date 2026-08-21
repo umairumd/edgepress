@@ -18,6 +18,7 @@ export default async function PrivacyPolicyPage() {
       <BreadcrumbTwo
         sub_title="LEGAL"
         title="Privacy Policy"
+        desc="How Inoma Digital collects, uses, and protects your information."
       />
       <section className="mb-60 pt-0" style={{ marginTop: "-40px" }}>
         <div className="container">
