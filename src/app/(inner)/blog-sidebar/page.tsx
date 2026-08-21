@@ -1,6 +1,11 @@
+import type { Metadata } from "next";
 import BlogHero from "@/components/pages/blog-sidebar/BlogHero";
 import BlogSidebarArea from "@/components/pages/blog-sidebar/BlogSidebarArea";
 import BlogRelated from "@/components/pages/blog-sidebar/BlogRelated";
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 export default function BlogSidebarPage() {
     return (
