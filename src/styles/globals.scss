@@ -2,6 +2,113 @@
 // Theme layout pricing (includes .td-pricing-comparison-area) — not in public main.css
 @use './scss/layout/pricing';
 
+/* Blog listing pagination — theme class exists in SCSS source but was missing from compiled main.css */
+.td-blog-pagenation {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.td-blog-pagenation ul {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.td-blog-pagenation ul li {
+  margin: 0;
+  list-style: none;
+}
+
+.td-blog-pagenation ul li.selected a,
+.td-blog-pagenation ul li.selected span,
+.td-blog-pagenation ul li a.active,
+.td-blog-pagenation ul li span.active {
+  color: var(--td-common-black);
+  background: var(--td-theme-primary);
+  border-color: var(--td-theme-primary);
+}
+
+.td-blog-pagenation ul li.disabled .td-blog-pagenation-nav {
+  opacity: 0.45;
+  pointer-events: none;
+  cursor: default;
+}
+
+.td-blog-pagenation ul li.ellipsis > span {
+  border: none;
+  background: transparent;
+  min-width: auto;
+  padding: 0 4px;
+  color: var(--td-grey-1);
+}
+
+.td-blog-pagenation ul li > a,
+.td-blog-pagenation ul li > span {
+  font-family: var(--td-ff-heading);
+  border: 1px solid rgba(28, 29, 31, 0.1);
+  border-radius: 30px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 16px;
+  color: var(--td-grey-1);
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.td-blog-pagenation ul li > a:hover,
+.td-blog-pagenation ul li:not(.ellipsis):not(.disabled) > span:hover {
+  color: var(--td-common-black);
+  background: var(--td-theme-primary);
+  border-color: var(--td-theme-primary);
+}
+
+.td-blog-pagenation ul li.ellipsis > span:hover {
+  background: transparent;
+  border: none;
+  color: var(--td-grey-1);
+}
+
+.td-blog-pagenation ul li .td-blog-pagenation-nav {
+  font-family: var(--td-ff-manrope);
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--td-common-black);
+  border: 1px solid rgba(28, 29, 31, 0.2);
+  border-radius: 30px;
+  min-width: auto;
+  height: 44px;
+  padding: 0 22px;
+  gap: 8px;
+  background: transparent;
+}
+
+.td-blog-pagenation ul li .td-blog-pagenation-nav:hover {
+  background: var(--td-theme-primary);
+  border-color: var(--td-theme-primary);
+  color: var(--td-common-black);
+}
+
+.td-blog-pagenation ul li .td-blog-pagenation-nav svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
 // Prevent horizontal scroll from image overflow
 html, body {
     overflow-x: hidden !important;
@@ -1897,7 +2004,22 @@ img {
 :root {
     /* Template uses --td-theme-3 for many headings/titles; user wants headings back to near-black */
     --td-theme-3: #1c1d1f !important;
-    --td-common-green-2: #b8e9ff !important; /* replace #8bea7c */
+    /* Brand primary accent: light blue (replaces lime greens) */
+    --td-theme-primary: #b8e9ff !important;
+    --td-common-green: #b8e9ff !important;
+    --td-common-green-2: #b8e9ff !important;
+}
+
+/* Ensure primary-fill buttons keep dark text on light-blue primary */
+.td-btn-2,
+.td-btn-2.td-btn-primary,
+.td-error-content .td-btn-2 {
+  color: #1a1a1a;
+}
+
+.tdmenu-offcanvas__close-icon button:hover,
+.tdmenu-offcanvas__social-icon a:hover {
+  color: #1a1a1a !important;
 }
 
 /* Header menu spacing: match Home across inner pages */

@@ -34,7 +34,7 @@ export default function NotFound() {
                 <p style={{ maxWidth: "520px", margin: "0 auto 34px", color: "rgba(28, 29, 31, 0.7)" }}>
                   Sorry, the page you&apos;re looking for doesn&apos;t exist.
                 </p>
-                <Link className="td-btn-2" href="/">Go Home</Link>
+                <Link className="td-btn-2" href="/" style={{ color: "#1a1a1a" }}>Go Home</Link>
               </div>
             </div>
           </div>

@@ -32,6 +32,9 @@ const wpMediaHosts = Array.from(
 );
 
 const nextConfig: NextConfig = {
+  // Next.js 16 enables Turbopack by default for `next dev` / `next build`.
+  // There is no next.config boolean to disable it (no experimental.turbo: false).
+  // Opt out via CLI: `next dev --webpack` (see package.json "dev" script).
   // Experimental optimizations for faster CSS loading
   experimental: {
     // Inline critical CSS to reduce render-blocking

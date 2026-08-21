@@ -393,6 +393,246 @@ export async function getPosts(limit = 12): Promise<Post[]> {
   });
 }
 
+const POST_LISTING_SELECTION = `
+  slug
+  title
+  excerpt
+  date
+  categories(first: 1) { nodes { name } }
+  featuredImage { node { sourceUrl altText mediaDetails { width height } } }
+`;
+
+type PostsConnection = {
+  nodes?: WpPostNode[];
+  pageInfo?: {
+    hasNextPage?: boolean;
+    endCursor?: string | null;
+    offsetPagination?: {
+      total?: number | null;
+      hasMore?: boolean | null;
+      hasPrevious?: boolean | null;
+    } | null;
+  };
+};
+
+export type PostsPage = {
+  posts: Post[];
+  page: number;
+  perPage: number;
+  total: number;
+  totalPages: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+};
+
+function mapPostListingNodes(nodes: WpPostNode[]): Post[] {
+  return nodes.map((node) => {
+    const title = node.title ?? "";
+    return {
+      slug: node.slug ?? "",
+      title,
+      excerpt: node.excerpt ?? undefined,
+      date: node.date ?? undefined,
+      category: node.categories?.nodes?.[0]?.name ?? undefined,
+      featuredImage: mapWpImageWithAlt(node.featuredImage?.node, stripHtml(title) || "Blog post"),
+    };
+  });
+}
+
+function buildPostsPageResult(
+  nodes: WpPostNode[],
+  page: number,
+  perPage: number,
+  total: number,
+  hasMore?: boolean | null,
+  hasPrevious?: boolean | null
+): PostsPage {
+  const totalPages = total > 0 ? Math.max(1, Math.ceil(total / perPage)) : 1;
+  return {
+    posts: mapPostListingNodes(nodes),
+    page,
+    perPage,
+    total,
+    totalPages,
+    hasPreviousPage: hasPrevious ?? page > 1,
+    hasNextPage: hasMore ?? (total > 0 ? page < totalPages : nodes.length === perPage),
+  };
+}
+
+async function getPostsPaginatedOffset(page: number, perPage: number): Promise<PostsPage | null> {
+  const offset = (page - 1) * perPage;
+  const query = `
+    query GetPostsPaginated($size: Int!, $offset: Int!) {
+      posts(
+        where: {
+          offsetPagination: { size: $size, offset: $offset }
+          orderby: { field: DATE, order: DESC }
+        }
+      ) {
+        nodes { ${POST_LISTING_SELECTION} }
+        pageInfo {
+          offsetPagination {
+            total
+            hasMore
+            hasPrevious
+          }
+        }
+      }
+    }
+  `;
+
+  const raw = await wpFetchRaw<{ posts?: PostsConnection }>(query, { size: perPage, offset });
+  if (raw?.errors?.length) return null;
+
+  const conn = raw?.data?.posts;
+  const nodes = conn?.nodes ?? [];
+  const pagination = conn?.pageInfo?.offsetPagination;
+  const total = pagination?.total ?? 0;
+
+  return buildPostsPageResult(
+    nodes,
+    page,
+    perPage,
+    total,
+    pagination?.hasMore,
+    pagination?.hasPrevious
+  );
+}
+
+const POST_TOTAL_CACHE_TTL_MS = 300_000;
+let postTotalCache: { total: number; fetchedAt: number } | null = null;
+
+const POSTS_CURSOR_PAGE_QUERY = `
+  query GetPostsCursorPage($first: Int!, $after: String) {
+    posts(
+      first: $first
+      after: $after
+      where: { orderby: { field: DATE, order: DESC } }
+    ) {
+      nodes { slug }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+    }
+  }
+`;
+
+async function countPostsWithCursor(): Promise<number> {
+  let total = 0;
+  let after: string | null = null;
+  let hasNextPage = true;
+
+  while (hasNextPage) {
+    const data: { posts?: PostsConnection } | null = await wpFetch<{ posts?: PostsConnection }>(
+      POSTS_CURSOR_PAGE_QUERY,
+      { first: 100, after }
+    );
+    const conn: PostsConnection | undefined = data?.posts;
+    const batch = conn?.nodes ?? [];
+    total += batch.length;
+    hasNextPage = Boolean(conn?.pageInfo?.hasNextPage);
+    after = conn?.pageInfo?.endCursor ?? null;
+    if (!batch.length) break;
+  }
+
+  return total;
+}
+
+async function getPostTotalCount(): Promise<number> {
+  const now = Date.now();
+  if (postTotalCache && now - postTotalCache.fetchedAt < POST_TOTAL_CACHE_TTL_MS) {
+    return postTotalCache.total;
+  }
+
+  const totalQuery = `
+    query GetPostTotal {
+      posts(where: { offsetPagination: { size: 1, offset: 0 } }) {
+        pageInfo {
+          offsetPagination {
+            total
+          }
+        }
+      }
+    }
+  `;
+  const raw = await wpFetchRaw<{ posts?: PostsConnection }>(totalQuery);
+  const offsetTotal = raw?.data?.posts?.pageInfo?.offsetPagination?.total;
+  const total =
+    typeof offsetTotal === "number" && offsetTotal >= 0 ? offsetTotal : await countPostsWithCursor();
+
+  postTotalCache = { total, fetchedAt: now };
+  return total;
+}
+
+async function getPostsPaginatedCursor(page: number, perPage: number): Promise<PostsPage> {
+  if (process.env.NODE_ENV !== "production") {
+    console.warn("[getPostsPaginated] offsetPagination unavailable; using cursor fallback");
+  }
+
+  const total = await getPostTotalCount();
+  const totalPages = Math.max(1, Math.ceil(total / perPage));
+
+  const query = `
+    query GetPostsCursorPage($first: Int!, $after: String) {
+      posts(
+        first: $first
+        after: $after
+        where: { orderby: { field: DATE, order: DESC } }
+      ) {
+        nodes { ${POST_LISTING_SELECTION} }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
+      }
+    }
+  `;
+
+  let after: string | null = null;
+  let currentPage = 1;
+  let nodes: WpPostNode[] = [];
+
+  while (currentPage <= page) {
+    const data: { posts?: PostsConnection } | null = await wpFetch<{ posts?: PostsConnection }>(query, {
+      first: perPage,
+      after,
+    });
+    const conn: PostsConnection | undefined = data?.posts;
+    nodes = conn?.nodes ?? [];
+    const hasNextPage = Boolean(conn?.pageInfo?.hasNextPage);
+    after = conn?.pageInfo?.endCursor ?? null;
+
+    if (currentPage === page) {
+      return buildPostsPageResult(
+        nodes,
+        page,
+        perPage,
+        total,
+        page < totalPages,
+        page > 1
+      );
+    }
+
+    if (!hasNextPage) {
+      return buildPostsPageResult([], page, perPage, total, false, page > 1);
+    }
+    currentPage += 1;
+  }
+
+  return buildPostsPageResult(nodes, page, perPage, total, page < totalPages, page > 1);
+}
+
+export async function getPostsPaginated(page = 1, perPage = 12): Promise<PostsPage> {
+  const safePage = Math.max(1, Math.floor(page) || 1);
+  const safePerPage = Math.max(1, Math.floor(perPage) || 12);
+
+  const offsetResult = await getPostsPaginatedOffset(safePage, safePerPage);
+  if (offsetResult) return offsetResult;
+
+  return getPostsPaginatedCursor(safePage, safePerPage);
+}
+
 export async function getPost(slug: string): Promise<Post | null> {
   type PostResponse = { post: WpPostNode | null };
 

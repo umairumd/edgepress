@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { Post } from "@/lib/wp";
 import Image from "next/image";
+import BlogPagination from "@/components/common/BlogPagination";
 
 type BlogAreaProps = {
     posts?: Post[];
+    pagination?: { currentPage: number; totalPages: number };
 };
 
 function formatDate(date?: string) {
@@ -15,7 +17,7 @@ function formatDate(date?: string) {
     }
 }
 
-const BlogArea = ({ posts }: BlogAreaProps) => {
+const BlogArea = ({ posts, pagination }: BlogAreaProps) => {
     const items =
         posts && posts.length
             ? posts.map((p) => ({
@@ -75,6 +77,12 @@ const BlogArea = ({ posts }: BlogAreaProps) => {
                             </div>
                         ))}
                     </div>
+                )}
+                {pagination && (
+                    <BlogPagination
+                        currentPage={pagination.currentPage}
+                        totalPages={pagination.totalPages}
+                    />
                 )}
             </div>
         </div>
