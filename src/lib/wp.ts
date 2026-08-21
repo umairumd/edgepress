@@ -333,6 +333,11 @@ function isMissingYoastSeoField(errors?: Array<{ message?: string }>) {
   return errors.some((e) => (e.message || "").includes('Cannot query field "seo"'));
 }
 
+function isMissingExcerptField(errors?: Array<{ message?: string }>) {
+  if (!errors?.length) return false;
+  return errors.some((e) => (e.message || "").includes('Cannot query field "excerpt"'));
+}
+
 export async function getPosts(limit = 12): Promise<Post[]> {
   const baseSelection = `
     slug
@@ -929,11 +934,12 @@ export async function getPortfolioItem(slug: string): Promise<PortfolioItem | nu
       : `${entrySelection} ${featureSelection}`;
   };
 
-  const buildQueryWithSeo = (entryField: string, shape: "edge" | "direct") => `
+  const buildQueryWithSeo = (entryField: string, shape: "edge" | "direct", includeExcerpt: boolean) => `
       query GetPortfolioItem($slug: ID!) {
         portfolioItem(id: $slug, idType: SLUG) {
           slug
           title
+          ${includeExcerpt ? "excerpt" : ""}
           content
           date
           featuredImage { node { sourceUrl altText mediaDetails { width height } } }
@@ -954,11 +960,12 @@ export async function getPortfolioItem(slug: string): Promise<PortfolioItem | nu
       }
     `;
 
-  const buildQueryBase = (entryField: string, shape: "edge" | "direct") => `
+  const buildQueryBase = (entryField: string, shape: "edge" | "direct", includeExcerpt: boolean) => `
       query GetPortfolioItem($slug: ID!) {
         portfolioItem(id: $slug, idType: SLUG) {
           slug
           title
+          ${includeExcerpt ? "excerpt" : ""}
           content
           date
           featuredImage { node { sourceUrl altText mediaDetails { width height } } }
@@ -968,11 +975,12 @@ export async function getPortfolioItem(slug: string): Promise<PortfolioItem | nu
       }
     `;
 
-  const minimalQuery = `
+  const buildMinimalQuery = (includeExcerpt: boolean) => `
     query GetPortfolioItem($slug: ID!) {
       portfolioItem(id: $slug, idType: SLUG) {
         slug
         title
+        ${includeExcerpt ? "excerpt" : ""}
         content
         date
         featuredImage { node { sourceUrl altText mediaDetails { width height } } }
@@ -980,23 +988,93 @@ export async function getPortfolioItem(slug: string): Promise<PortfolioItem | nu
     }
   `;
 
+  async function resolvePortfolioResponse(
+    raw: WPGraphQlResponse<PortfolioResponse> | null,
+    entryField: string,
+    shape: "edge" | "direct"
+  ): Promise<WpPortfolioNode | null | undefined> {
+    if (!raw) return undefined;
+
+    // Prefer success with no errors.
+    if (!raw.errors?.length && raw.data?.portfolioItem) {
+      return raw.data.portfolioItem;
+    }
+
+    let includeExcerpt = true;
+    let includeSeo = true;
+
+    if (raw.errors && isMissingExcerptField(raw.errors)) {
+      includeExcerpt = false;
+    }
+    if (raw.errors && isMissingYoastSeoField(raw.errors)) {
+      includeSeo = false;
+    }
+
+    // If the only issue was a missing field we know how to drop, retry.
+    if (raw.errors && (!includeExcerpt || !includeSeo)) {
+      if (includeSeo) {
+        const retrySeo = await wpFetchRaw<PortfolioResponse>(
+          buildQueryWithSeo(entryField, shape, includeExcerpt),
+          { slug }
+        );
+        if (retrySeo && !retrySeo.errors?.length && retrySeo.data?.portfolioItem) {
+          return retrySeo.data.portfolioItem;
+        }
+        // SEO query still failed (e.g. excerpt ok but seo missing was detected on retry path).
+        if (retrySeo?.errors && isMissingYoastSeoField(retrySeo.errors)) {
+          includeSeo = false;
+        }
+      }
+
+      if (!includeSeo) {
+        const retryBase = await wpFetchRaw<PortfolioResponse>(
+          buildQueryBase(entryField, shape, includeExcerpt),
+          { slug }
+        );
+        if (retryBase && !retryBase.errors?.length && retryBase.data?.portfolioItem) {
+          return retryBase.data.portfolioItem;
+        }
+        // Base still fails solely on excerpt — strip it.
+        if (retryBase?.errors && isMissingExcerptField(retryBase.errors) && includeExcerpt) {
+          const retryBaseNoExcerpt = await wpFetch<PortfolioResponse>(
+            buildQueryBase(entryField, shape, false),
+            { slug }
+          );
+          return retryBaseNoExcerpt?.portfolioItem;
+        }
+      }
+    }
+
+    // No actionable field errors — use data if present (partial success), else undefined.
+    return raw.data?.portfolioItem ?? undefined;
+  }
+
   let item: WpPortfolioNode | null | undefined;
   for (const candidate of PORTFOLIO_ENTRY_FIELD_CANDIDATES) {
     for (const shape of ["edge", "direct"] as const) {
-      const raw = await wpFetchRaw<PortfolioResponse>(buildQueryWithSeo(candidate, shape), { slug });
-      const data = raw?.errors && isMissingYoastSeoField(raw.errors)
-        ? await wpFetch<PortfolioResponse>(buildQueryBase(candidate, shape), { slug })
-        : raw?.data;
-      item = data?.portfolioItem;
+      const raw = await wpFetchRaw<PortfolioResponse>(
+        buildQueryWithSeo(candidate, shape, true),
+        { slug }
+      );
+      item = await resolvePortfolioResponse(raw, candidate, shape);
       if (item) break;
     }
     if (item) break;
   }
 
   // Final fallback: avoid breaking the page if ACF/tax fields are not queryable.
+  // Try minimal with excerpt first; if excerpt is unsupported, retry without it.
   if (!item) {
-    const data = await wpFetch<PortfolioResponse>(minimalQuery, { slug });
-    item = data?.portfolioItem ?? null;
+    const rawMinimal = await wpFetchRaw<PortfolioResponse>(buildMinimalQuery(true), { slug });
+    if (rawMinimal && !rawMinimal.errors?.length && rawMinimal.data?.portfolioItem) {
+      item = rawMinimal.data.portfolioItem;
+    } else if (rawMinimal?.errors && isMissingExcerptField(rawMinimal.errors)) {
+      const data = await wpFetch<PortfolioResponse>(buildMinimalQuery(false), { slug });
+      item = data?.portfolioItem ?? null;
+    } else {
+      const data = await wpFetch<PortfolioResponse>(buildMinimalQuery(false), { slug });
+      item = data?.portfolioItem ?? null;
+    }
   }
 
   if (!item) return null;
@@ -1008,6 +1086,7 @@ export async function getPortfolioItem(slug: string): Promise<PortfolioItem | nu
   return {
     slug: item.slug ?? "",
     title,
+    excerpt: item.excerpt ?? undefined,
     content: item.content ?? undefined,
     date: item.date ?? undefined,
     featuredImage: mapWpImageWithAlt(item.featuredImage?.node, titleAlt),

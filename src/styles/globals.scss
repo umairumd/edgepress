@@ -680,6 +680,44 @@ img {
     margin-bottom: 24px !important; /* Reduced from mb-40 (40px) */
 }
 
+.td-portfolio-entry-meta {
+    margin-top: 14px;
+    gap: 10px 12px;
+}
+.td-portfolio-entry-meta-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(184, 233, 255, 0.75);
+    color: #062539;
+    font-family: var(--td-ff-heading);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.01em;
+}
+.td-portfolio-entry-meta-sep {
+    display: inline-block;
+    width: 40px;
+    height: 1px;
+    background: #6f7071;
+    flex-shrink: 0;
+}
+.td-portfolio-entry-meta-date {
+    font-family: var(--td-ff-body);
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--td-grey-1);
+}
+.td-portfolio-entry-excerpt {
+    margin: 18px 0 0;
+    max-width: 42rem;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.65;
+    color: rgba(6, 37, 57, 0.78);
+}
+
 .td-portfolio-entry-content {
     margin-top: 0 !important;
 }

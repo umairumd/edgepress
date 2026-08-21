@@ -106,6 +106,7 @@ export default async function PortfolioDetailsPage({ params }: { params: Promise
     const entryHeight = item.entryImage?.height || item.featuredImage?.height || 4000;
     const contentHtml = (item.content || "").trim();
     const contentHasImages = /<img\b/i.test(contentHtml);
+    const excerptText = stripHtml(item.excerpt);
 
     const content = contentHtml
         ? parse(contentHtml, {
@@ -150,7 +151,7 @@ export default async function PortfolioDetailsPage({ params }: { params: Promise
         "@type": "CreativeWork",
         name: stripHtml(item.title),
         image: entryImage,
-        description: stripHtml(item.excerpt),
+        description: stripHtml(item.excerpt) || undefined,
         url: `${SITE_URL}/portfolio/${slug}`,
         author: { "@type": "Organization", name: "Inoma Digital" },
     };
@@ -165,6 +166,32 @@ export default async function PortfolioDetailsPage({ params }: { params: Promise
                         <div className="col-12">
                             <div className="td-portfolio-entry-header mb-40">
                                 <h1 className="td-portfolio-entry-title" dangerouslySetInnerHTML={{ __html: item.title }} />
+
+                                {(item.categories?.length || item.date) ? (
+                                    <div className="td-portfolio-entry-meta d-flex align-items-center flex-wrap">
+                                        {item.categories?.map((cat) => (
+                                            <span key={cat.slug || cat.name} className="td-portfolio-entry-meta-tag">
+                                                {cat.name}
+                                            </span>
+                                        ))}
+                                        {item.categories?.length && item.date ? (
+                                            <span className="td-portfolio-entry-meta-sep" aria-hidden="true" />
+                                        ) : null}
+                                        {item.date ? (
+                                            <time className="td-portfolio-entry-meta-date" dateTime={item.date}>
+                                                {new Date(item.date).toLocaleDateString("en-US", {
+                                                    year: "numeric",
+                                                    month: "short",
+                                                    day: "numeric",
+                                                })}
+                                            </time>
+                                        ) : null}
+                                    </div>
+                                ) : null}
+
+                                {excerptText ? (
+                                    <p className="td-portfolio-entry-excerpt">{excerptText}</p>
+                                ) : null}
                             </div>
 
                             <div id="td-portfolio-focus-anchor" aria-hidden="true" />
