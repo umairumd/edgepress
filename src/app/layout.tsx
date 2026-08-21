@@ -16,8 +16,11 @@ export const metadata: Metadata = {
   },
   description: "Digital marketing, design, and technology partner.",
   icons: {
-    icon: [{ url: "/inoma-favicon.jpg", type: "image/jpeg" }],
-    apple: [{ url: "/inoma-favicon.jpg" }],
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.png", type: "image/png", sizes: "96x96" },
+    ],
+    apple: [{ url: "/icon.png" }],
   },
   // Canonical URL - tells search engines this is the main URL for this page
   alternates: {
@@ -59,8 +62,6 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <link rel="icon" href="/inoma-favicon.jpg" type="image/jpeg" />
-        <link rel="apple-touch-icon" href="/inoma-favicon.jpg" />
         {/* Hero background is now pure CSS gradient - no preload needed */}
         {/* Critical CSS - loaded synchronously */}
         <link rel="stylesheet" href="/assets/css/bootstrap.min.css" />
