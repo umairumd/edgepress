@@ -1,198 +1,169 @@
 # Next.js Headless WordPress Agency Website
 
-A production-ready agency website built with Next.js 16 App Router and headless WordPress via WPGraphQL. Designed for digital agencies that need non-technical team members to manage content while maintaining full frontend control.
+A production-ready agency website built with Next.js 16 App Router and headless WordPress via WPGraphQL. Built for digital agencies that need non-technical content teams to manage SEO, blog, portfolio, and redirects — while keeping full frontend control in Next.js.
 
 ## Live Demo
 
-[https://inomadigital.com/](https://inomadigital.com/)
+[https://inomadigital.com](https://inomadigital.com)
 
 ## Screenshots
 
+<!-- Add screenshot: homepage hero -->
+<!-- Add screenshot: blog with pagination -->
+<!-- Add screenshot: portfolio detail with progressive image -->
+<!-- Add screenshot: mobile view -->
 
+---
 
-## Architecture
+## What Makes This Different
 
-**Headless WordPress.** The CMS stays in WordPress so editors keep the admin they already know: posts, portfolio items, featured images, excerpts, and custom fields. The public site is a Next.js application, so developers control routing, performance, SEO metadata, and UI without fighting a PHP theme.
+### Progressive Portfolio Image Loading
+The most technically distinctive feature of this project. Large portfolio images are fetched from WordPress, split into horizontal slices server-side using Sharp, and streamed to the client progressively — each slice loads independently and stitches together as it arrives. This solves a real problem: agency portfolio images are often very tall composite images (3000–8000px) that would block render if loaded as a single file. The slicing pipeline runs at request time via a dedicated API route, with slice dimensions calculated dynamically based on the image aspect ratio.
 
-**WPGraphQL.** All CMS content is fetched over GraphQL rather than the REST posts API. Queries are explicit, payloads stay small, and TypeScript types in `src/lib/wp.ts` map cleanly onto posts, portfolio items, media, taxonomies, and Yoast-style SEO fields.
+Key files: `src/app/api/img/slice/route.ts`, `src/components/pages/portfolio/PortfolioLongImage.tsx`
 
-**ISR with 5-minute revalidation.** Blog, portfolio, and privacy pages use Incremental Static Regeneration (`revalidate = 300`). GraphQL fetches in production use the same 300-second cache. Pages stay statically fast; content updates appear without a full rebuild. Marketing pages that change less often can use a longer window.
+### WordPress-Driven Redirects at the Edge
+SEO-safe URL changes without code deploys. A custom WordPress REST endpoint stores redirect rules in the CMS. Next.js middleware fetches these rules at the Edge on every request and applies them before the page renders — meaning marketing and SEO teams can manage 301 redirects directly from WordPress admin, with no developer involvement and no redeployment required.
 
-**WordPress-driven redirects.** Middleware loads a redirect map from a custom WordPress REST endpoint (`/wp-json/[namespace]/v1/redirects`) and applies 301/302/307/308 responses at the edge. Editors can change URLs for SEO without a code deploy. The map is cached in memory for five minutes.
+Key file: `src/middleware.ts`
 
-**PurgeCSS + CSSO in postbuild.** After `next build`, unused Bootstrap and theme CSS is stripped, then CSSO minifies the remaining files. Production CSS stays small without rewriting the SCSS source.
+### Yoast SEO → Next.js Metadata Pipeline
+Every page's `<title>`, `<meta description>`, Open Graph tags, canonical URLs, and robots directives are sourced from Yoast SEO in WordPress via WPGraphQL. The GraphQL query fetches the full Yoast `seo` object and maps it directly to Next.js `generateMetadata()`. This means SEO teams get full Yoast tooling — previews, readability scores, keyword analysis — and the output flows automatically into the Next.js metadata system without any manual duplication.
 
-**Resend for transactional email.** The contact form posts to a Next.js Route Handler that sends mail through Resend. Delivery is handled by a dedicated email API instead of the WordPress server.
+Key file: `src/lib/wp.ts` — `buildQueryWithSeo()`, `mapSeoToMetadata()`
+
+### ISR with 5-Minute Revalidation
+All data-fetching pages use `export const revalidate = 300`. Pages are statically generated at build time and automatically regenerated in the background every 5 minutes. Users always get a cached response at CDN speed; content updates from WordPress appear within 5 minutes without any manual cache clearing or redeployment.
+
+### PurgeCSS + CSSO Post-Build Pipeline
+Bootstrap 5 ships ~200KB of CSS. The `postbuild` script runs PurgeCSS against all rendered HTML and TSX files, removing every unused selector, then pipes the result through CSSO for minification and structure optimization. The result is a fraction of the original Bootstrap bundle — only the classes actually used in the project survive to production.
+
+---
 
 ## Features
 
-- [x] Dynamic blog with cursor-based pagination
-- [x] Portfolio with image slicing and excerpt support
-- [x] WordPress-driven 301 redirects
-- [x] Contact form with Resend
-- [x] Privacy policy page from WordPress
-- [x] Automatic XML sitemap
-- [x] Google Tag Manager (server-side env var)
-- [x] Headless font loading (Clash Display)
-- [x] Mobile-responsive with Bootstrap grid
+- [x] Dynamic blog with cursor-based WPGraphQL pagination
+- [x] Progressive portfolio image slicing and streaming
+- [x] WordPress-driven 301 redirects at the Edge
+- [x] Yoast SEO → Next.js metadata pipeline (title, description, OG, canonical, robots)
+- [x] ISR with 5-minute revalidation across all pages
+- [x] Contact form via Resend
+- [x] Privacy policy page sourced from WordPress
+- [x] Automatic XML sitemap with dynamic blog and portfolio entries
+- [x] Google Tag Manager (server-side env var, zero client exposure)
+- [x] PurgeCSS + CSSO post-build CSS optimization
+- [x] Clash Display variable font (self-hosted)
+- [x] Bootstrap 5 grid with custom SCSS design system
+- [x] Mobile-responsive across all pages
 
+---
 
+## Architecture
 
-## WordPress Requirements
-
-
-
-### Plugins
-
-- **WPGraphQL** — GraphQL endpoint at `/graphql`
-- **Advanced Custom Fields (ACF)** — custom fields on posts and portfolio items
-- **WPGraphQL for Advanced Custom Fields** — expose ACF fields in the GraphQL schema
-- **Custom Post Type UI** — register the Portfolio custom post type
-- **Yoast SEO** (recommended) — titles, meta descriptions, canonicals, and Open Graph data consumed by the frontend
-- A **custom REST endpoint** that returns the redirect map at `/wp-json/[namespace]/v1/redirects`
-
-Replace `[namespace]` with your WordPress plugin namespace. The response should be a JSON object keyed by path (no leading slash), for example:
-
-```json
-{
-  "old-page": { "target": "/new-page", "type": 301 }
-}
+```
+Next.js 16 App Router (TypeScript)
+├── WordPress CMS (WPGraphQL + Yoast SEO + CPT UI)
+├── ISR revalidation (5 min) on all data pages
+├── Edge middleware for WordPress-driven redirects
+├── Sharp image pipeline for portfolio slice streaming
+├── Resend for transactional email
+├── PurgeCSS + CSSO in postbuild
+└── Vercel deployment
 ```
 
-`target` may be a relative path or an absolute URL. `type` should be `301`, `302`, `307`, or `308`.
-
-### Portfolio CPT
-
-Register a publicly queryable post type exposed to WPGraphQL as `portfolioItems`. Each item should include:
-
-
-| Field                     | Use                                                            |
-| ------------------------- | -------------------------------------------------------------- |
-| Title                     | Listing and detail headings                                    |
-| Content                   | Case study body                                                |
-| Excerpt                   | Cards and meta descriptions                                    |
-| Featured image            | Listing thumbnail                                              |
-| Categories                | Filters (typical slugs: `case-studies`, `websites`, `logos`)   |
-| ACF `portfolioEntryImage` | Tall “entry” image on the detail page (sliced for performance) |
-| ACF `featured` (optional) | Pins items to the top of the listing                           |
-
-
-If your GraphQL field names differ, override them with the optional `WP_PORTFOLIO_*` environment variables in `.env.example`.
-
-### Blog posts
-
-Standard WordPress posts power `/blog`. An optional ACF true/false field (`featuredBlog` by default) marks posts for the sidebar. Configure names with `WP_POST_FEATURE_FIELD` and `WP_POST_ACF_GROUP_FIELD` if needed.
-
-### Privacy policy
-
-Publish a WordPress page whose slug is `privacy-policy`. The Next.js route at `/privacy-policy` fetches that page over GraphQL.
+---
 
 ## Project Structure
 
 ```
 src/
-  app/          # Next.js App Router pages and layouts
-  components/   # React components
-  lib/          # WordPress data fetching (wp.ts), shared utils
-  styles/       # SCSS source files
-  data/         # Static data (menus, services)
-  hooks/        # Custom React hooks
+  app/              # Pages, layouts, API routes
+  components/       # React components
+  lib/              # wp.ts (data fetching), utils.ts (shared helpers)
+  styles/           # SCSS source
+  data/             # Static data (menus, services)
+  hooks/            # Custom React hooks
 public/
-  assets/       # CSS, fonts, images
-docs/           # Architecture and SEO documentation
+  assets/           # CSS, fonts, images
+docs/               # SEO guidelines, CMS audit, performance notes
 ```
 
+---
 
+## WordPress Requirements
+
+**Plugins required:**
+- WPGraphQL
+- WPGraphQL for Yoast SEO
+- Custom Post Type UI (Portfolio CPT with excerpt support enabled)
+- A custom REST endpoint at `/wp-json/[namespace]/v1/redirects` returning redirect rules
+
+**Portfolio CPT must support:**
+- Title, content, excerpt, featured image
+- Taxonomies for categories
+- ACF fields (optional — field names configurable via env vars)
+
+---
 
 ## Getting Started
 
-1. **Clone the repo**
-  ```bash
-   git clone <your-repo-url>
-   cd <project-directory>
-  ```
-2. **Configure environment variables**
-  ```bash
-   cp .env.example .env.local
-  ```
-   Fill in WordPress, Resend, site URL, and GTM values. See `.env.example` for descriptions.
-3. **Set up WordPress** with the plugins, Portfolio CPT, ACF fields, and redirects endpoint listed above. Confirm GraphQL works in WPGraphQL IDE.
-4. **Install dependencies**
-  ```bash
-   npm install
-  ```
-5. **Run the development server**
-  ```bash
-   npm run dev
-  ```
-   Open [http://localhost:3000](http://localhost:3000). Content is fetched live from WordPress (no ISR cache in development).
+1. Clone the repository
+2. Copy `.env.example` to `.env.local` and fill in all required values
+3. Set up WordPress with the required plugins listed above
+4. Create the Portfolio custom post type in CPT UI with excerpt support enabled
+5. Run `npm install`
+6. Run `npm run dev`
 
+See `.env.example` for all environment variables with descriptions.
 
-
-### Production build
-
-```bash
-npm run build
-npm run start
-```
-
-`postbuild` runs PurgeCSS and CSSO on the compiled CSS in `public/assets/css/`.
-
-## Environment Variables
-
-See `[.env.example](.env.example)` for all required and optional variables with descriptions.
-
-
-| Variable                              | Required | Purpose                                                          |
-| ------------------------------------- | -------- | ---------------------------------------------------------------- |
-| `WP_GRAPHQL_ENDPOINT`                 | Yes      | Full URL to the WPGraphQL endpoint                               |
-| `WP_MEDIA_DOMAIN`                     | Yes      | Host(s) for WordPress media (comma-separated if needed)          |
-| `SITE_URL`                            | Yes      | Canonical origin for sitemaps and metadata                       |
-| `WP_REDIRECTS_API_URL`                | No       | Custom REST URL for WordPress-driven redirects; skipped if unset |
-| `RESEND_API_KEY`                      | Yes      | Resend API key for the contact form                              |
-| `CONTACT_TO_EMAIL`                    | Yes      | Inbox that receives inquiries                                    |
-| `CONTACT_FROM_EMAIL`                  | Yes      | From name and address (must be a verified Resend domain)         |
-| `GTM_ID`                              | Yes      | Google Tag Manager container ID (e.g. `GTM-XXXXXXX`)             |
-| `WP_PORTFOLIO_*` / `WP_POST_*`        | No       | Override ACF / taxonomy GraphQL field names                      |
-| `GOOGLE_*` / `NEXT_PUBLIC_SUPABASE_*` | No       | Only if those integrations are enabled                           |
-
-
-Set `WP_REDIRECTS_API_URL` to your redirects REST URL (`/wp-json/[namespace]/v1/redirects`). If it is unset, middleware skips CMS redirects.
+---
 
 ## Deployment
 
-Optimized for **Vercel**.
+Optimized for Vercel. Set all environment variables in your Vercel project dashboard. The `postbuild` script (PurgeCSS + CSSO) runs automatically on every Vercel build.
 
-1. Import the Git repository into a Vercel project.
-2. Set every required variable from `.env.example` in the project dashboard (Production, Preview, and Development as needed). Do not commit `.env.local`.
-3. Deploy. Vercel runs `npm run build` (including the CSS postbuild) and serves the App Router with ISR.
+**Required Vercel environment variables:**
+- `WP_GRAPHQL_ENDPOINT`
+- `WP_MEDIA_DOMAIN`
+- `SITE_URL`
+- `RESEND_API_KEY`
+- `CONTACT_TO_EMAIL`
+- `CONTACT_FROM_EMAIL`
+- `GTM_ID`
+- `WP_REDIRECTS_API_URL`
 
-Allowlist your WordPress media host in `WP_MEDIA_DOMAIN` so `next/image` can optimize remote images (AVIF/WebP via Sharp). After go-live, confirm `/sitemap.xml`, contact form delivery, GTM, and a sample WordPress redirect.
-
-## Docs
-
-See the `docs/` folder for:
-
-- SEO architecture decisions and guidelines (`SEO-GUIDELINES.md`, `SEO-ROUTING-AUDIT.md`, `SEO-MAINTENANCE-GUIDE.md`, `TECHNICAL-SEO-CLEANUP-PLAN.md`)
-- CMS configuration notes (`wordpress-blog.md`, `wordpress-portfolio.md`, `CMS-BROWSER-REQUEST-AUDIT.md`)
-- Performance audit reports (`ABOUT-PAGE-PERFORMANCE-PLAN.md`, `GTM-ANALYTICS-AUDIT.md`)
-
-
+---
 
 ## Tech Stack
 
+| Technology | Purpose |
+|---|---|
+| Next.js 16 | App Router, ISR, API routes, Edge middleware |
+| TypeScript | Type safety throughout |
+| WordPress | Headless CMS — content, SEO, redirects |
+| WPGraphQL | Typed GraphQL API for WordPress data |
+| Yoast SEO | SEO metadata managed in WordPress |
+| Sharp | Server-side image slicing for portfolio |
+| Bootstrap 5 | Responsive grid and base components |
+| SCSS | Custom design system on top of Bootstrap |
+| Resend | Transactional email for contact form |
+| PurgeCSS + CSSO | Production CSS optimization |
+| Vercel | Deployment and Edge runtime |
 
-| Technology  | Purpose                                                |
-| ----------- | ------------------------------------------------------ |
-| Next.js 16  | App Router, ISR, Route Handlers, image optimization    |
-| TypeScript  | Typed GraphQL mapping and application code             |
-| WordPress   | Headless CMS for posts, portfolio, and pages           |
-| WPGraphQL   | Typed content API                                      |
-| Bootstrap 5 | Responsive grid and layout utilities                   |
-| SCSS        | Component and layout styles                            |
-| Resend      | Transactional email for the contact form               |
-| Vercel      | Hosting, edge middleware, and ISR                      |
-| PurgeCSS    | Remove unused CSS after build                          |
-| Sharp       | Image decoding, slicing, and `next/image` optimization |
+---
 
+## Docs
 
+The `docs/` folder contains internal architecture and SEO documentation:
+- SEO architecture decisions and guidelines
+- CMS configuration notes
+- GTM and analytics audit
+- Performance audit reports
+
+These document the decisions behind the implementation and are useful for anyone maintaining or extending this project.
+
+---
+
+## License
+
+MIT
