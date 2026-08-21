@@ -3,7 +3,6 @@ import Link from "next/link";
 import MobileMenu from "./MobileMenu";
 import {
     IconXmark,
-    IconSearch,
     IconAngleRight,
     IconFacebookF,
     IconInstagram,
@@ -38,14 +37,6 @@ const Offcanvas = ({ offCanvas, setOffCanvas }: OffcanvasProps) => {
                                 decoding="async"
                             />
                         </Link>
-                    </div>
-                    <div className="tdmobile__search">
-                        <form onSubmit={(e) => e.preventDefault()}>
-                            <input type="text" placeholder="Search here..." aria-label="Search" />
-                            <button type="submit" aria-label="Search">
-                                <IconSearch aria-hidden="true" />
-                            </button>
-                        </form>
                     </div>
                     <div className="tdmobile__menu-outer">
                         <MobileMenu onNavigate={() => setOffCanvas(false)} />
