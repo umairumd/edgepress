@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const REDIRECT_API_URL = "https://cms.inomadigital.com/wp-json/inomadigital/v1/redirects";
+const REDIRECT_API_URL = process.env.WP_REDIRECTS_API_URL || "";
 const CACHE_TTL_MS = 300_000;
 
 let redirectCache: Record<string, { target: string; type: number }> | null = null;
 let lastFetch = 0;
 
 async function getRedirectMap(): Promise<Record<string, { target: string; type: number }> | null> {
+  if (!REDIRECT_API_URL) return null;
   const now = Date.now();
   if (redirectCache !== null && now - lastFetch < CACHE_TTL_MS) {
     return redirectCache;
@@ -30,17 +31,19 @@ export async function middleware(request: NextRequest) {
 
   // 1. Host normalization (if present) — none in this middleware; add above trailing-slash if needed.
 
-  // 2. WordPress redirect lookup
-  const path = pathname.replace(/^\/|\/$/g, "");
-  if (path !== "") {
-    const map = await getRedirectMap();
-    if (map) {
-      const redirect = map[path];
-      if (redirect?.target) {
-        const targetUrl = redirect.target.startsWith("http")
-          ? redirect.target
-          : new URL(redirect.target, request.url).toString();
-        return NextResponse.redirect(targetUrl, (redirect.type as 301 | 302 | 307 | 308) || 307);
+  // 2. WordPress redirect lookup (skipped when WP_REDIRECTS_API_URL is unset)
+  if (REDIRECT_API_URL) {
+    const path = pathname.replace(/^\/|\/$/g, "");
+    if (path !== "") {
+      const map = await getRedirectMap();
+      if (map) {
+        const redirect = map[path];
+        if (redirect?.target) {
+          const targetUrl = redirect.target.startsWith("http")
+            ? redirect.target
+            : new URL(redirect.target, request.url).toString();
+          return NextResponse.redirect(targetUrl, (redirect.type as 301 | 302 | 307 | 308) || 307);
+        }
       }
     }
   }
