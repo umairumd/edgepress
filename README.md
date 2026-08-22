@@ -8,10 +8,18 @@ A production-ready agency website built with Next.js 16 App Router and headless 
 
 ## Screenshots
 
-<!-- Add screenshot: homepage hero -->
-<!-- Add screenshot: blog with pagination -->
-<!-- Add screenshot: portfolio detail with progressive image -->
-<!-- Add screenshot: mobile view -->
+![Banner](screenshots/banner.jpg)
+
+### Desktop
+
+![Homepage](screenshots/homepage.jpeg)
+![Blog](screenshots/blogs.jpeg)
+![Portfolio](screenshots/portfolio.jpeg)
+
+### Mobile
+
+![Mobile About](screenshots/mobile-about.png)
+![Mobile Track Record](screenshots/mobile-track.png)
 
 ---
 
