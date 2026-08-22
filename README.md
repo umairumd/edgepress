@@ -1,5 +1,7 @@
 # Next.js Headless WordPress Agency Website
 
+![Banner](screenshots/banner.jpg)
+
 A production-ready agency website built with Next.js 16 App Router and headless WordPress via WPGraphQL. Built for digital agencies that need non-technical content teams to manage SEO, blog, portfolio, and redirects — while keeping full frontend control in Next.js.
 
 ## Live Demo
@@ -7,8 +9,6 @@ A production-ready agency website built with Next.js 16 App Router and headless 
 [https://inomadigital.com](https://inomadigital.com)
 
 ## Screenshots
-
-![Banner](screenshots/banner.jpg)
 
 ### Desktop
 
@@ -50,6 +50,19 @@ All data-fetching pages use `export const revalidate = 300`. Pages are staticall
 ### PurgeCSS + CSSO Post-Build Pipeline
 Bootstrap 5 ships ~200KB of CSS. The `postbuild` script runs PurgeCSS against all rendered HTML and TSX files, removing every unused selector, then pipes the result through CSSO for minification and structure optimization. The result is a fraction of the original Bootstrap bundle — only the classes actually used in the project survive to production.
 
+### Non-Technical Content Management
+Blog posts, portfolio items, SEO metadata, and 301 redirects are all managed 
+from WordPress admin — no developer involvement needed for day-to-day content 
+operations. SEO teams get full Yoast tooling (previews, readability scores, 
+keyword analysis) with output flowing automatically into Next.js. Content 
+changes appear on the live site within 5 minutes via ISR.
+
+### Default SEO Fallbacks on Every Page
+Static pages that haven't been updated yet are never empty from a search 
+engine perspective. Every page has default meta titles, descriptions, and OG 
+tags built in — the site is always indexable and presentable, even before 
+content is written.
+
 ---
 
 ## Features
@@ -67,6 +80,11 @@ Bootstrap 5 ships ~200KB of CSS. The `postbuild` script runs PurgeCSS against al
 - [x] Clash Display variable font (self-hosted)
 - [x] Bootstrap 5 grid with custom SCSS design system
 - [x] Mobile-responsive across all pages
+- [x] Non-technical WordPress content management (blog, portfolio, SEO, redirects)
+- [x] Dynamic blog and portfolio category filtering (client-side, WP taxonomy-driven)
+- [x] Video testimonials carousel (YouTube, Swiper, WordPress-managed)
+- [x] Default SEO fallbacks on all static pages
+- [x] Sharp image optimisation with lazy loading across all pages
 
 ---
 
