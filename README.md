@@ -18,8 +18,12 @@ A production-ready agency website built with Next.js 16 App Router and headless 
 
 ### Mobile
 
-![Mobile About](screenshots/mobile-about.png)
-![Mobile Track Record](screenshots/mobile-track.png)
+<table>
+  <tr>
+    <td><img src="screenshots/mobile-about.png" width="300"/></td>
+    <td><img src="screenshots/mobile-track.png" width="300"/></td>
+  </tr>
+</table>
 
 ---
 
