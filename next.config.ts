@@ -46,12 +46,16 @@ const nextConfig: NextConfig = {
     qualities: [65, 75],
     // Cache optimized images for 30 days (reduces re-compression)
     minimumCacheTTL: 2592000,
-    remotePatterns: wpMediaHosts.length
-      ? wpMediaHosts.flatMap((hostname) => [
-          { protocol: "https", hostname },
-          { protocol: "http", hostname },
-        ])
-      : [],
+    remotePatterns: [
+      { protocol: "https", hostname: "img.youtube.com" },
+      { protocol: "https", hostname: "i.ytimg.com" },
+      ...(wpMediaHosts.length
+        ? wpMediaHosts.flatMap((hostname) => [
+            { protocol: "https" as const, hostname },
+            { protocol: "http" as const, hostname },
+          ])
+        : []),
+    ],
   },
   async headers() {
     return [

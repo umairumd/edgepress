@@ -4,7 +4,7 @@ import { useVideoPopup } from "@/hooks/useVideoPopup";
 import VideoPopup from "@/modals/VideoPopup";
 
 const About = () => {
-    const { isVideoOpen, openVideo, closeVideo } = useVideoPopup();
+    const { openVideo } = useVideoPopup();
     return (
         <div className="td-about-area pt-140 pb-125">
             <div className="container">
@@ -40,7 +40,7 @@ const About = () => {
                                 sizes="140px"
                                 aria-hidden="true"
                             />
-                            <div className="p-relative" style={{ cursor: "pointer" }} onClick={openVideo}>
+                            <div className="p-relative" style={{ cursor: "pointer" }} onClick={() => openVideo("YV6AQgnaPVA")}>
                                 <Image
                                     src="/assets/img/about/about-6/inoma-home-1.jpg"
                                     alt="Inoma Digital team collaborating on digital strategy and execution - Click to watch video"
@@ -124,7 +124,7 @@ const About = () => {
                     </div>
                 </div>
             </div>
-            <VideoPopup isOpen={isVideoOpen} onClose={closeVideo} videoId="YV6AQgnaPVA" />
+            <VideoPopup />
         </div>
     )
 }

@@ -5,6 +5,7 @@ import { PortfolioItem } from "@/lib/wp";
 import Image from "next/image";
 import type Isotope from "isotope-layout";
 import { IconStar, IconBehance, IconArrowRight } from "@/components/icons";
+import { slugToLabel } from "@/lib/utils";
 
 type Props = {
     items?: PortfolioItem[];
@@ -69,26 +70,18 @@ const PortfolioArea = ({ items }: Props) => {
 
     const filteredData = useMemo(() => {
         if (items && items.length) {
-            const normalizeCat = (input?: string) => (input || "").trim().toLowerCase();
-            const normalizeSlug = (input?: string) =>
-                normalizeCat(input)
+            const toFilterSlug = (input?: string) =>
+                (input || "")
+                    .trim()
+                    .toLowerCase()
                     .replace(/\s+/g, "-")
                     .replace(/[^a-z0-9-]/g, "")
                     .trim();
-            const toKnownFilterSlug = (slug: string) => {
-                const s = normalizeSlug(slug);
-                if (s === "case-studies" || s === "websites" || s === "logos") return s;
-                if (s.includes("case")) return "case-studies";
-                if (s.includes("website") || s.includes("web")) return "websites";
-                if (s.includes("logo")) return "logos";
-                return "case-studies";
-            };
             const toFilterClasses = (item: PortfolioItem) => {
                 const slugs =
                     item.categories?.map((c) => c.slug).filter(Boolean) ??
                     (item.category ? [item.category] : []);
-                const mapped = slugs.map(toKnownFilterSlug);
-                return Array.from(new Set(mapped)).join(" ") || "case-studies";
+                return Array.from(new Set(slugs.map(toFilterSlug).filter(Boolean))).join(" ");
             };
 
             return items
@@ -115,21 +108,39 @@ const PortfolioArea = ({ items }: Props) => {
         return [];
     }, [items]);
 
+    const categorySlugs = useMemo(() => {
+        const unique = new Set<string>();
+        for (const item of filteredData) {
+            for (const slug of item.categoryClasses.split(/\s+/).filter(Boolean)) {
+                unique.add(slug);
+            }
+        }
+        return Array.from(unique).sort((a, b) => slugToLabel(a).localeCompare(slugToLabel(b)));
+    }, [filteredData]);
+
     return (
         <div className="td-portfolio-filter-area pb-160">
             <div className="container">
                 {filteredData.length > 0 ? (
                     <>
-                        <div className="row">
-                            <div className="col-lg-12 mb-50">
-                                <div className="td-portfolio-filter-btn text-center masonary-menu">
-                                    <button className={`${selectedFilter === "*" ? "is-checked active" : ""}`} onClick={handleFilterKeyChange("*")}> SHOW ALL </button>
-                                    <button className={`${selectedFilter === "case-studies" ? "is-checked active" : ""}`} onClick={handleFilterKeyChange("case-studies")}> CASE STUDIES </button>
-                                    <button className={`${selectedFilter === "websites" ? "is-checked active" : ""}`} onClick={handleFilterKeyChange("websites")}> WEBSITES </button>
-                                    <button className={`${selectedFilter === "logos" ? "is-checked active" : ""}`} onClick={handleFilterKeyChange("logos")}> LOGOS </button>
+                        {categorySlugs.length > 0 ? (
+                            <div className="row">
+                                <div className="col-lg-12 mb-50">
+                                    <div className="td-portfolio-filter-btn text-center masonary-menu">
+                                        <button className={`${selectedFilter === "*" ? "is-checked active" : ""}`} onClick={handleFilterKeyChange("*")}> Show All </button>
+                                        {categorySlugs.map((slug) => (
+                                            <button
+                                                key={slug}
+                                                className={`${selectedFilter === slug ? "is-checked active" : ""}`}
+                                                onClick={handleFilterKeyChange(slug)}
+                                            >
+                                                {slugToLabel(slug)}
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        ) : null}
                         <div className="grid row">
                             {filteredData.map((item) => (
                                 <div key={item.id} className={`col-md-6 grid-item ${item.categoryClasses} mb-30`}>

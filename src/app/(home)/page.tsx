@@ -10,7 +10,8 @@ import Choose from "@/components/home/Choose";
 import Team from "@/components/home/Team";
 import Counter from "@/components/home/Counter";
 import Cta from "@/components/common/Cta";
-import { getFeaturedPortfolios, getHeroSlides, getTestimonials, getTeamMembers } from "@/lib/wp";
+import VideoTestimonialsCarousel from "@/components/home/VideoTestimonialsCarousel";
+import { getFeaturedPortfolios, getHeroSlides, getTestimonials, getTeamMembers, getVideoTestimonials } from "@/lib/wp";
 
 export const metadata: Metadata = {
   title: {
@@ -26,11 +27,12 @@ export const revalidate = 3600;
 
 export default async function HomePage() {
     // Fetch data at build time (ISR)
-    const [featuredPortfolios, heroSlides, testimonials, teamMembers] = await Promise.all([
+    const [featuredPortfolios, heroSlides, testimonials, teamMembers, videoTestimonials] = await Promise.all([
         getFeaturedPortfolios(5),
         getHeroSlides(),
         getTestimonials(10),
         getTeamMembers(20),
+        getVideoTestimonials(),
     ]);
 
     // Preload first hero slide for faster LCP (React hoists <link> to <head>)
@@ -55,6 +57,7 @@ export default async function HomePage() {
                 <About />
                 <Service />
                 <Portfolio items={featuredPortfolios} />
+                <VideoTestimonialsCarousel testimonials={videoTestimonials} />
                 <VideoArea />
                 <Pricing />
                 <Testimonial testimonials={testimonials} />

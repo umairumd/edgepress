@@ -3,6 +3,16 @@ export function stripHtml(html?: string | null): string {
   return html.replace(/<[^>]*>?/gm, "").trim();
 }
 
+/** Convert a URL slug to a display label, e.g. "case-studies" → "Case Studies". */
+export function slugToLabel(slug: string): string {
+  return slug
+    .trim()
+    .split(/[-_]+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+    .join(" ");
+}
+
 /** Rewrite a canonical URL onto the site origin while preserving path/search/hash. */
 export function normalizeCanonical(
   url: string,

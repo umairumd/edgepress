@@ -129,6 +129,7 @@ export type Post = {
   content?: string;
   date?: string;
   category?: string;
+  categories?: Array<{ slug: string; name: string }>;
   featuredImage?: WPImage;
   featured?: boolean;
   author?: string;
@@ -346,7 +347,7 @@ export async function getPosts(limit = 12): Promise<Post[]> {
     title
     excerpt
     date
-    categories(first: 1) { nodes { name } }
+    categories { nodes { slug name } }
     featuredImage { node { sourceUrl altText mediaDetails { width height } } }
   `;
 
@@ -388,12 +389,14 @@ export async function getPosts(limit = 12): Promise<Post[]> {
 
   return nodes.map((node) => {
     const title = node.title ?? "";
+    const categories = mapWpTerms(node.categories);
     return {
       slug: node.slug ?? "",
       title,
       excerpt: node.excerpt ?? undefined,
       date: node.date ?? undefined,
-      category: node.categories?.nodes?.[0]?.name ?? undefined,
+      categories,
+      category: categories?.[0]?.name ?? node.categories?.nodes?.[0]?.name ?? undefined,
       featuredImage: mapWpImageWithAlt(node.featuredImage?.node, stripHtml(title) || "Blog post"),
       featured: getPostFeaturedFlag(node) ?? false,
     };
@@ -405,7 +408,7 @@ const POST_LISTING_SELECTION = `
   title
   excerpt
   date
-  categories(first: 1) { nodes { name } }
+  categories { nodes { slug name } }
   featuredImage { node { sourceUrl altText mediaDetails { width height } } }
 `;
 
@@ -435,12 +438,14 @@ export type PostsPage = {
 function mapPostListingNodes(nodes: WpPostNode[]): Post[] {
   return nodes.map((node) => {
     const title = node.title ?? "";
+    const categories = mapWpTerms(node.categories);
     return {
       slug: node.slug ?? "",
       title,
       excerpt: node.excerpt ?? undefined,
       date: node.date ?? undefined,
-      category: node.categories?.nodes?.[0]?.name ?? undefined,
+      categories,
+      category: categories?.[0]?.name ?? node.categories?.nodes?.[0]?.name ?? undefined,
       featuredImage: mapWpImageWithAlt(node.featuredImage?.node, stripHtml(title) || "Blog post"),
     };
   });
@@ -725,7 +730,7 @@ export async function getRecentPosts(limit = 5): Promise<Post[]> {
     slug
     title
     date
-    categories(first: 1) { nodes { name } }
+    categories { nodes { slug name } }
     featuredImage { node { sourceUrl altText mediaDetails { width height } } }
   `;
 
@@ -766,11 +771,13 @@ export async function getRecentPosts(limit = 5): Promise<Post[]> {
 
   return nodes.map((node) => {
     const title = node.title ?? "";
+    const categories = mapWpTerms(node.categories);
     return {
       slug: node.slug ?? "",
       title,
       date: node.date ?? undefined,
-      category: node.categories?.nodes?.[0]?.name ?? undefined,
+      categories,
+      category: categories?.[0]?.name ?? node.categories?.nodes?.[0]?.name ?? undefined,
       featuredImage: mapWpImageWithAlt(node.featuredImage?.node, stripHtml(title) || "Blog post"),
       featured: getPostFeaturedFlag(node) ?? false,
     };
@@ -1430,6 +1437,120 @@ export async function getTestimonials(limit = 10): Promise<Testimonial[]> {
 
   // No testimonials found
   return [];
+}
+
+export type TestimonialItem = {
+  id: string;
+  slug: string;
+  title: string;
+  youtubeId: string;
+  thumbnailUrl?: string;
+};
+
+function extractYoutubeId(value: unknown): string | undefined {
+  if (typeof value !== "string") return undefined;
+  const trimmed = value.trim();
+  if (!trimmed) return undefined;
+  if (/^[a-zA-Z0-9_-]{11}$/.test(trimmed)) return trimmed;
+  try {
+    const url = new URL(trimmed);
+    if (url.hostname.replace(/^www\./, "") === "youtu.be") {
+      const id = url.pathname.split("/").filter(Boolean)[0];
+      return id || undefined;
+    }
+    const fromQuery = url.searchParams.get("v");
+    if (fromQuery) return fromQuery;
+    const parts = url.pathname.split("/").filter(Boolean);
+    const embedIdx = parts.indexOf("embed");
+    if (embedIdx >= 0 && parts[embedIdx + 1]) return parts[embedIdx + 1];
+    const shortsIdx = parts.indexOf("shorts");
+    if (shortsIdx >= 0 && parts[shortsIdx + 1]) return parts[shortsIdx + 1];
+  } catch {
+    return trimmed;
+  }
+  return trimmed;
+}
+
+function getTestimonialYoutubeId(node: WpTestimonialNode): string | undefined {
+  const group = node?.testimonialFields as Record<string, unknown> | null | undefined;
+  return extractYoutubeId(group?.youtubeId) ?? extractYoutubeId(node?.youtubeId);
+}
+
+function getTestimonialThumbnailUrl(node: WpTestimonialNode): string | undefined {
+  const readMedia = (field: unknown): string | undefined => {
+    if (!field || typeof field !== "object") return undefined;
+    const edge = field as WpMediaEdge;
+    if (edge && typeof edge === "object" && "node" in edge) {
+      return mapWpImage(edge.node)?.url;
+    }
+    return mapWpImage(field as WpMediaNode)?.url;
+  };
+  const group = node?.testimonialFields as Record<string, unknown> | null | undefined;
+  return readMedia(group?.customThumbnail) ?? readMedia(node?.customThumbnail);
+}
+
+/**
+ * Fetch video testimonials (YouTube) from WordPress.
+ * Uses CPT "testimonials" / "testimonial" and ACF group "testimonialFields".
+ */
+export async function getVideoTestimonials(limit = 20): Promise<TestimonialItem[]> {
+  try {
+    const cptCandidates = ["testimonials", "testimonial"];
+    const thumbSelections = [
+      `testimonialFields { youtubeId customThumbnail { node { sourceUrl altText mediaDetails { width height } } } }`,
+      `testimonialFields { youtubeId customThumbnail { sourceUrl altText mediaDetails { width height } } }`,
+      `testimonialFields { youtubeId } youtubeId customThumbnail { node { sourceUrl altText mediaDetails { width height } } }`,
+      `testimonialFields { youtubeId } youtubeId`,
+      `youtubeId customThumbnail { node { sourceUrl altText mediaDetails { width height } } }`,
+      `youtubeId`,
+    ];
+
+    for (const cptName of cptCandidates) {
+      for (const extraSelection of thumbSelections) {
+        const query = `
+          query GetVideoTestimonials($limit: Int!) {
+            ${cptName}(first: $limit, where: {orderby: {field: DATE, order: DESC}}) {
+              nodes {
+                databaseId
+                slug
+                title
+                ${extraSelection}
+              }
+            }
+          }
+        `;
+
+        const raw = await wpFetchRaw<Record<string, { nodes?: WpTestimonialNode[] } | null>>(query, {
+          limit,
+        });
+        if (!raw || raw.errors?.length || !raw.data) continue;
+
+        const nodes = raw.data[cptName]?.nodes;
+        if (!Array.isArray(nodes) || !nodes.length) continue;
+
+        const items: TestimonialItem[] = [];
+        for (const [idx, node] of nodes.entries()) {
+          const youtubeId = getTestimonialYoutubeId(node);
+          if (!youtubeId) continue;
+          const thumbnailUrl = getTestimonialThumbnailUrl(node);
+          items.push({
+            id: String(node.databaseId ?? node.slug ?? idx),
+            slug: String(node.slug ?? node.databaseId ?? idx),
+            title: node.title ?? "Client",
+            youtubeId,
+            ...(thumbnailUrl ? { thumbnailUrl } : {}),
+          });
+        }
+
+        if (items.length) return items;
+      }
+    }
+
+    return [];
+  } catch (err) {
+    console.error("[wp] getTestimonials failed:", err);
+    return [];
+  }
 }
 
 // ============================================================================
