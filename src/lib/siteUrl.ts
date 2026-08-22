@@ -1,4 +1,4 @@
-const FALLBACK_SITE_URL = "https://inomadigital.com";
+const FALLBACK_SITE_URL = process.env.SITE_URL || "http://localhost:3000";
 
 /**
  * Returns a valid absolute site URL to use in metadata/canonicals.
@@ -17,6 +17,10 @@ export function getSiteUrl(): string {
     // Normalize to no trailing slash for consistent concatenation.
     return u.toString().replace(/\/$/, "");
   } catch {
-    return FALLBACK_SITE_URL;
+    try {
+      return new URL(FALLBACK_SITE_URL).toString().replace(/\/$/, "");
+    } catch {
+      return "http://localhost:3000";
+    }
   }
 }

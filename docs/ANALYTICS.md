@@ -12,9 +12,9 @@
 | **@next/third-parties/google** | `src/app/layout.tsx` (import) |
 | **gtag** | Not found in `src`. (Only in `package-lock.json` / dependency strings, not app code.) |
 | **gtm** | `src/app/layout.tsx` (inside `GoogleTagManager` usage: `gtmId="GTM-MMSWN6S"`) |
-| **dataLayer** | Not referenced in `src`. (Used internally by `@next/third-parties` in `node_modules/@next/third-parties/dist/google/gtm.js` and in ABOUT-PAGE-PERFORMANCE-PLAN.md as documentation.) |
+| **dataLayer** | Not referenced in `src`. (Used internally by `@next/third-parties` in `node_modules/@next/third-parties/dist/google/gtm.js` and in ARCHITECTURE.md as documentation.) |
 | **facebook** | Only as link URLs, share URLs, icon names, and content copy (FooterSix, Offcanvas, Sidebar, ServiceItem, PricingComparisonTable, signatures). No Facebook Pixel or fbevents script. |
-| **fbevents** | Not found in repo. (Mentioned only in ABOUT-PAGE-PERFORMANCE-PLAN.md as “loaded via GTM”.) |
+| **fbevents** | Not found in repo. (Mentioned only in ARCHITECTURE.md as “loaded via GTM”.) |
 | **next/script** | Not imported in `src`. Used only inside `node_modules/@next/third-parties/dist/google/gtm.js` (as `script_1.default`). |
 | **Script** | No direct usage in `src`. (One match in ServiceItem.tsx is the word “JavaScript” in a string.) |
 

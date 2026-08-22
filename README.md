@@ -166,13 +166,10 @@ Optimized for Vercel. Set all environment variables in your Vercel project dashb
 
 ## Docs
 
-The `docs/` folder contains internal architecture and SEO documentation:
-- SEO architecture decisions and guidelines
-- CMS configuration notes
-- GTM and analytics audit
-- Performance audit reports
-
-These document the decisions behind the implementation and are useful for anyone maintaining or extending this project.
+The `docs/` folder contains architecture and maintenance documentation:
+- `ARCHITECTURE.md` — CMS request flow, routing audit, performance notes
+- `SEO.md` — SEO guidelines, maintenance guide, technical SEO decisions
+- `ANALYTICS.md` — GTM setup and analytics audit
 
 ---
 

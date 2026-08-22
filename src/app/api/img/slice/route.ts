@@ -46,19 +46,27 @@ function evictIfNeeded() {
   }
 }
 
+function hostnameFromEnv(input?: string): string | undefined {
+  if (!input) return undefined;
+  try {
+    return new URL(input.includes("://") ? input : `https://${input}`).hostname;
+  } catch {
+    return undefined;
+  }
+}
+
 function allowedHosts(): Set<string> {
-  const out = new Set<string>();
-  if (WP_MEDIA_DOMAIN) out.add(WP_MEDIA_DOMAIN);
+  let graphqlHost: string | undefined;
   if (WP_ENDPOINT) {
     try {
-      out.add(new URL(WP_ENDPOINT).hostname);
+      graphqlHost = new URL(WP_ENDPOINT).hostname;
     } catch {
-      // ignore
+      graphqlHost = undefined;
     }
   }
-  // Common default if env vars aren't set (safe to include only if you use this host).
-  out.add("cms.inomadigital.com");
-  return out;
+  return new Set(
+    [hostnameFromEnv(WP_MEDIA_DOMAIN), graphqlHost].filter((h): h is string => Boolean(h))
+  );
 }
 
 function pickFormat(accept: string | null): "avif" | "webp" | "jpeg" {
