@@ -471,14 +471,35 @@ function buildPostsPageResult(
   };
 }
 
-async function getPostsPaginatedOffset(page: number, perPage: number): Promise<PostsPage | null> {
+function sanitizeCategoryName(input?: string): string | undefined {
+  if (!input) return undefined;
+  const name = input.trim();
+  return name || undefined;
+}
+
+function postsWhereGraphql(opts: { withOffset?: boolean; withCategory?: boolean }): string {
+  const lines = ["orderby: { field: DATE, order: DESC }"];
+  if (opts.withOffset) {
+    lines.unshift("offsetPagination: { size: $size, offset: $offset }");
+  }
+  if (opts.withCategory) {
+    lines.push("categoryName: $categoryName");
+  }
+  return lines.join("\n          ");
+}
+
+async function getPostsPaginatedOffset(
+  page: number,
+  perPage: number,
+  categoryName?: string
+): Promise<PostsPage | null> {
   const offset = (page - 1) * perPage;
+  const withCategory = Boolean(categoryName);
   const query = `
-    query GetPostsPaginated($size: Int!, $offset: Int!) {
+    query GetPostsPaginated($size: Int!, $offset: Int!${withCategory ? ", $categoryName: String!" : ""}) {
       posts(
         where: {
-          offsetPagination: { size: $size, offset: $offset }
-          orderby: { field: DATE, order: DESC }
+          ${postsWhereGraphql({ withOffset: true, withCategory })}
         }
       ) {
         nodes { ${POST_LISTING_SELECTION} }
@@ -493,7 +514,11 @@ async function getPostsPaginatedOffset(page: number, perPage: number): Promise<P
     }
   `;
 
-  const raw = await wpFetchRaw<{ posts?: PostsConnection }>(query, { size: perPage, offset });
+  const raw = await wpFetchRaw<{ posts?: PostsConnection }>(query, {
+    size: perPage,
+    offset,
+    ...(categoryName ? { categoryName } : {}),
+  });
   if (raw?.errors?.length) return null;
 
   const conn = raw?.data?.posts;
@@ -512,33 +537,39 @@ async function getPostsPaginatedOffset(page: number, perPage: number): Promise<P
 }
 
 const POST_TOTAL_CACHE_TTL_MS = 300_000;
-let postTotalCache: { total: number; fetchedAt: number } | null = null;
+let postTotalCache: { key: string; total: number; fetchedAt: number } | null = null;
 
-const POSTS_CURSOR_PAGE_QUERY = `
-  query GetPostsCursorPage($first: Int!, $after: String) {
-    posts(
-      first: $first
-      after: $after
-      where: { orderby: { field: DATE, order: DESC } }
-    ) {
-      nodes { slug }
-      pageInfo {
-        hasNextPage
-        endCursor
+function postsCursorCountQuery(withCategory: boolean): string {
+  return `
+    query GetPostsCursorPage($first: Int!, $after: String${withCategory ? ", $categoryName: String!" : ""}) {
+      posts(
+        first: $first
+        after: $after
+        where: {
+          ${postsWhereGraphql({ withCategory })}
+        }
+      ) {
+        nodes { slug }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
       }
     }
-  }
-`;
+  `;
+}
 
-async function countPostsWithCursor(): Promise<number> {
+async function countPostsWithCursor(categoryName?: string): Promise<number> {
+  const withCategory = Boolean(categoryName);
+  const query = postsCursorCountQuery(withCategory);
   let total = 0;
   let after: string | null = null;
   let hasNextPage = true;
 
   while (hasNextPage) {
     const data: { posts?: PostsConnection } | null = await wpFetch<{ posts?: PostsConnection }>(
-      POSTS_CURSOR_PAGE_QUERY,
-      { first: 100, after }
+      query,
+      { first: 100, after, ...(categoryName ? { categoryName } : {}) }
     );
     const conn: PostsConnection | undefined = data?.posts;
     const batch = conn?.nodes ?? [];
@@ -551,15 +582,24 @@ async function countPostsWithCursor(): Promise<number> {
   return total;
 }
 
-async function getPostTotalCount(): Promise<number> {
+async function getPostTotalCount(categoryName?: string): Promise<number> {
+  const cacheKey = categoryName ?? "";
   const now = Date.now();
-  if (postTotalCache && now - postTotalCache.fetchedAt < POST_TOTAL_CACHE_TTL_MS) {
+  if (
+    postTotalCache &&
+    postTotalCache.key === cacheKey &&
+    now - postTotalCache.fetchedAt < POST_TOTAL_CACHE_TTL_MS
+  ) {
     return postTotalCache.total;
   }
 
+  const withCategory = Boolean(categoryName);
   const totalQuery = `
-    query GetPostTotal {
-      posts(where: { offsetPagination: { size: 1, offset: 0 } }) {
+    query GetPostTotal${withCategory ? "($categoryName: String!)" : ""} {
+      posts(where: {
+        offsetPagination: { size: 1, offset: 0 }
+        ${withCategory ? "categoryName: $categoryName" : ""}
+      }) {
         pageInfo {
           offsetPagination {
             total
@@ -568,29 +608,41 @@ async function getPostTotalCount(): Promise<number> {
       }
     }
   `;
-  const raw = await wpFetchRaw<{ posts?: PostsConnection }>(totalQuery);
+  const raw = await wpFetchRaw<{ posts?: PostsConnection }>(
+    totalQuery,
+    categoryName ? { categoryName } : undefined
+  );
   const offsetTotal = raw?.data?.posts?.pageInfo?.offsetPagination?.total;
   const total =
-    typeof offsetTotal === "number" && offsetTotal >= 0 ? offsetTotal : await countPostsWithCursor();
+    typeof offsetTotal === "number" && offsetTotal >= 0
+      ? offsetTotal
+      : await countPostsWithCursor(categoryName);
 
-  postTotalCache = { total, fetchedAt: now };
+  postTotalCache = { key: cacheKey, total, fetchedAt: now };
   return total;
 }
 
-async function getPostsPaginatedCursor(page: number, perPage: number): Promise<PostsPage> {
+async function getPostsPaginatedCursor(
+  page: number,
+  perPage: number,
+  categoryName?: string
+): Promise<PostsPage> {
   if (process.env.NODE_ENV !== "production") {
     console.warn("[getPostsPaginated] offsetPagination unavailable; using cursor fallback");
   }
 
-  const total = await getPostTotalCount();
+  const total = await getPostTotalCount(categoryName);
   const totalPages = Math.max(1, Math.ceil(total / perPage));
+  const withCategory = Boolean(categoryName);
 
   const query = `
-    query GetPostsCursorPage($first: Int!, $after: String) {
+    query GetPostsCursorPage($first: Int!, $after: String${withCategory ? ", $categoryName: String!" : ""}) {
       posts(
         first: $first
         after: $after
-        where: { orderby: { field: DATE, order: DESC } }
+        where: {
+          ${postsWhereGraphql({ withCategory })}
+        }
       ) {
         nodes { ${POST_LISTING_SELECTION} }
         pageInfo {
@@ -609,6 +661,7 @@ async function getPostsPaginatedCursor(page: number, perPage: number): Promise<P
     const data: { posts?: PostsConnection } | null = await wpFetch<{ posts?: PostsConnection }>(query, {
       first: perPage,
       after,
+      ...(categoryName ? { categoryName } : {}),
     });
     const conn: PostsConnection | undefined = data?.posts;
     nodes = conn?.nodes ?? [];
@@ -635,14 +688,19 @@ async function getPostsPaginatedCursor(page: number, perPage: number): Promise<P
   return buildPostsPageResult(nodes, page, perPage, total, page < totalPages, page > 1);
 }
 
-export async function getPostsPaginated(page = 1, perPage = 12): Promise<PostsPage> {
+export async function getPostsPaginated(
+  page = 1,
+  perPage = 12,
+  categoryName?: string
+): Promise<PostsPage> {
   const safePage = Math.max(1, Math.floor(page) || 1);
   const safePerPage = Math.max(1, Math.floor(perPage) || 12);
+  const safeCategoryName = sanitizeCategoryName(categoryName);
 
-  const offsetResult = await getPostsPaginatedOffset(safePage, safePerPage);
+  const offsetResult = await getPostsPaginatedOffset(safePage, safePerPage, safeCategoryName);
   if (offsetResult) return offsetResult;
 
-  return getPostsPaginatedCursor(safePage, safePerPage);
+  return getPostsPaginatedCursor(safePage, safePerPage, safeCategoryName);
 }
 
 export async function getPost(slug: string): Promise<Post | null> {
@@ -800,28 +858,33 @@ export async function getFeaturedPortfolios(limit = 5): Promise<PortfolioItem[]>
 export type Category = { slug: string; name: string; count?: number };
 
 export async function getCategories(): Promise<Category[]> {
-  const data = await wpFetch<{
-    categories: { nodes: WpCategoryNode[] };
-  }>(
-    `
-    query GetCategories {
-      categories(first: 50, where: {hideEmpty: true}) {
-        nodes {
-          slug
-          name
-          count
+  try {
+    const data = await wpFetch<{
+      categories: { nodes: WpCategoryNode[] };
+    }>(
+      `
+      query GetCategories {
+        categories(first: 50, where: {hideEmpty: true}) {
+          nodes {
+            slug
+            name
+            count
+          }
         }
       }
-    }
-    `
-  );
+      `
+    );
 
-  if (!data?.categories?.nodes) return [];
-  return data.categories.nodes.map((c) => ({
-    slug: c.slug ?? "",
-    name: c.name ?? "",
-    count: c.count ?? undefined,
-  }));
+    if (!data?.categories?.nodes) return [];
+    return data.categories.nodes.map((c) => ({
+      slug: c.slug ?? "",
+      name: c.name ?? "",
+      count: c.count ?? undefined,
+    }));
+  } catch {
+    console.warn("[wp] getCategories failed, returning []");
+    return [];
+  }
 }
 
 export async function getPortfolioItems(limit = 200): Promise<PortfolioItem[]> {

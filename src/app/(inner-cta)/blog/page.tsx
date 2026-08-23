@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import BlogArea from "@/components/pages/blog/BlogArea";
 import Cta from "@/components/common/Cta";
-import { getPostsPaginated } from "@/lib/wp";
+import { blogListingHref } from "@/components/common/BlogPagination";
+import { getPostsPaginated, getCategories, type PostsPage } from "@/lib/wp";
 
 export const revalidate = 300;
 
@@ -15,20 +16,29 @@ function parsePageParam(raw?: string): number {
   return parsed;
 }
 
+function parseCategoryParam(raw?: string): string | undefined {
+  if (!raw) return undefined;
+  const slug = raw.trim().toLowerCase();
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) return undefined;
+  return slug;
+}
+
 type BlogPageProps = {
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<{ page?: string; category?: string }>;
 };
 
 export async function generateMetadata({ searchParams }: BlogPageProps): Promise<Metadata> {
-  const { page: pageParam } = await searchParams;
+  const { page: pageParam, category: categoryParam } = await searchParams;
   const page = parsePageParam(pageParam);
+  const category = parseCategoryParam(categoryParam);
+  const canonical = blogListingHref(page, category);
 
   if (page <= 1) {
     return {
       title: "Blog",
       description:
         "Explore practical articles on digital strategy, marketing tips, SEO trends, development guides, and business growth to help teams make smarter decisions.",
-      alternates: { canonical: "/blog" },
+      alternates: { canonical },
     };
   }
 
@@ -36,26 +46,52 @@ export async function generateMetadata({ searchParams }: BlogPageProps): Promise
     title: `Blog — Page ${page}`,
     description:
       "Explore practical articles on digital strategy, marketing tips, SEO trends, development guides, and business growth to help teams make smarter decisions.",
-    alternates: { canonical: `/blog?page=${page}` },
+    alternates: { canonical },
     robots: { index: false, follow: true },
   };
 }
 
 export default async function BlogPage({ searchParams }: BlogPageProps) {
-  const { page: pageParam } = await searchParams;
+  const { page: pageParam, category: categoryParam } = await searchParams;
   const page = parsePageParam(pageParam);
+  const category = parseCategoryParam(categoryParam);
 
   if (pageParam === "1") {
-    redirect("/blog");
+    redirect(blogListingHref(1, category));
   }
 
-  const result = await getPostsPaginated(page, PER_PAGE);
+  const [categoriesResult] = await Promise.allSettled([getCategories()]);
+  const categories = categoriesResult.status === "fulfilled" ? categoriesResult.value : [];
+
+  const [postsResult] = await Promise.allSettled([
+    getPostsPaginated(page, PER_PAGE, category),
+  ]);
+
+  const emptyPage: PostsPage = {
+    posts: [],
+    page: 1,
+    perPage: PER_PAGE,
+    total: 0,
+    totalPages: 0,
+    hasPreviousPage: false,
+    hasNextPage: false,
+  };
+  const result = postsResult.status === "fulfilled" ? postsResult.value : emptyPage;
 
   if (result.total > 0 && page > result.totalPages) {
     notFound();
   }
 
   if (page > 1 && result.posts.length === 0) {
+    notFound();
+  }
+
+  if (
+    category &&
+    categories.length > 0 &&
+    result.posts.length === 0 &&
+    result.total === 0
+  ) {
     notFound();
   }
 
@@ -80,6 +116,8 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
       </section>
       <BlogArea
         posts={result.posts}
+        categories={categories}
+        activeCategory={category}
         pagination={
           result.totalPages > 1
             ? { currentPage: result.page, totalPages: result.totalPages }

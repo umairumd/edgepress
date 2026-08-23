@@ -4,11 +4,15 @@ import { IconArrowLeft, IconArrowRight } from "@/components/icons";
 type BlogPaginationProps = {
   currentPage: number;
   totalPages: number;
+  category?: string;
 };
 
-function blogPageHref(page: number): string {
-  if (page <= 1) return "/blog";
-  return `/blog?page=${page}`;
+export function blogListingHref(page: number, category?: string): string {
+  const params = new URLSearchParams();
+  if (category) params.set("category", category);
+  if (page > 1) params.set("page", String(page));
+  const query = params.toString();
+  return query ? `/blog?${query}` : "/blog";
 }
 
 function getPageNumbers(currentPage: number, totalPages: number): (number | "ellipsis")[] {
@@ -31,7 +35,7 @@ function getPageNumbers(currentPage: number, totalPages: number): (number | "ell
   return result;
 }
 
-const BlogPagination = ({ currentPage, totalPages }: BlogPaginationProps) => {
+const BlogPagination = ({ currentPage, totalPages, category }: BlogPaginationProps) => {
   if (totalPages <= 1) return null;
 
   const pageNumbers = getPageNumbers(currentPage, totalPages);
@@ -45,7 +49,7 @@ const BlogPagination = ({ currentPage, totalPages }: BlogPaginationProps) => {
           {hasPrevious ? (
             <Link
               className="td-blog-pagenation-nav"
-              href={blogPageHref(currentPage - 1)}
+              href={blogListingHref(currentPage - 1, category)}
               aria-label="Previous page"
             >
               <IconArrowLeft aria-hidden="true" />
@@ -71,7 +75,7 @@ const BlogPagination = ({ currentPage, totalPages }: BlogPaginationProps) => {
                   {item}
                 </span>
               ) : (
-                <Link href={blogPageHref(item)} aria-label={`Page ${item}`}>
+                <Link href={blogListingHref(item, category)} aria-label={`Page ${item}`}>
                   {item}
                 </Link>
               )}
@@ -83,7 +87,7 @@ const BlogPagination = ({ currentPage, totalPages }: BlogPaginationProps) => {
           {hasNext ? (
             <Link
               className="td-blog-pagenation-nav"
-              href={blogPageHref(currentPage + 1)}
+              href={blogListingHref(currentPage + 1, category)}
               aria-label="Next page"
             >
               <span>Next</span>

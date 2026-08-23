@@ -1,62 +1,64 @@
 "use client";
-import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Post } from "@/lib/wp";
+import { useRouter } from "next/navigation";
+import { Post, Category } from "@/lib/wp";
 import Image from "next/image";
 import BlogPagination from "@/components/common/BlogPagination";
-import { formatDate, slugToLabel } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 
 type BlogAreaProps = {
     posts?: Post[];
+    categories?: Category[];
+    activeCategory?: string;
     pagination?: { currentPage: number; totalPages: number };
 };
 
-const toFilterSlug = (input?: string) =>
-    (input || "")
-        .trim()
-        .toLowerCase()
-        .replace(/\s+/g, "-")
-        .replace(/[^a-z0-9-]/g, "")
-        .trim();
-
-const postCategorySlugs = (post: Post): string[] => {
-    const fromTerms = post.categories?.map((c) => c.slug).filter(Boolean) ?? [];
-    if (fromTerms.length) return fromTerms.map(toFilterSlug).filter(Boolean);
-    const fallback = toFilterSlug(post.category);
-    return fallback ? [fallback] : [];
-};
-
-const BlogArea = ({ posts, pagination }: BlogAreaProps) => {
-    const [selectedFilter, setSelectedFilter] = useState("*");
+const BlogArea = ({ posts, categories = [], activeCategory, pagination }: BlogAreaProps) => {
+    const router = useRouter();
 
     const items =
         posts && posts.length
-            ? posts.map((p) => ({
-                  slug: p.slug,
-                  thumb: p.featuredImage?.url ?? "/assets/img/blog/thumb.jpg",
-                  title: p.title,
-                  tag: p.category ?? "Blog",
-                  date: formatDate(p.date, "upper-short"),
-                  categorySlugs: postCategorySlugs(p),
-              }))
+            ? posts.map((p) => {
+                  const matched =
+                      activeCategory && p.categories?.length
+                          ? p.categories.find((c) => c.slug === activeCategory)
+                          : undefined;
+                  return {
+                      slug: p.slug,
+                      thumb: p.featuredImage?.url ?? "/assets/img/blog/thumb.jpg",
+                      title: p.title,
+                      tag: matched?.name ?? p.categories?.[0]?.name ?? p.category ?? "Blog",
+                      date: formatDate(p.date, "upper-short"),
+                  };
+              })
             : [];
-
-    const categorySlugs = useMemo(() => {
-        const unique = new Set<string>();
-        for (const item of items) {
-            for (const slug of item.categorySlugs) unique.add(slug);
-        }
-        return Array.from(unique).sort((a, b) => slugToLabel(a).localeCompare(slugToLabel(b)));
-    }, [items]);
-
-    const visibleItems =
-        selectedFilter === "*"
-            ? items
-            : items.filter((item) => item.categorySlugs.includes(selectedFilter));
 
     return (
         <div className="td-blog-area pt-0 pb-100">
             <div className="container">
+                {categories.length > 0 ? (
+                    <div className="row">
+                        <div className="col-lg-12 mb-50">
+                            <div className="td-blog-filter-btn text-center masonary-menu">
+                                <button
+                                    className={`${!activeCategory ? "is-checked active" : ""}`}
+                                    onClick={() => router.push("/blog")}
+                                >
+                                    All
+                                </button>
+                                {categories.map((category) => (
+                                    <button
+                                        key={category.slug}
+                                        className={`${activeCategory === category.slug ? "is-checked active" : ""}`}
+                                        onClick={() => router.push(`/blog?category=${category.slug}`)}
+                                    >
+                                        {category.name}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                ) : null}
                 {!items.length ? (
                     <div className="row">
                         <div className="col-12">
@@ -67,32 +69,8 @@ const BlogArea = ({ posts, pagination }: BlogAreaProps) => {
                         </div>
                     </div>
                 ) : (
-                    <>
-                        {categorySlugs.length > 0 ? (
-                            <div className="row">
-                                <div className="col-lg-12 mb-50">
-                                    <div className="td-blog-filter-btn text-center masonary-menu">
-                                        <button
-                                            className={`${selectedFilter === "*" ? "is-checked active" : ""}`}
-                                            onClick={() => setSelectedFilter("*")}
-                                        >
-                                            All
-                                        </button>
-                                        {categorySlugs.map((slug) => (
-                                            <button
-                                                key={slug}
-                                                className={`${selectedFilter === slug ? "is-checked active" : ""}`}
-                                                onClick={() => setSelectedFilter(slug)}
-                                            >
-                                                {slugToLabel(slug)}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        ) : null}
-                        <div className="row">
-                            {visibleItems.map((item, idx) => (
+                    <div className="row">
+                        {items.map((item, idx) => (
                             <div key={item.slug + idx} className="col-xl-4 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay=".5s" data-wow-duration="1s">
                                 <div className="td-blog-wrap mb-60">
                                     <div className="td-blog-thumb fix mb-25">
@@ -124,14 +102,14 @@ const BlogArea = ({ posts, pagination }: BlogAreaProps) => {
                                     </div>
                                 </div>
                             </div>
-                            ))}
-                        </div>
-                    </>
+                        ))}
+                    </div>
                 )}
                 {pagination && (
                     <BlogPagination
                         currentPage={pagination.currentPage}
                         totalPages={pagination.totalPages}
+                        category={activeCategory}
                     />
                 )}
             </div>

@@ -57,9 +57,9 @@ export default async function HomePage() {
                 <About />
                 <Service />
                 <Portfolio items={featuredPortfolios} />
-                <VideoTestimonialsCarousel testimonials={videoTestimonials} />
                 <VideoArea />
                 <Pricing />
+                <VideoTestimonialsCarousel testimonials={videoTestimonials} />
                 <Testimonial testimonials={testimonials} />
                 <Choose />
                 <Team members={teamMembers} />

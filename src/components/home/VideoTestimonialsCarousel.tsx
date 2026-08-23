@@ -9,15 +9,20 @@ type Props = {
     testimonials: TestimonialItem[];
 };
 
-const SLIDE_WIDTH = 360;
-
 const VideoTestimonialsCarousel = ({ testimonials }: Props) => {
     const { openVideo } = useVideoPopup();
 
     if (!testimonials.length) return null;
 
+    const slides =
+        testimonials.length < 5
+            ? Array.from({ length: Math.ceil(5 / testimonials.length) })
+                  .flatMap(() => testimonials)
+                  .slice(0, testimonials.length * Math.ceil(5 / testimonials.length))
+            : testimonials;
+
     const setting = {
-        loop: testimonials.length > 1,
+        loop: true,
         slidesPerView: "auto" as const,
         spaceBetween: 24,
         speed: 4000,
@@ -29,18 +34,27 @@ const VideoTestimonialsCarousel = ({ testimonials }: Props) => {
     };
 
     return (
-        <section className="td-video-testimonials">
+        <section className="td-video-testimonials pt-80 pb-60">
             <div className="td-video-testimonials__wrap">
+                <div className="container">
+                    <div className="row justify-content-center">
+                        <div className="col-xxl-8 col-xl-9 col-lg-10">
+                            <div className="text-center mb-65">
+                                <span className="td-section-6-subtitle d-inline-block mb-15">WHAT OUR CLIENTS SAY</span>
+                                <h2 className="td-section-6-bigtitle td-text-opacity">SUCCESS STORIES</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <Swiper {...setting} modules={[Autoplay]} className="td-video-testimonials__slider">
-                    {testimonials.map((item) => {
+                    {slides.map((item, idx) => {
                         const thumbSrc =
                             item.thumbnailUrl ||
                             `https://img.youtube.com/vi/${item.youtubeId}/hqdefault.jpg`;
                         return (
                             <SwiperSlide
-                                key={item.id}
+                                key={`${item.id}-${idx}`}
                                 className="td-video-testimonials__slide"
-                                style={{ width: SLIDE_WIDTH }}
                             >
                                 <button
                                     type="button"
@@ -52,9 +66,9 @@ const VideoTestimonialsCarousel = ({ testimonials }: Props) => {
                                         <Image
                                             src={thumbSrc}
                                             alt=""
-                                            width={640}
-                                            height={360}
-                                            sizes={`${SLIDE_WIDTH}px`}
+                                            width={220}
+                                            height={391}
+                                            sizes="(max-width: 767px) 160px, (max-width: 1199px) 180px, 220px"
                                             unoptimized={
                                                 process.env.NODE_ENV !== "production" &&
                                                 thumbSrc.startsWith("http")
