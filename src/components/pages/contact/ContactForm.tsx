@@ -16,6 +16,7 @@ const ContactForm = () => {
         subject: "",
         phone: "",
         message: "",
+        website: "",
     });
 
     // Pre-fill email from URL parameter (from footer form redirect)
@@ -59,7 +60,7 @@ const ContactForm = () => {
 
             setStatus("success");
             // Reset form on success
-            setFormData({ name: "", email: "", subject: "", phone: "", message: "" });
+            setFormData({ name: "", email: "", subject: "", phone: "", message: "", website: "" });
         } catch {
             setStatus("error");
             setErrorMessage("Unable to send your message. Please try again later or contact us directly.");
@@ -68,6 +69,22 @@ const ContactForm = () => {
 
     return (
         <form onSubmit={handleSubmit}>
+            <div style={{
+                position: "absolute",
+                left: "-9999px",
+                width: "1px",
+                height: "1px",
+                overflow: "hidden"
+            }} aria-hidden="true">
+                <input
+                    type="text"
+                    name="website"
+                    value={formData.website}
+                    onChange={handleChange}
+                    tabIndex={-1}
+                    autoComplete="off"
+                />
+            </div>
             <div className="row">
                 <div className="col-lg-6">
                     <div className="td-contact-7-input-item mb-25">

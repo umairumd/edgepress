@@ -22,18 +22,80 @@ interface ContactFormData {
     subject?: string;
     phone?: string;
     message: string;
+    website?: string;
+}
+
+const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+const RATE_LIMIT_MAX = 3; // max 3 submissions per IP per hour
+
+interface RateLimitEntry {
+    count: number;
+    resetAt: number;
+}
+
+const rateLimitMap = new Map<string, RateLimitEntry>();
+
+function getClientIp(request: NextRequest): string {
+    return (
+        request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+        request.headers.get("x-real-ip") ||
+        "unknown"
+    );
+}
+
+function isRateLimited(ip: string): boolean {
+    const now = Date.now();
+    const entry = rateLimitMap.get(ip);
+
+    if (!entry || now > entry.resetAt) {
+        rateLimitMap.set(ip, {
+            count: 1,
+            resetAt: now + RATE_LIMIT_WINDOW_MS
+        });
+        return false;
+    }
+
+    if (entry.count >= RATE_LIMIT_MAX) {
+        return true;
+    }
+
+    entry.count++;
+    return false;
+}
+
+// Periodically clean up expired entries to prevent
+// memory growth on long-lived instances
+function cleanupRateLimit(): void {
+    const now = Date.now();
+    for (const [ip, entry] of rateLimitMap.entries()) {
+        if (now > entry.resetAt) rateLimitMap.delete(ip);
+    }
 }
 
 export async function POST(request: NextRequest) {
     try {
+        const body: ContactFormData = await request.json();
+
+        if (body.website && body.website.trim() !== "") {
+            // Bot filled the honeypot — silently succeed
+            return NextResponse.json({ success: true });
+        }
+
+        cleanupRateLimit();
+        const clientIp = getClientIp(request);
+        if (isRateLimited(clientIp)) {
+            return NextResponse.json(
+                { error: "Too many submissions. Please wait before trying again." },
+                { status: 429 }
+            );
+        }
+
         if (!RECIPIENT_EMAIL || !FROM_EMAIL) {
             return NextResponse.json(
                 { error: "Contact email is not configured. Set CONTACT_TO_EMAIL and CONTACT_FROM_EMAIL." },
                 { status: 500 }
             );
         }
-
-        const body: ContactFormData = await request.json();
 
         // Validate required fields
         if (!body.name?.trim() || !body.email?.trim() || !body.message?.trim()) {
