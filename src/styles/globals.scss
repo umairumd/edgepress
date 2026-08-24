@@ -3148,14 +3148,22 @@ main.td-has-cta-footer + footer .td-footer-area {
   font-size: 14px;
   margin-top: 12px;
 }
-.td-maintenance-geometry {
+.td-maintenance-gear {
   position: absolute;
-  right: -60px;
-  bottom: -60px;
-  width: 300px;
-  height: 300px;
-  opacity: 0.08;
+  right: -40px;
+  bottom: -40px;
+  width: 220px;
+  height: 220px;
+  color: rgba(255, 255, 255, 0.12);
   pointer-events: none;
   z-index: 1;
-  filter: brightness(10);
+  animation: td-gear-spin 12s linear infinite;
+}
+.td-maintenance-gear svg {
+  width: 100%;
+  height: 100%;
+}
+@keyframes td-gear-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }

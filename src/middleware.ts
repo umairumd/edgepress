@@ -4,7 +4,7 @@ const REDIRECT_API_URL = process.env.WP_REDIRECTS_API_URL || "";
 const CACHE_TTL_MS = 300_000;
 
 const MAINTENANCE_COOKIE = "inoma_bypass";
-const MAINTENANCE_CACHE_MS = 60_000; // 1 min
+const MAINTENANCE_CACHE_MS = 10_000; // 10 seconds
 let _maintenanceSettings: {
   active: boolean;
   password: string;
