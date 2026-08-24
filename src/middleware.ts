@@ -27,7 +27,7 @@ async function getMaintenanceStatus(): Promise<{
   }
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_SITE_URL ?? "https://inomadigital.com"}/api/maintenance-settings`,
+      `${process.env.SITE_URL ?? "https://inomadigital.com"}/api/maintenance-settings`,
       { cache: "no-store", signal: AbortSignal.timeout(3000) }
     );
     if (res.ok) {
