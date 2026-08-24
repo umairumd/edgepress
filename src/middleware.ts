@@ -3,8 +3,47 @@ import { NextRequest, NextResponse } from "next/server";
 const REDIRECT_API_URL = process.env.WP_REDIRECTS_API_URL || "";
 const CACHE_TTL_MS = 300_000;
 
+const MAINTENANCE_COOKIE = "inoma_bypass";
+const MAINTENANCE_CACHE_MS = 60_000; // 1 min
+let _maintenanceSettings: {
+  active: boolean;
+  password: string;
+} | null = null;
+let _maintenanceLastFetch = 0;
+
 let redirectCache: Record<string, { target: string; type: number }> | null = null;
 let lastFetch = 0;
+
+async function getMaintenanceStatus(): Promise<{
+  active: boolean;
+  password: string;
+}> {
+  const now = Date.now();
+  if (
+    _maintenanceSettings !== null &&
+    now - _maintenanceLastFetch < MAINTENANCE_CACHE_MS
+  ) {
+    return _maintenanceSettings;
+  }
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_SITE_URL ?? "https://inomadigital.com"}/api/maintenance-settings`,
+      { cache: "no-store", signal: AbortSignal.timeout(3000) }
+    );
+    if (res.ok) {
+      const data = await res.json();
+      _maintenanceSettings = {
+        active: Boolean(data.maintenanceActive),
+        password: String(data.maintenancePassword ?? ""),
+      };
+      _maintenanceLastFetch = now;
+      return _maintenanceSettings;
+    }
+  } catch {
+    // On failure keep last known state or default off
+  }
+  return _maintenanceSettings ?? { active: false, password: "" };
+}
 
 async function getRedirectMap(): Promise<Record<string, { target: string; type: number }> | null> {
   if (!REDIRECT_API_URL) return null;
@@ -28,6 +67,26 @@ async function getRedirectMap(): Promise<Record<string, { target: string; type: 
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
+
+  // Skip maintenance check for these paths
+  const isExempt =
+    pathname === "/maintenance" ||
+    pathname.startsWith("/api/") ||
+    pathname.startsWith("/_next") ||
+    pathname.includes(".");
+
+  if (!isExempt) {
+    const { active, password } = await getMaintenanceStatus();
+
+    if (active) {
+      const bypassCookie = request.cookies.get(MAINTENANCE_COOKIE);
+      const hasValidBypass = password && bypassCookie?.value === password;
+
+      if (!hasValidBypass) {
+        return NextResponse.redirect(new URL("/maintenance", request.url));
+      }
+    }
+  }
 
   // 1. Host normalization (if present) — none in this middleware; add above trailing-slash if needed.
 
