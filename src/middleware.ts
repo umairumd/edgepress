@@ -4,15 +4,38 @@ const REDIRECT_API_URL = process.env.WP_REDIRECTS_API_URL || "";
 const CACHE_TTL_MS = 300_000;
 
 const MAINTENANCE_COOKIE = "inoma_bypass";
-const MAINTENANCE_CACHE_MS = 10_000; // 10 seconds
+const WP_ENDPOINT = process.env.WP_GRAPHQL_ENDPOINT ?? "";
+const MAINTENANCE_QUERY = JSON.stringify({
+  query: `{
+    page(id: "maintenance-settings", idType: URI) {
+      siteSettings {
+        maintenanceActive
+        maintenancePassword
+      }
+    }
+  }`,
+});
+
 let _maintenanceSettings: {
   active: boolean;
   password: string;
 } | null = null;
 let _maintenanceLastFetch = 0;
+const MAINTENANCE_CACHE_MS = 10_000;
 
 let redirectCache: Record<string, { target: string; type: number }> | null = null;
 let lastFetch = 0;
+
+type MaintenanceGqlResponse = {
+  data?: {
+    page?: {
+      siteSettings?: {
+        maintenanceActive?: boolean;
+        maintenancePassword?: string;
+      } | null;
+    } | null;
+  } | null;
+};
 
 async function getMaintenanceStatus(): Promise<{
   active: boolean;
@@ -25,29 +48,41 @@ async function getMaintenanceStatus(): Promise<{
   ) {
     return _maintenanceSettings;
   }
-  try {
-    const baseUrl = process.env.SITE_URL
-      ?? (process.env.VERCEL_URL
-        ? `https://${process.env.VERCEL_URL}`
-        : "http://localhost:3000");
 
-    const res = await fetch(
-      `${baseUrl}/api/maintenance-settings`,
-      { cache: "no-store",
-        signal: AbortSignal.timeout(3000) }
-    );
+  if (!WP_ENDPOINT) {
+    return _maintenanceSettings ?? { active: false, password: "" };
+  }
+
+  try {
+    const res = await fetch(WP_ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: MAINTENANCE_QUERY,
+      cache: "no-store",
+      signal: AbortSignal.timeout(4000),
+    });
+
     if (res.ok) {
-      const data = await res.json();
-      _maintenanceSettings = {
-        active: Boolean(data.maintenanceActive),
-        password: String(data.maintenancePassword ?? ""),
-      };
-      _maintenanceLastFetch = now;
-      return _maintenanceSettings;
+      const json = (await res.json()) as MaintenanceGqlResponse;
+      const s = json?.data?.page?.siteSettings;
+
+      // Only update cache on valid response
+      if (s !== undefined) {
+        _maintenanceSettings = {
+          active: Boolean(s?.maintenanceActive),
+          password: String(s?.maintenancePassword ?? ""),
+        };
+        _maintenanceLastFetch = now;
+      }
     }
   } catch {
-    // On failure keep last known state or default off
+    // On failure: keep last known state
+    // Do not update _maintenanceLastFetch so
+    // next request retries immediately
   }
+
   return _maintenanceSettings ?? { active: false, password: "" };
 }
 

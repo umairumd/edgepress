@@ -6,11 +6,16 @@ export const revalidate = 60;
 export async function GET() {
   try {
     const settings = await getSiteSettings();
-    return NextResponse.json(settings);
+    return NextResponse.json({
+      maintenanceActive: settings.maintenanceActive,
+      maintenancePassword: settings.maintenancePassword,
+    });
   } catch {
+    // Return 503 so middleware knows this is
+    // an error, not a real "off" state
     return NextResponse.json(
-      { maintenanceActive: false, maintenancePassword: "" },
-      { status: 200 }
+      { error: "unavailable" },
+      { status: 503 }
     );
   }
 }
