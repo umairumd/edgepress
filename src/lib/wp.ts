@@ -341,6 +341,35 @@ function isMissingExcerptField(errors?: Array<{ message?: string }>) {
   return errors.some((e) => (e.message || "").includes('Cannot query field "excerpt"'));
 }
 
+export interface SiteSettings {
+  maintenanceActive: boolean;
+  maintenancePassword: string;
+}
+
+export async function getSiteSettings(): Promise<SiteSettings> {
+  const data = await wpFetch<{
+    page: {
+      siteSettings: {
+        maintenanceActive: boolean;
+        maintenancePassword: string;
+      };
+    } | null;
+  }>(
+    `query GetSiteSettings {
+      page(id: "maintenance-settings", idType: URI) {
+        siteSettings {
+          maintenanceActive
+          maintenancePassword
+        }
+      }
+    }`
+  );
+  return {
+    maintenanceActive: data?.page?.siteSettings?.maintenanceActive ?? false,
+    maintenancePassword: data?.page?.siteSettings?.maintenancePassword ?? "",
+  };
+}
+
 export async function getPosts(limit = 12): Promise<Post[]> {
   const baseSelection = `
     slug
