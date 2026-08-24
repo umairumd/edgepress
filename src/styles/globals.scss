@@ -1430,6 +1430,13 @@ img {
     font-size: 58px; /* slightly larger */
     line-height: 1;
     color: #1c1d1f;
+    width: 56px;
+    height: 56px;
+}
+.td-services-cards-area .td-services-cards-icon img {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
 }
 
 /* Blog listing: typography-first hero (no hero image) */

@@ -24,14 +24,14 @@ export default function ServicesCards({ services = [] }: ServicesCardsProps) {
                 aria-label={`Learn more about ${item.title}`}
               >
                 <div className="td-service-process-item">
-                  <span className="icons mb-60 d-flex align-items-start justify-content-between">
+                  <span className="icons mb-40 d-flex align-items-start justify-content-between">
                     <span className="td-services-cards-icon" aria-hidden="true">
                       {item.iconUrl ? (
                         <img
                           src={item.iconUrl}
                           alt=""
-                          width={48}
-                          height={48}
+                          width={56}
+                          height={56}
                           style={{ objectFit: "contain" }}
                           aria-hidden="true"
                         />
