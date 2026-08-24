@@ -1,36 +1,11 @@
 import Link from "next/link";
-import type { JSX } from "react";
+import type { ServiceListItem } from "@/lib/wp";
 
-interface DataType {
-    id: number;
-    title: JSX.Element;
-    desc: string;
+interface ServiceProps {
+    services: ServiceListItem[];
 }
 
-const service_data: DataType[] = [
-    {
-        id: 1,
-        title: (<>Digital Marketing</>),
-        desc: "Campaigns built to drive measurable growth across channels."
-    },
-    {
-        id: 2,
-        title: (<>Graphics Designing</>),
-        desc: "Clear, consistent visuals that strengthen your brand presence."
-    },
-    {
-        id: 3,
-        title: (<>SEO Services</>),
-        desc: "Sustainable search visibility that compounds over time."
-    },
-    {
-        id: 4,
-        title: (<>Web Development</>),
-        desc: "Fast, scalable websites built for performance and conversion."
-    },
-];
-
-const Service = () => {
+export default function Service({ services }: ServiceProps) {
     return (
         <div className="td-service-6-area">
             <div className="container">
@@ -52,35 +27,37 @@ const Service = () => {
                         </div>
                     </div>
                     <div className="col-12 pt-55">
-                        {service_data.map((item, i) => (
-                            <div key={item.id} className="td-service-6-item">
-                                <div className="row">
-                                    <div className="col-lg-5">
-                                        <div className="td-service-6-item-title mb-15">
-                                            <span className="d-inline-block mr-80">0{i + 1}</span>
-                                            <h3>{item.title}</h3>
-                                        </div>
-                                    </div>
-                                    <div className="col-lg-5">
-                                        <div className="td-service-6-text mb-15">
-                                            <p>{item.desc}</p>
-                                        </div>
-                                    </div>
-                                    <div className="col-lg-2">
-                                        <div className="td-service-6-btn text-lg-center mb-15">
-                                            <Link href="/service" aria-label="View services">
-                                                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M1 13L13 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                                    <path d="M1 1H13V13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                                </svg>
-                                            </Link>
+                        <div className="row">
+                            {services.map((item, i) => (
+                                <div key={item.id} className="col-lg-6">
+                                    <div className="td-service-6-item">
+                                        <div className="row">
+                                            <div className="col-8">
+                                                <div className="td-service-6-item-title mb-15">
+                                                    <span className="d-inline-block mr-30">0{i + 1}</span>
+                                                    <h3>{item.title}</h3>
+                                                </div>
+                                                <div className="td-service-6-text mb-15">
+                                                    <p>{item.excerpt}</p>
+                                                </div>
+                                            </div>
+                                            <div className="col-4">
+                                                <div className="td-service-6-btn text-lg-end mb-15">
+                                                    <Link href={`/services/${item.slug}`} aria-label={`View ${item.title}`}>
+                                                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M1 13L13 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                                            <path d="M1 1H13V13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                                        </svg>
+                                                    </Link>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                         <div className="d-flex justify-content-center mt-50">
-                            <Link className="td-btn-12 td-home-services-cta" href="/service">
+                            <Link className="td-btn-12 td-home-services-cta" href="/services">
                                 Explore All Services
                             </Link>
                         </div>
@@ -88,7 +65,5 @@ const Service = () => {
                 </div>
             </div>
         </div>
-    )
+    );
 }
-
-export default Service;

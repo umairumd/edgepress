@@ -20,7 +20,7 @@ const menu_data: MenuItem[] = [
     {
         id: 3,
         title: "Services",
-        link: "/service",
+        link: "/services",
         has_dropdown: false,
     },
     {

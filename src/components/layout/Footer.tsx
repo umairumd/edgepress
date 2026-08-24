@@ -55,7 +55,7 @@ const Footer = ({ style }: FooterProps = {}) => {
                             <div className="td-footer-widget ml-80 mb-30">
                                 <h3 className="td-footer-title mb-30">Quick Links</h3>
                                 <ul className="td-footer-widget-list">
-                                    <li><Link href="/service">All Services</Link></li>
+                                    <li><Link href="/services">All Services</Link></li>
                                     <li><Link href="/pricing">Pricing</Link></li>
                                     <li><Link href="/blog">Blog</Link></li>
                                     <li><Link href="/privacy-policy">Privacy Policy</Link></li>
