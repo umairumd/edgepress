@@ -26,9 +26,15 @@ async function getMaintenanceStatus(): Promise<{
     return _maintenanceSettings;
   }
   try {
+    const baseUrl = process.env.SITE_URL
+      ?? (process.env.VERCEL_URL
+        ? `https://${process.env.VERCEL_URL}`
+        : "http://localhost:3000");
+
     const res = await fetch(
-      `${process.env.SITE_URL ?? "https://inomadigital.com"}/api/maintenance-settings`,
-      { cache: "no-store", signal: AbortSignal.timeout(3000) }
+      `${baseUrl}/api/maintenance-settings`,
+      { cache: "no-store",
+        signal: AbortSignal.timeout(3000) }
     );
     if (res.ok) {
       const data = await res.json();
