@@ -1,7 +1,12 @@
 import ServicesCards from "./ServicesCards";
 import Image from "next/image";
+import type { ServiceListItem } from "@/lib/wp";
 
-const ServiceArea = () => {
+interface ServiceAreaProps {
+    services?: ServiceListItem[];
+}
+
+const ServiceArea = ({ services }: ServiceAreaProps) => {
     return (
         <div className="td-service-main-area pb-125">
             <div className="container">
@@ -21,7 +26,7 @@ const ServiceArea = () => {
                         </div>
                     </div>
                 </div>
-                <ServicesCards />
+                <ServicesCards services={services} />
                 <div className="row justify-content-center">
                     <div className="col-lg-9">
                         <div className="td-service-main-content text-center pt-140 mb-60">

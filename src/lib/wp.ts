@@ -1818,3 +1818,238 @@ export async function getPrivacyPolicy(): Promise<WpPage | null> {
   return null;
 }
 
+// ============================================================================
+// SERVICES
+// ============================================================================
+
+export interface ServiceListItem {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  iconUrl?: string;
+}
+
+export interface ServiceDetail extends ServiceListItem {
+  tagline?: string;
+  heroHeadline?: string;
+  section1Heading?: string;
+  section1Text?: string;
+  section1ImageUrl?: string;
+  section1ImageSide?: "left" | "right";
+  section2Heading?: string;
+  section2Text?: string;
+  section2ImageUrl?: string;
+  section2ImageSide?: "left" | "right";
+  section3Heading?: string;
+  section3Text?: string;
+  section3ImageUrl?: string;
+  section3ImageSide?: "left" | "right";
+  ctaHeading?: string;
+  ctaButtonLabel?: string;
+  seo?: YoastSeo;
+}
+
+type WpServiceNode = {
+  databaseId?: number | null;
+  slug?: string | null;
+  title?: string | null;
+  serviceFields?: {
+    excerptSummary?: string | null;
+    tagline?: string | null;
+    heroHeadline?: string | null;
+    icon?: { node?: { sourceUrl?: string | null } | null } | null;
+    section1Heading?: string | null;
+    section1Text?: string | null;
+    section1Image?: { node?: WpMediaNode | null } | null;
+    section1ImageSide?: unknown;
+    section2Heading?: string | null;
+    section2Text?: string | null;
+    section2Image?: { node?: WpMediaNode | null } | null;
+    section2ImageSide?: unknown;
+    section3Heading?: string | null;
+    section3Text?: string | null;
+    section3Image?: { node?: WpMediaNode | null } | null;
+    section3ImageSide?: unknown;
+    ctaHeading?: string | null;
+    ctaButtonLabel?: string | null;
+  } | null;
+  seo?: WpSeoNode | null;
+};
+
+export async function getServices(): Promise<ServiceListItem[]> {
+  try {
+    const data = await wpFetch<{ services?: { nodes?: WpServiceNode[] } | null }>(
+      `
+      query GetServices {
+        services(first: 50, where: { orderby: { field: MENU_ORDER, order: ASC } }) {
+          nodes {
+            databaseId
+            slug
+            title
+            serviceFields {
+              excerptSummary
+              icon { node { sourceUrl } }
+            }
+          }
+        }
+      }
+      `
+    );
+    const nodes = data?.services?.nodes;
+    if (!nodes?.length) return [];
+    return nodes.map((node) => ({
+      id: String(node.databaseId ?? node.slug ?? ""),
+      slug: node.slug ?? "",
+      title: node.title ?? "",
+      excerpt: node.serviceFields?.excerptSummary ?? "",
+      iconUrl: normalizeWpMediaUrl(node.serviceFields?.icon?.node?.sourceUrl ?? undefined),
+    }));
+  } catch (err) {
+    console.error("[wp] getServices failed:", err);
+    return [];
+  }
+}
+
+export async function getService(slug: string): Promise<ServiceDetail | null> {
+  type ServiceResponse = { service?: WpServiceNode | null };
+
+  const queryWithSeo = `
+    query GetService($slug: ID!) {
+      service(id: $slug, idType: SLUG) {
+        databaseId
+        slug
+        title
+        serviceFields {
+          tagline
+          heroHeadline
+          excerptSummary
+          icon { node { sourceUrl } }
+          section1Heading
+          section1Text
+          section1Image { node { sourceUrl altText mediaDetails { width height } } }
+          section1ImageSide
+          section2Heading
+          section2Text
+          section2Image { node { sourceUrl altText mediaDetails { width height } } }
+          section2ImageSide
+          section3Heading
+          section3Text
+          section3Image { node { sourceUrl altText mediaDetails { width height } } }
+          section3ImageSide
+          ctaHeading
+          ctaButtonLabel
+        }
+        seo {
+          title
+          metaDesc
+          canonical
+          opengraphTitle
+          opengraphDescription
+          opengraphImage { sourceUrl altText mediaDetails { width height } }
+          twitterTitle
+          twitterDescription
+          twitterImage { sourceUrl altText mediaDetails { width height } }
+        }
+      }
+    }
+  `;
+
+  const queryBase = `
+    query GetService($slug: ID!) {
+      service(id: $slug, idType: SLUG) {
+        databaseId
+        slug
+        title
+        serviceFields {
+          tagline
+          heroHeadline
+          excerptSummary
+          icon { node { sourceUrl } }
+          section1Heading
+          section1Text
+          section1Image { node { sourceUrl altText mediaDetails { width height } } }
+          section1ImageSide
+          section2Heading
+          section2Text
+          section2Image { node { sourceUrl altText mediaDetails { width height } } }
+          section2ImageSide
+          section3Heading
+          section3Text
+          section3Image { node { sourceUrl altText mediaDetails { width height } } }
+          section3ImageSide
+          ctaHeading
+          ctaButtonLabel
+        }
+      }
+    }
+  `;
+
+  try {
+    const raw = await wpFetchRaw<ServiceResponse>(queryWithSeo, { slug });
+    const fallback =
+      raw?.errors && isMissingYoastSeoField(raw.errors)
+        ? await wpFetch<ServiceResponse>(queryBase, { slug })
+        : raw?.data;
+
+    const node = fallback?.service;
+    if (!node) return null;
+
+    const sf = node.serviceFields;
+    const title = node.title ?? "";
+
+    const mapImageSide = (value?: unknown): "left" | "right" | undefined => {
+      if (value == null || value === "") return undefined;
+      const raw = Array.isArray(value) ? value[0] : value;
+      if (raw == null || raw === "") return undefined;
+      const str =
+        typeof raw === "string"
+          ? raw
+          : typeof raw === "object" && raw !== null && "value" in raw
+            ? String((raw as Record<string, unknown>).value)
+            : String(raw);
+      return str.toLowerCase().trim() === "left" ? "left" : "right";
+    };
+
+    return {
+      id: String(node.databaseId ?? node.slug ?? ""),
+      slug: node.slug ?? "",
+      title,
+      excerpt: sf?.excerptSummary ?? "",
+      iconUrl: normalizeWpMediaUrl(sf?.icon?.node?.sourceUrl ?? undefined),
+      tagline: sf?.tagline ?? undefined,
+      heroHeadline: sf?.heroHeadline ?? undefined,
+      section1Heading: sf?.section1Heading ?? undefined,
+      section1Text: sf?.section1Text ?? undefined,
+      section1ImageUrl: normalizeWpMediaUrl(sf?.section1Image?.node?.sourceUrl ?? undefined),
+      section1ImageSide: mapImageSide(sf?.section1ImageSide),
+      section2Heading: sf?.section2Heading ?? undefined,
+      section2Text: sf?.section2Text ?? undefined,
+      section2ImageUrl: normalizeWpMediaUrl(sf?.section2Image?.node?.sourceUrl ?? undefined),
+      section2ImageSide: mapImageSide(sf?.section2ImageSide),
+      section3Heading: sf?.section3Heading ?? undefined,
+      section3Text: sf?.section3Text ?? undefined,
+      section3ImageUrl: normalizeWpMediaUrl(sf?.section3Image?.node?.sourceUrl ?? undefined),
+      section3ImageSide: mapImageSide(sf?.section3ImageSide),
+      ctaHeading: sf?.ctaHeading ?? undefined,
+      ctaButtonLabel: sf?.ctaButtonLabel ?? undefined,
+      seo: node.seo
+        ? {
+            title: node.seo.title,
+            metaDesc: node.seo.metaDesc,
+            canonical: node.seo.canonical,
+            opengraphTitle: node.seo.opengraphTitle,
+            opengraphDescription: node.seo.opengraphDescription,
+            opengraphImage: mapWpImageWithAlt(node.seo.opengraphImage, title),
+            twitterTitle: node.seo.twitterTitle,
+            twitterDescription: node.seo.twitterDescription,
+            twitterImage: mapWpImageWithAlt(node.seo.twitterImage, title),
+          }
+        : undefined,
+    };
+  } catch (err) {
+    console.error("[wp] getService failed:", err);
+    return null;
+  }
+}
+

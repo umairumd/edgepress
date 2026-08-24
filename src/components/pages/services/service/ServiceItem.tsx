@@ -1,17 +1,17 @@
 "use client";
 import { useCallback, useEffect, useRef } from "react";
-import type { JSX } from "react";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { IconArrowRight } from "@/components/icons";
 
 interface DataType {
     id: number;
-    slug: string;
-    sub_title: string;
+    slug?: string;
+    sub_title?: string;
     title: string;
-    desc: JSX.Element;
-    list: string[];
+    desc: ReactNode;
+    list?: string[];
 }
 
 const serviceThumbs: string[] = [
@@ -25,104 +25,59 @@ const serviceThumbs: string[] = [
 const service_data: DataType[] = [
     {
         id: 1,
-        slug: "business-strategy",
-        sub_title: "Clarity before execution.",
-        title: "Business Strategy",
-        desc: (<>Everything starts here. Strategy defines what to do, why to do it, and what not to do. Without this, marketing becomes noise.</>),
-        list: [
-            "Growth & positioning strategy",
-            "Market & competitor analysis",
-            "Funnel & execution roadmap",
-        ],
+        title: "Strategy Before Execution",
+        desc: (
+            <>
+                <p>We start with your business goals, not a template. Every engagement begins with understanding what you are trying to achieve, who you are trying to reach, and what stands between you and that outcome.</p>
+                <ul>
+                    <li>Market & competitor research</li>
+                    <li>Goal alignment workshops</li>
+                    <li>Custom growth roadmap</li>
+                </ul>
+            </>
+        ),
     },
     {
         id: 2,
-        slug: "ui-ux-design",
-        sub_title: "Designing how users think and move.",
-        title: "UI / UX Design",
-        desc: (<>Before building or marketing anything, we design the experience — how users navigate, understand, and convert.</>),
-        list: [
-            "User flows & wireframing",
-            "Prototyping & interface design",
-            "Usability-focused layouts",
-            "Tools: Figma, Adobe XD",
-        ],
+        title: "Full-Service, One Team",
+        desc: (
+            <>
+                <p>From brand to development to marketing — everything is handled in-house. No handoffs, no miscommunication, no outsourcing surprises. One team owns the outcome end to end.</p>
+                <ul>
+                    <li>Brand, design & development</li>
+                    <li>SEO, paid media & content</li>
+                    <li>Single point of accountability</li>
+                </ul>
+            </>
+        ),
     },
     {
         id: 3,
-        slug: "web-development",
-        sub_title: "Turning strategy into a functional platform.",
-        title: "Web Development",
-        desc: (<>Once the experience is defined, we build fast, scalable websites that support conversions and growth.</>),
-        list: [
-            "Custom website development",
-            "WordPress & Shopify builds",
-            "Responsive & performance optimization",
-            "Tech: HTML, CSS, JavaScript, WordPress, Shopify",
-        ],
+        title: "Measurable Outcomes",
+        desc: (
+            <>
+                <p>Every engagement is tied to KPIs that matter to your business. We track, report, and adjust — so results are visible, not assumed. You always know what is working and why.</p>
+                <ul>
+                    <li>KPI definition & tracking</li>
+                    <li>Monthly reporting & analysis</li>
+                    <li>Transparent performance data</li>
+                </ul>
+            </>
+        ),
     },
     {
         id: 4,
-        slug: "ecommerce-store-development",
-        sub_title: "Commerce-focused execution.",
-        title: "E-Commerce Store Development",
-        desc: (<>E-commerce deserves its own spotlight. This is where strategy, UX, and development come together to drive sales.</>),
-        list: [
-            "Shopify & WooCommerce stores",
-            "Product & payment setup",
-            "Conversion-focused layouts",
-        ],
-    },
-    {
-        id: 5,
-        slug: "graphics-designing",
-        sub_title: "Visual consistency across every touchpoint.",
-        title: "Graphics Designing",
-        desc: (<>Design supports trust, recall, and professionalism — across social media, websites, ads, and brand assets.</>),
-        list: [
-            "Brand visuals & social creatives",
-            "Marketing & promotional designs",
-            "Print & digital assets",
-            "Tools: Adobe Illustrator, Photoshop, InDesign",
-        ],
-    },
-    {
-        id: 6,
-        slug: "digital-marketing",
-        sub_title: "Distribution, visibility, and demand generation.",
-        title: "Digital Marketing",
-        desc: (<>Once the foundation is solid, we drive traffic and attention through aligned, multi-channel marketing.</>),
-        list: [
-            "Paid ads & campaign management",
-            "Social media marketing",
-            "Lead generation & optimization",
-            "Platforms: Google, Facebook, Instagram, LinkedIn, Twitter",
-        ],
-    },
-    {
-        id: 7,
-        slug: "seo-services",
-        sub_title: "Sustainable, intent-driven growth.",
-        title: "SEO Services",
-        desc: (<>SEO compounds over time. It strengthens everything else by capturing demand that already exists.</>),
-        list: [
-            "Technical SEO",
-            "Content-driven SEO",
-            "On-page & off-page optimization",
-        ],
-    },
-    {
-        id: 8,
-        slug: "app-development",
-        sub_title: "Product-level execution for scalable ideas.",
-        title: "App Development",
-        desc: (<>Apps come after clarity, demand, and validation — not before. This keeps your positioning mature and strategic.</>),
-        list: [
-            "Cross-platform mobile apps",
-            "Android & iOS development",
-            "Performance optimization",
-            "Tech: Flutter, Android Studio",
-        ],
+        title: "Built for the Long Term",
+        desc: (
+            <>
+                <p>We build systems that compound over time — SEO that grows, brands that stick, and websites that scale. Not quick wins that fade. Everything we build is designed to keep working.</p>
+                <ul>
+                    <li>Scalable technical foundations</li>
+                    <li>Brand systems that evolve</li>
+                    <li>Long-term growth strategy</li>
+                </ul>
+            </>
+        ),
     },
 ];
 
@@ -222,11 +177,13 @@ const ServiceItem = () => {
                                     <h2 className="td-service-pin-title mb-30">{item.title}</h2>
                                     <div className="td-service-pin-content  ml-50">
                                         <div className="mb-40">{item.desc}</div>
-                                        <ul>
-                                            {item.list.map((list, i) => (
-                                                <li key={i}>{list}</li>
-                                            ))}
-                                        </ul>
+                                        {item.list && (
+                                            <ul>
+                                                {item.list.map((list, i) => (
+                                                    <li key={i}>{list}</li>
+                                                ))}
+                                            </ul>
+                                        )}
                                         <div className="td-btn-group td-btn-group-border pt-50">
                                             <Link className="td-btn-circle" href="/contact" aria-label="Reach out">
                                                 <IconArrowRight />
