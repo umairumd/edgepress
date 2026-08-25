@@ -1473,6 +1473,7 @@ export async function getTestimonials(limit = 10): Promise<Testimonial[]> {
             databaseId
             title
             content
+            testimonialFields { youtubeId }
             ${acfGroupSelections}
             ${acfFieldSelection}
           }
@@ -1490,12 +1491,25 @@ export async function getTestimonials(limit = 10): Promise<Testimonial[]> {
       const nodes = cptData?.nodes;
 
       if (Array.isArray(nodes) && nodes.length > 0) {
-        return nodes.map((node, idx) => ({
-          id: node.databaseId ?? idx + 1,
-          name: node.title ?? "Anonymous",
-          designation: getTestimonialDesignation(node),
-          text: stripHtml(node.content ?? ""),
-        }));
+        const items: Testimonial[] = [];
+        for (const [idx, node] of nodes.entries()) {
+          const fields = node?.testimonialFields as Record<string, unknown> | null | undefined;
+          const youtubeId = fields?.youtubeId ?? fields?.youtube_id ?? null;
+
+          // Skip video testimonials
+          if (youtubeId && String(youtubeId).trim() !== "") continue;
+
+          // Skip posts with no text content
+          if (!node.content || node.content.trim() === "") continue;
+
+          items.push({
+            id: node.databaseId ?? idx + 1,
+            name: node.title ?? "Anonymous",
+            designation: getTestimonialDesignation(node),
+            text: stripHtml(node.content ?? ""),
+          });
+        }
+        if (items.length > 0) return items;
       }
     }
 
@@ -1522,12 +1536,18 @@ export async function getTestimonials(limit = 10): Promise<Testimonial[]> {
       const nodes = cptData?.nodes;
 
       if (Array.isArray(nodes) && nodes.length > 0) {
-        return nodes.map((node, idx) => ({
-          id: node.databaseId ?? idx + 1,
-          name: node.title ?? "Anonymous",
-          designation: undefined,
-          text: stripHtml(node.content ?? ""),
-        }));
+        const items: Testimonial[] = [];
+        for (const [idx, node] of nodes.entries()) {
+          // Without ACF we can still skip empty-content (video) posts
+          if (!node.content || node.content.trim() === "") continue;
+          items.push({
+            id: node.databaseId ?? idx + 1,
+            name: node.title ?? "Anonymous",
+            designation: undefined,
+            text: stripHtml(node.content ?? ""),
+          });
+        }
+        if (items.length > 0) return items;
       }
     }
   }
@@ -1596,10 +1616,10 @@ export async function getVideoTestimonials(limit = 20): Promise<TestimonialItem[
   try {
     const cptCandidates = ["testimonials", "testimonial"];
     const thumbSelections = [
-      `testimonialFields { youtubeId videoType companyName customThumbnail { node { sourceUrl altText mediaDetails { width height } } } }`,
-      `testimonialFields { youtubeId videoType companyName customThumbnail { sourceUrl altText mediaDetails { width height } } }`,
-      `testimonialFields { youtubeId videoType companyName } youtubeId customThumbnail { node { sourceUrl altText mediaDetails { width height } } }`,
-      `testimonialFields { youtubeId videoType companyName } youtubeId`,
+      `testimonialFields { youtubeId companyName customThumbnail { node { sourceUrl altText mediaDetails { width height } } } }`,
+      `testimonialFields { youtubeId companyName customThumbnail { sourceUrl altText mediaDetails { width height } } }`,
+      `testimonialFields { youtubeId companyName } youtubeId customThumbnail { node { sourceUrl altText mediaDetails { width height } } }`,
+      `testimonialFields { youtubeId companyName } youtubeId`,
       `youtubeId customThumbnail { node { sourceUrl altText mediaDetails { width height } } }`,
       `youtubeId`,
     ];
@@ -1642,11 +1662,7 @@ export async function getVideoTestimonials(limit = 20): Promise<TestimonialItem[
             slug: String(node.slug ?? node.databaseId ?? idx),
             title: node.title ?? "Client",
             youtubeId,
-            aspectRatio: (() => {
-              const vt = node?.testimonialFields?.videoType;
-              const val = Array.isArray(vt) ? vt[0] : vt;
-              return val === "portrait" ? "9:16" : "16:9";
-            })(),
+            aspectRatio: "16:9" as const,
             ...(thumbnailUrl ? { thumbnailUrl } : {}),
             ...(companyName ? { companyName } : {}),
           });
