@@ -78,12 +78,14 @@ export async function POST(request: NextRequest) {
 
         if (body.website && body.website.trim() !== "") {
             // Bot filled the honeypot — silently succeed
+            console.log("[contact] Honeypot triggered:", body.website);
             return NextResponse.json({ success: true });
         }
 
         cleanupRateLimit();
         const clientIp = getClientIp(request);
         if (isRateLimited(clientIp)) {
+            console.log("[contact] Rate limited:", clientIp);
             return NextResponse.json(
                 { error: "Too many submissions. Please wait before trying again." },
                 { status: 429 }
@@ -91,6 +93,11 @@ export async function POST(request: NextRequest) {
         }
 
         if (!RECIPIENT_EMAIL || !FROM_EMAIL) {
+            console.error("[contact] Missing env vars:", {
+                hasResendKey: !!process.env.RESEND_API_KEY,
+                hasToEmail: !!process.env.CONTACT_TO_EMAIL,
+                hasFromEmail: !!process.env.CONTACT_FROM_EMAIL,
+            });
             return NextResponse.json(
                 { error: "Contact email is not configured. Set CONTACT_TO_EMAIL and CONTACT_FROM_EMAIL." },
                 { status: 500 }
@@ -175,7 +182,7 @@ ${escapeHtml(body.message)}
         });
 
         if (error) {
-            console.error("Resend error:", JSON.stringify(error, null, 2));
+            console.error("[contact] Resend error:", error);
             // User-friendly message - don't expose technical details
             return NextResponse.json(
                 { error: "Unable to send your message at this time. Please try again later or contact us directly." },
@@ -185,7 +192,7 @@ ${escapeHtml(body.message)}
 
         return NextResponse.json({ success: true });
     } catch (err) {
-        console.error("Contact form error:", err);
+        console.error("[contact] Unexpected error:", err);
         // User-friendly message - don't expose technical details
         return NextResponse.json(
             { error: "Unable to send your message at this time. Please try again later or contact us directly." },
