@@ -29,11 +29,6 @@ export async function POST(request: NextRequest) {
         const body: ContactFormData = await request.json();
 
         if (!RECIPIENT_EMAIL || !FROM_EMAIL) {
-            console.error("[contact] Missing env vars:", {
-                hasResendKey: !!process.env.RESEND_API_KEY,
-                hasToEmail: !!process.env.CONTACT_TO_EMAIL,
-                hasFromEmail: !!process.env.CONTACT_FROM_EMAIL,
-            });
             return NextResponse.json(
                 { error: "Contact email is not configured. Set CONTACT_TO_EMAIL and CONTACT_FROM_EMAIL." },
                 { status: 500 }
@@ -118,7 +113,7 @@ ${escapeHtml(body.message)}
         });
 
         if (error) {
-            console.error("[contact] Resend error:", error);
+            console.error("Resend error:", JSON.stringify(error, null, 2));
             // User-friendly message - don't expose technical details
             return NextResponse.json(
                 { error: "Unable to send your message at this time. Please try again later or contact us directly." },
@@ -128,7 +123,7 @@ ${escapeHtml(body.message)}
 
         return NextResponse.json({ success: true });
     } catch (err) {
-        console.error("[contact] Unexpected error:", err);
+        console.error("Contact form error:", err);
         // User-friendly message - don't expose technical details
         return NextResponse.json(
             { error: "Unable to send your message at this time. Please try again later or contact us directly." },

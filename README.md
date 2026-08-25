@@ -86,6 +86,15 @@ content is written.
 - [x] Default SEO fallbacks on all static pages
 - [x] Sharp image optimisation with lazy loading across all pages
 
+## Recent Updates
+
+- WordPress-driven Service pages with dynamic routing (/services/[slug]), ACF content fields, Yoast SEO, and ISR
+- Video testimonials carousel (CSS marquee, YouTube thumbnails, square cards, company name)
+- WordPress-controlled maintenance mode with password-protected bypass
+- On-demand cache revalidation via WordPress admin button
+- Blog and portfolio category filtering (URL-based, server-side)
+- Contact form with Resend email delivery
+
 ---
 
 ## Architecture
