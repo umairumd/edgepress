@@ -49,7 +49,7 @@ function ServiceSection({
     ) : null;
 
     const textCol = (
-        <div className={`col-lg-${hasImage ? 6 : 8}`}>
+        <div className={`col-lg-${hasImage ? 6 : 7}`}>
             <div className="td-service-detail-text-wrap">
                 {heading && (
                     <h2 className="td-service-detail-section-heading mb-25">{heading}</h2>
