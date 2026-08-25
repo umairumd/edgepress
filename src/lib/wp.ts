@@ -1420,6 +1420,10 @@ type WpTestimonialNode = {
   databaseId?: number | null;
   title?: string | null;
   content?: string | null;
+  testimonialFields?: {
+    videoType?: string | string[] | null;
+    [key: string]: unknown;
+  } | null;
   // ACF fields - try multiple field name patterns
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
@@ -1537,6 +1541,7 @@ export type TestimonialItem = {
   title: string;
   youtubeId: string;
   thumbnailUrl?: string;
+  aspectRatio: "16:9" | "9:16";
 };
 
 function extractYoutubeId(value: unknown): string | undefined {
@@ -1589,10 +1594,10 @@ export async function getVideoTestimonials(limit = 20): Promise<TestimonialItem[
   try {
     const cptCandidates = ["testimonials", "testimonial"];
     const thumbSelections = [
-      `testimonialFields { youtubeId customThumbnail { node { sourceUrl altText mediaDetails { width height } } } }`,
-      `testimonialFields { youtubeId customThumbnail { sourceUrl altText mediaDetails { width height } } }`,
-      `testimonialFields { youtubeId } youtubeId customThumbnail { node { sourceUrl altText mediaDetails { width height } } }`,
-      `testimonialFields { youtubeId } youtubeId`,
+      `testimonialFields { youtubeId videoType customThumbnail { node { sourceUrl altText mediaDetails { width height } } } }`,
+      `testimonialFields { youtubeId videoType customThumbnail { sourceUrl altText mediaDetails { width height } } }`,
+      `testimonialFields { youtubeId videoType } youtubeId customThumbnail { node { sourceUrl altText mediaDetails { width height } } }`,
+      `testimonialFields { youtubeId videoType } youtubeId`,
       `youtubeId customThumbnail { node { sourceUrl altText mediaDetails { width height } } }`,
       `youtubeId`,
     ];
@@ -1630,6 +1635,11 @@ export async function getVideoTestimonials(limit = 20): Promise<TestimonialItem[
             slug: String(node.slug ?? node.databaseId ?? idx),
             title: node.title ?? "Client",
             youtubeId,
+            aspectRatio: (() => {
+              const vt = node?.testimonialFields?.videoType;
+              const val = Array.isArray(vt) ? vt[0] : vt;
+              return val === "portrait" ? "9:16" : "16:9";
+            })(),
             ...(thumbnailUrl ? { thumbnailUrl } : {}),
           });
         }
