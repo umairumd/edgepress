@@ -49,19 +49,14 @@ export default function VideoTestimonialsCarousel({
       <div className="td-video-testimonials__track">
         <div className="td-video-testimonials__reel">
           {slides.map((item, idx) => {
-            const isPortrait = item.aspectRatio === "9:16";
             const thumbSrc =
               item.thumbnailUrl ||
-              (isPortrait
-                ? `https://img.youtube.com/vi/${item.youtubeId}/maxresdefault.jpg`
-                : `https://img.youtube.com/vi/${item.youtubeId}/mqdefault.jpg`);
+              `https://img.youtube.com/vi/${item.youtubeId}/hqdefault.jpg`;
 
             return (
               <div
                 key={`${item.id}-${idx}`}
-                className={`td-video-testimonials__slide td-video-testimonials__slide--${
-                  isPortrait ? "portrait" : "landscape"
-                }`}
+                className="td-video-testimonials__slide"
               >
                 <button
                   type="button"
