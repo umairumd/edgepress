@@ -2507,7 +2507,7 @@ body.td-portfolio-focus .td-header-6-wrapper.td-sticky .tdmenu__navbar-wrap > ul
 }
 .td-video-testimonials__slide {
   flex-shrink: 0;
-  width: 280px;
+  width: 320px;
 }
 .td-video-testimonials__card {
   display: flex;
@@ -2522,7 +2522,7 @@ body.td-portfolio-focus .td-header-6-wrapper.td-sticky .tdmenu__navbar-wrap > ul
 }
 .td-video-testimonials__thumb {
   width: 100%;
-  height: 280px;
+  height: 320px;
   overflow: hidden;
   border-radius: 12px;
   background: #111;
@@ -2536,10 +2536,12 @@ body.td-portfolio-focus .td-header-6-wrapper.td-sticky .tdmenu__navbar-wrap > ul
   height: 100% !important;
   object-fit: cover;
   display: block;
-}
-.td-video-testimonials__thumb:hover img {
-  transform: scale(1.04);
+  transform: scale(1.15);
+  transform-origin: center center;
   transition: transform 0.35s ease;
+}
+.td-video-testimonials__card:hover .td-video-testimonials__thumb img {
+  transform: scale(1.2);
 }
 .td-video-testimonials__play {
   position: absolute;
@@ -2560,26 +2562,40 @@ body.td-portfolio-focus .td-header-6-wrapper.td-sticky .tdmenu__navbar-wrap > ul
   height: 38px;
   margin-left: 5px;
 }
-.td-video-testimonials__name {
-  display: block;
-  padding: 10px 5px 0;
-  font-size: 16px;
-  font-weight: 600;
+.td-video-testimonials__meta {
+  padding: 10px 4px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  text-align: center;
+  align-items: center;
+}
+.td-video-testimonials__client {
+  font-size: 20px;
+  font-weight: 700;
   color: #1c1d1f;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  letter-spacing: -0.01em;
+  max-width: 100%;
+}
+.td-video-testimonials__company {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--td-grey-1, #6f7071);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 @media (max-width: 767px) {
   .td-video-testimonials__slide {
-    width: 200px;
+    width: 230px;
   }
   .td-video-testimonials__thumb {
-    height: 200px;
-  }
-  .td-video-testimonials__name {
-    font-size: 14px;
+    height: 230px;
   }
 }
 

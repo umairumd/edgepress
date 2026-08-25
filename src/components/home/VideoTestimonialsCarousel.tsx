@@ -82,9 +82,16 @@ export default function VideoTestimonialsCarousel({
                       </svg>
                     </span>
                   </div>
-                  <span className="td-video-testimonials__name">
-                    {item.title}
-                  </span>
+                  <div className="td-video-testimonials__meta">
+                    <span className="td-video-testimonials__client">
+                      {item.title}
+                    </span>
+                    {item.companyName && (
+                      <span className="td-video-testimonials__company">
+                        {item.companyName}
+                      </span>
+                    )}
+                  </div>
                 </button>
               </div>
             );

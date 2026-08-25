@@ -1422,6 +1422,7 @@ type WpTestimonialNode = {
   content?: string | null;
   testimonialFields?: {
     videoType?: string | string[] | null;
+    companyName?: string | null;
     [key: string]: unknown;
   } | null;
   // ACF fields - try multiple field name patterns
@@ -1541,6 +1542,7 @@ export type TestimonialItem = {
   title: string;
   youtubeId: string;
   thumbnailUrl?: string;
+  companyName?: string;
   aspectRatio: "16:9" | "9:16";
 };
 
@@ -1594,10 +1596,10 @@ export async function getVideoTestimonials(limit = 20): Promise<TestimonialItem[
   try {
     const cptCandidates = ["testimonials", "testimonial"];
     const thumbSelections = [
-      `testimonialFields { youtubeId videoType customThumbnail { node { sourceUrl altText mediaDetails { width height } } } }`,
-      `testimonialFields { youtubeId videoType customThumbnail { sourceUrl altText mediaDetails { width height } } }`,
-      `testimonialFields { youtubeId videoType } youtubeId customThumbnail { node { sourceUrl altText mediaDetails { width height } } }`,
-      `testimonialFields { youtubeId videoType } youtubeId`,
+      `testimonialFields { youtubeId videoType companyName customThumbnail { node { sourceUrl altText mediaDetails { width height } } } }`,
+      `testimonialFields { youtubeId videoType companyName customThumbnail { sourceUrl altText mediaDetails { width height } } }`,
+      `testimonialFields { youtubeId videoType companyName } youtubeId customThumbnail { node { sourceUrl altText mediaDetails { width height } } }`,
+      `testimonialFields { youtubeId videoType companyName } youtubeId`,
       `youtubeId customThumbnail { node { sourceUrl altText mediaDetails { width height } } }`,
       `youtubeId`,
     ];
@@ -1630,6 +1632,11 @@ export async function getVideoTestimonials(limit = 20): Promise<TestimonialItem[
           const youtubeId = getTestimonialYoutubeId(node);
           if (!youtubeId) continue;
           const thumbnailUrl = getTestimonialThumbnailUrl(node);
+          const rawCompany = node?.testimonialFields?.companyName;
+          const companyName =
+            typeof rawCompany === "string" && rawCompany.trim()
+              ? rawCompany.trim()
+              : undefined;
           items.push({
             id: String(node.databaseId ?? node.slug ?? idx),
             slug: String(node.slug ?? node.databaseId ?? idx),
@@ -1641,6 +1648,7 @@ export async function getVideoTestimonials(limit = 20): Promise<TestimonialItem[
               return val === "portrait" ? "9:16" : "16:9";
             })(),
             ...(thumbnailUrl ? { thumbnailUrl } : {}),
+            ...(companyName ? { companyName } : {}),
           });
         }
 
