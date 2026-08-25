@@ -1887,18 +1887,36 @@ type WpServiceNode = {
     excerptSummary?: string | null;
     tagline?: string | null;
     heroHeadline?: string | null;
-    icon?: { node?: { sourceUrl?: string | null } | null } | null;
+    icon?: { node?: { mediaItemUrl?: string | null } | null } | null;
     section1Heading?: string | null;
     section1Text?: string | null;
-    section1Image?: { node?: WpMediaNode | null } | null;
+    section1Image?: {
+      node?: {
+        mediaItemUrl?: string | null;
+        altText?: string | null;
+        mediaDetails?: { width?: number | null; height?: number | null } | null;
+      } | null;
+    } | null;
     section1ImageSide?: unknown;
     section2Heading?: string | null;
     section2Text?: string | null;
-    section2Image?: { node?: WpMediaNode | null } | null;
+    section2Image?: {
+      node?: {
+        mediaItemUrl?: string | null;
+        altText?: string | null;
+        mediaDetails?: { width?: number | null; height?: number | null } | null;
+      } | null;
+    } | null;
     section2ImageSide?: unknown;
     section3Heading?: string | null;
     section3Text?: string | null;
-    section3Image?: { node?: WpMediaNode | null } | null;
+    section3Image?: {
+      node?: {
+        mediaItemUrl?: string | null;
+        altText?: string | null;
+        mediaDetails?: { width?: number | null; height?: number | null } | null;
+      } | null;
+    } | null;
     section3ImageSide?: unknown;
     ctaHeading?: string | null;
     ctaButtonLabel?: string | null;
@@ -1918,7 +1936,7 @@ export async function getServices(): Promise<ServiceListItem[]> {
             title
             serviceFields {
               excerptSummary
-              icon { node { sourceUrl } }
+              icon { node { mediaItemUrl } }
             }
           }
         }
@@ -1932,7 +1950,7 @@ export async function getServices(): Promise<ServiceListItem[]> {
       slug: node.slug ?? "",
       title: node.title ?? "",
       excerpt: node.serviceFields?.excerptSummary ?? "",
-      iconUrl: normalizeWpMediaUrl(node.serviceFields?.icon?.node?.sourceUrl ?? undefined),
+      iconUrl: normalizeWpMediaUrl(node.serviceFields?.icon?.node?.mediaItemUrl ?? undefined),
     }));
   } catch (err) {
     console.error("[wp] getServices failed:", err);
@@ -1953,18 +1971,18 @@ export async function getService(slug: string): Promise<ServiceDetail | null> {
           tagline
           heroHeadline
           excerptSummary
-          icon { node { sourceUrl } }
+          icon { node { mediaItemUrl } }
           section1Heading
           section1Text
-          section1Image { node { sourceUrl altText mediaDetails { width height } } }
+          section1Image { node { mediaItemUrl altText mediaDetails { width height } } }
           section1ImageSide
           section2Heading
           section2Text
-          section2Image { node { sourceUrl altText mediaDetails { width height } } }
+          section2Image { node { mediaItemUrl altText mediaDetails { width height } } }
           section2ImageSide
           section3Heading
           section3Text
-          section3Image { node { sourceUrl altText mediaDetails { width height } } }
+          section3Image { node { mediaItemUrl altText mediaDetails { width height } } }
           section3ImageSide
           ctaHeading
           ctaButtonLabel
@@ -1994,18 +2012,18 @@ export async function getService(slug: string): Promise<ServiceDetail | null> {
           tagline
           heroHeadline
           excerptSummary
-          icon { node { sourceUrl } }
+          icon { node { mediaItemUrl } }
           section1Heading
           section1Text
-          section1Image { node { sourceUrl altText mediaDetails { width height } } }
+          section1Image { node { mediaItemUrl altText mediaDetails { width height } } }
           section1ImageSide
           section2Heading
           section2Text
-          section2Image { node { sourceUrl altText mediaDetails { width height } } }
+          section2Image { node { mediaItemUrl altText mediaDetails { width height } } }
           section2ImageSide
           section3Heading
           section3Text
-          section3Image { node { sourceUrl altText mediaDetails { width height } } }
+          section3Image { node { mediaItemUrl altText mediaDetails { width height } } }
           section3ImageSide
           ctaHeading
           ctaButtonLabel
@@ -2045,20 +2063,20 @@ export async function getService(slug: string): Promise<ServiceDetail | null> {
       slug: node.slug ?? "",
       title,
       excerpt: sf?.excerptSummary ?? "",
-      iconUrl: normalizeWpMediaUrl(sf?.icon?.node?.sourceUrl ?? undefined),
+      iconUrl: normalizeWpMediaUrl(sf?.icon?.node?.mediaItemUrl ?? undefined),
       tagline: sf?.tagline ?? undefined,
       heroHeadline: sf?.heroHeadline ?? undefined,
       section1Heading: sf?.section1Heading ?? undefined,
       section1Text: sf?.section1Text ?? undefined,
-      section1ImageUrl: normalizeWpMediaUrl(sf?.section1Image?.node?.sourceUrl ?? undefined),
+      section1ImageUrl: normalizeWpMediaUrl(sf?.section1Image?.node?.mediaItemUrl ?? undefined),
       section1ImageSide: mapImageSide(sf?.section1ImageSide),
       section2Heading: sf?.section2Heading ?? undefined,
       section2Text: sf?.section2Text ?? undefined,
-      section2ImageUrl: normalizeWpMediaUrl(sf?.section2Image?.node?.sourceUrl ?? undefined),
+      section2ImageUrl: normalizeWpMediaUrl(sf?.section2Image?.node?.mediaItemUrl ?? undefined),
       section2ImageSide: mapImageSide(sf?.section2ImageSide),
       section3Heading: sf?.section3Heading ?? undefined,
       section3Text: sf?.section3Text ?? undefined,
-      section3ImageUrl: normalizeWpMediaUrl(sf?.section3Image?.node?.sourceUrl ?? undefined),
+      section3ImageUrl: normalizeWpMediaUrl(sf?.section3Image?.node?.mediaItemUrl ?? undefined),
       section3ImageSide: mapImageSide(sf?.section3ImageSide),
       ctaHeading: sf?.ctaHeading ?? undefined,
       ctaButtonLabel: sf?.ctaButtonLabel ?? undefined,
