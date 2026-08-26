@@ -127,6 +127,47 @@ export default function RootLayout({
             />
           </>
         ) : null}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "ProfessionalService",
+              "@id": "https://inomadigital.com/#organization",
+              "name": "Inoma Digital",
+              "url": "https://inomadigital.com",
+              "logo": "https://inomadigital.com/assets/img/logo/inoma-logo-dark.png",
+              "image": "https://inomadigital.com/assets/img/logo/inoma-og.jpg",
+              "description": "Full-service digital agency specializing in web development, SEO, digital marketing, and brand strategy for US and international clients.",
+              "foundingDate": "2019",
+              "numberOfEmployees": {
+                "@type": "QuantitativeValue",
+                "minValue": 15
+              },
+              "email": "info@inomadigital.com",
+              "sameAs": [
+                "https://www.behance.net/inoma",
+                "https://www.linkedin.com/company/inoma-digital",
+                "https://www.facebook.com/inomadigital",
+                "https://www.instagram.com/inomadigital"
+              ],
+              "hasOfferCatalog": {
+                "@type": "OfferCatalog",
+                "name": "Digital Agency Services",
+                "itemListElement": [
+                  { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Web Development" }},
+                  { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "SEO Services" }},
+                  { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Digital Marketing" }},
+                  { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Business Strategy" }},
+                  { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "UI/UX Design" }},
+                  { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Graphics Design" }},
+                  { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "App Development" }},
+                  { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "E-Commerce Development" }}
+                ]
+              }
+            })
+          }}
+        />
         <LayoutWrapper>
           {children}
         </LayoutWrapper>

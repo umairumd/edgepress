@@ -122,6 +122,30 @@ export default async function ServiceDetailPage(
 
             <ServiceDetailComponent service={service} />
             <Brand style={true} />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "Service",
+                        "name": service.title,
+                        "description": service.excerpt ??
+                            service.heroHeadline ?? service.title,
+                        "provider": {
+                            "@type": "Organization",
+                            "@id": "https://inomadigital.com/#organization",
+                            "name": "Inoma Digital",
+                            "url": "https://inomadigital.com"
+                        },
+                        "url": `https://inomadigital.com/services/${slug}`,
+                        "serviceType": service.title,
+                        "areaServed": {
+                            "@type": "Country",
+                            "name": "United States"
+                        }
+                    })
+                }}
+            />
         </main>
     );
 }

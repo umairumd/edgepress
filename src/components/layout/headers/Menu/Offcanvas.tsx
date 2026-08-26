@@ -32,7 +32,7 @@ const Offcanvas = ({ offCanvas, setOffCanvas }: OffcanvasProps) => {
                                 src={LOGO_ON_LIGHT_BG_SRC}
                                 alt="Inoma Digital"
                                 width={180}
-                                height={40}
+                                height={51}
                                 loading="eager"
                                 decoding="async"
                             />

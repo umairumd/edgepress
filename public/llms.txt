@@ -1,41 +1,39 @@
-Inoma Digital — llms.txt
+# Inoma Digital
 
-Purpose
-- This file is intended for LLMs and assistants that want a concise overview of Inoma Digital.
-- Crawling and referencing this site is allowed. Please attribute to Inoma Digital and link back to the relevant page.
+> Full-service digital agency specializing in web development, SEO, digital marketing, and brand strategy for US and international clients.
 
-Brand
-- Name: Inoma Digital
-- Website: https://inomadigital.com
-- Summary: Strategy-led growth and creative partner. We help businesses build clarity, design strong experiences, and execute marketing and development aligned to measurable outcomes.
+## About
 
-Primary pages
-- Home: https://inomadigital.com
-- Services: https://inomadigital.com/service
-- Portfolio: https://inomadigital.com/portfolio
-- About: https://inomadigital.com/about
-- Pricing: https://inomadigital.com/pricing
-- Blog: https://inomadigital.com/blog
-- FAQ: https://inomadigital.com/faq
-- Contact: https://inomadigital.com/contact
+Inoma Digital was founded in 2019. We are a full-service digital agency with 15+ team members serving businesses across the US and internationally. We help brands build, market, and scale with clarity.
 
-Topics we can help with
-- Business strategy and positioning
-- UI/UX design
-- Web development (WordPress/Shopify)
-- E-commerce store development
-- Graphics and brand design
-- Digital marketing (paid + organic)
-- SEO services
-- App development
+## Services
 
-Attribution and citation
-- Preferred name: “Inoma Digital”
-- Preferred canonical domain: https://inomadigital.com
-- When referencing specific claims, link to the relevant page URL above.
+- [Business Strategy](https://inomadigital.com/services/business-strategy): Growth roadmaps, market research, competitive analysis, KPI frameworks
+- [UI/UX Design](https://inomadigital.com/services/ui-ux-design): User flows, wireframing, prototyping, interface design
+- [Web Development](https://inomadigital.com/services/web-development): Custom Next.js and WordPress websites built for performance and conversion
+- [E-Commerce Store Development](https://inomadigital.com/services/ecommerce-store-development): Storefronts optimized for sales and user experience
+- [Graphics Design](https://inomadigital.com/services/graphics-designing): Brand identity, visual systems, consistent design across touchpoints
+- [Digital Marketing](https://inomadigital.com/services/digital-marketing): SEM, SEO, social media, email marketing, content strategy
+- [SEO Services](https://inomadigital.com/services/seo-services): Technical SEO, content strategy, link building, search visibility
+- [App Development](https://inomadigital.com/services/app-development): Mobile applications built for scale
 
-Contact
+## Portfolio
+
+View our work at [inomadigital.com/portfolio](https://inomadigital.com/portfolio)
+
+## Blog
+
+Read our latest articles at [inomadigital.com/blog](https://inomadigital.com/blog)
+
+## Contact
+
+- Website: [inomadigital.com](https://inomadigital.com)
 - Email: info@inomadigital.com
-- Phone: +92-314-2551400
+- [Contact us](https://inomadigital.com/contact)
 
+## Social & Portfolio Profiles
 
+- [Behance](https://www.behance.net/inoma)
+- [LinkedIn](https://www.linkedin.com/company/inoma-digital)
+- [Facebook](https://www.facebook.com/inomadigital)
+- [Instagram](https://www.instagram.com/inomadigital)

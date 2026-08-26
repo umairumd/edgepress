@@ -103,7 +103,7 @@ const Header = ({ variant = "home" }: HeaderProps) => {
                                             src={variant === "home" ? LOGO_ON_DARK_BG_SRC : LOGO_ON_LIGHT_BG_SRC}
                                             alt="Inoma Digital"
                                             width={180}
-                                            height={40}
+                                            height={51}
                                             loading="eager"
                                             decoding="async"
                                         />
@@ -114,7 +114,7 @@ const Header = ({ variant = "home" }: HeaderProps) => {
                                             src={LOGO_ON_LIGHT_BG_SRC}
                                             alt="Inoma Digital"
                                             width={180}
-                                            height={40}
+                                            height={51}
                                             loading="eager"
                                             decoding="async"
                                         />
