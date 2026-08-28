@@ -78,6 +78,11 @@ const Header = ({ variant = "home" }: HeaderProps) => {
         return base;
     }, [sticky, hidden, variant, mounting]);
 
+    // logo-1 = dark/transparent header (home top; portfolio-focus sticky via CSS)
+    // logo-2 = white/light header (sticky, and all inner/default pages)
+    const logoOnDarkHeader = LOGO_ON_DARK_BG_SRC;
+    const logoOnLightHeader = LOGO_ON_LIGHT_BG_SRC;
+
     return (
         <>
             <header>
@@ -98,9 +103,9 @@ const Header = ({ variant = "home" }: HeaderProps) => {
                             <div className="col-xxl-2 col-xl-2 col-4">
                                 <div className="logo">
                                     <Link className="logo-1" href="/">
-                                        {/* logo-1 = shown on non-sticky (dark header on Home) */}
+                                        {/* logo-1 = shown on non-sticky dark header (Home); also shown when sticky header is dark */}
                                         <img
-                                            src={variant === "home" ? LOGO_ON_DARK_BG_SRC : LOGO_ON_LIGHT_BG_SRC}
+                                            src={logoOnDarkHeader}
                                             alt="Inoma Digital"
                                             width={180}
                                             height={51}
@@ -109,9 +114,9 @@ const Header = ({ variant = "home" }: HeaderProps) => {
                                         />
                                     </Link>
                                     <Link className="logo-2 d-none" href="/">
-                                        {/* logo-2 = shown on sticky/white header */}
+                                        {/* logo-2 = shown on sticky/white header (and inner pages) */}
                                         <img
-                                            src={LOGO_ON_LIGHT_BG_SRC}
+                                            src={logoOnLightHeader}
                                             alt="Inoma Digital"
                                             width={180}
                                             height={51}

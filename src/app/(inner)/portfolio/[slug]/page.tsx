@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPortfolioItem, getPortfolioItems } from "@/lib/wp";
-import Image from "next/image";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { stripHtml, normalizeCanonical, formatDate } from "@/lib/utils";
 import Cta from "@/components/common/Cta";
@@ -64,65 +63,35 @@ export default async function PortfolioDetailsPage({ params }: { params: Promise
     const { slug } = await params;
     const item = await getPortfolioItem(slug);
     if (!item) return notFound();
-    const isDev = process.env.NODE_ENV !== "production";
 
-    const toLikelyOriginalUrl = (url: string) => {
-        try {
-            const u = new URL(url);
-            u.pathname = u.pathname
-                .replace(/-\d+x\d+(?=\.(?:png|jpe?g|webp|gif)$)/i, "")
-                .replace(/-scaled(?=\.(?:png|jpe?g|webp|gif)$)/i, "")
-                .replace(/-rotated(?=\.(?:png|jpe?g|webp|gif)$)/i, "");
-            return u.toString();
-        } catch {
-            return url
-                .replace(/-\d+x\d+(?=\.(?:png|jpe?g|webp|gif)$)/i, "")
-                .replace(/-scaled(?=\.(?:png|jpe?g|webp|gif)$)/i, "")
-                .replace(/-rotated(?=\.(?:png|jpe?g|webp|gif)$)/i, "");
+    const entryImageUrl = item.entryImage?.url || item.featuredImage?.url;
+    const entryImageWidth =
+        item.entryImage?.width ||
+        item.featuredImage?.width || 1600;
+
+    // If reported width is small (scaled version dimensions), use a large height
+    // fallback so slice loading does not stop early on the full-res original.
+    const entryImageHeight = (() => {
+        const w = item.entryImage?.width;
+        const h = item.entryImage?.height;
+        if (!w || !h) return 4000;
+        if (w < 600) {
+            return Math.round(h * (1600 / w) * 1.2);
         }
-    };
-
-    const entryImage = item.entryImage?.url || item.featuredImage?.url;
-    const entryAlt = item.entryImage?.alt || item.featuredImage?.alt || stripHtml(item.title);
-    const entryWidth = item.entryImage?.width || item.featuredImage?.width || 1600;
-    const entryHeight = item.entryImage?.height || item.featuredImage?.height || 4000;
+        return h;
+    })() || item.featuredImage?.height || 4000;
+    const entryImageAlt = item.entryImage?.alt || item.featuredImage?.alt || stripHtml(item.title);
     const contentHtml = (item.content || "").trim();
-    const contentHasImages = /<img\b/i.test(contentHtml);
-    const excerptText = stripHtml(item.excerpt);
 
     const content = contentHtml
         ? parse(contentHtml, {
             replace: (node) => {
-                if (node instanceof Element && node.name === "img") {
-                    const attribs = node.attribs || {};
-                    const rawSrc =
-                        attribs["data-orig-file"] ||
-                        attribs["data-large-file"] ||
-                        attribs["data-full-url"] ||
-                        attribs["data-src"] ||
-                        attribs["src"] ||
-                        "";
-                    if (!rawSrc) return undefined;
-                    const src = toLikelyOriginalUrl(rawSrc);
-                    const alt = attribs["alt"] || "";
-                    const wAttr = attribs["width"] ? parseInt(attribs["width"], 10) : NaN;
-                    const hAttr = attribs["height"] ? parseInt(attribs["height"], 10) : NaN;
-                    const w = Number.isFinite(wAttr) ? wAttr : undefined;
-                    const h = Number.isFinite(hAttr) ? hAttr : undefined;
-
-                    const ratio = w && h ? h / w : undefined;
-                    const isLong = (ratio && ratio >= 2.2) || (h && h >= 2200) || !h || !w;
-
-                    // For portfolio case studies, prefer the optimized slice renderer.
-                    // If the image isn't actually long, the slice endpoint will stop after the first slice.
-                    // If WP reports a small "thumbnail-ish" height (like 1024), don't trust it.
-                    // Let the component load slices until the slice API returns 416 (end of image).
-                    const trustHeight = Boolean(h && h >= 2200);
-                    if (isLong) return <PortfolioLongImage src={src} alt={alt} width={w} height={trustHeight ? h : undefined} />;
-
-                    return <PortfolioLongImage src={src} alt={alt} width={w} height={h} sliceHeight={900} />;
+                if (!(node instanceof Element)) return undefined;
+                if (node.name === "img") return null;
+                if (node.name === "figure") {
+                    const className = node.attribs?.class || "";
+                    if (className.includes("wp-block-image")) return null;
                 }
-                // Preserve everything else as-is
                 return undefined;
             },
         })
@@ -132,7 +101,7 @@ export default async function PortfolioDetailsPage({ params }: { params: Promise
         "@context": "https://schema.org",
         "@type": "CreativeWork",
         name: stripHtml(item.title),
-        image: entryImage,
+        image: entryImageUrl,
         description: stripHtml(item.excerpt) || undefined,
         url: `${SITE_URL}/portfolio/${slug}`,
         author: { "@type": "Organization", name: "Inoma Digital" },
@@ -142,10 +111,10 @@ export default async function PortfolioDetailsPage({ params }: { params: Promise
         <main className="td-has-cta-footer">
             <DisableRightClick />
             <PortfolioFocusMode />
-            <div className="td-portfolio-entry-area pb-120 pt-120">
+            <div className="td-portfolio-entry-area pb-120 pt-60">
                 <div className="container">
-                    <div className="row">
-                        <div className="col-12">
+                    <div className="row justify-content-center">
+                        <div className="col-lg-8">
                             <div className="td-portfolio-entry-header mb-40">
                                 <h1 className="td-portfolio-entry-title" dangerouslySetInnerHTML={{ __html: item.title }} />
 
@@ -166,39 +135,31 @@ export default async function PortfolioDetailsPage({ params }: { params: Promise
                                         ) : null}
                                     </div>
                                 ) : null}
-
-                                {excerptText ? (
-                                    <p className="td-portfolio-entry-excerpt">{excerptText}</p>
-                                ) : null}
                             </div>
 
                             <div id="td-portfolio-focus-anchor" aria-hidden="true" />
                             {content ? (
-                                <div className="td-portfolio-entry-content td-wp-content mb-40">{content}</div>
-                            ) : null}
-
-                            {/* If the WP content already contains the long screenshot/gallery images,
-                                don't render the featured image again at the bottom. */}
-                            {!contentHasImages && entryImage ? (
-                                <div className="td-portfolio-entry-image-wrap">
-                                    <Image
-                                        className="w-100 td-portfolio-entry-image"
-                                        src={entryImage}
-                                        alt={entryAlt}
-                                        width={entryWidth}
-                                        height={entryHeight}
-                                        sizes="(max-width: 1200px) 100vw, 1200px"
-                                        style={{ height: "auto" }}
-                                        quality={100}
-                                        priority
-                                        unoptimized={isDev && entryImage.startsWith("http")}
-                                    />
+                                <div className="td-portfolio-content-wrap">
+                                    <div className="td-portfolio-entry-content td-portfolio-content td-wp-content mb-40">
+                                        {content}
+                                    </div>
                                 </div>
-                            ) : !contentHtml ? (
-                                <p>Project image coming soon.</p>
                             ) : null}
                         </div>
                     </div>
+
+                    {entryImageUrl ? (
+                        <div className="td-portfolio-entry-image-wrap">
+                            <PortfolioLongImage
+                                src={entryImageUrl}
+                                width={entryImageWidth || 1600}
+                                height={entryImageHeight || 4000}
+                                alt={entryImageAlt}
+                            />
+                        </div>
+                    ) : (
+                        <p>Project image coming soon.</p>
+                    )}
                 </div>
             </div>
             <Cta />

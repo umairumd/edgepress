@@ -2,6 +2,20 @@ import { stripHtml } from "@/lib/utils";
 
 const WP_ENDPOINT = (process.env.WP_GRAPHQL_ENDPOINT || "").trim() || undefined;
 
+function toLikelyOriginalUrl(url: string): string {
+  try {
+    const u = new URL(url);
+    // Strip WordPress size suffixes: -300x200, -scaled, -rotated from filename
+    u.pathname = u.pathname
+      .replace(/-\d+x\d+(\.[a-z]+)$/i, "$1")
+      .replace(/-scaled(\.[a-z]+)$/i, "$1")
+      .replace(/-rotated(\.[a-z]+)$/i, "$1");
+    return u.toString();
+  } catch {
+    return url;
+  }
+}
+
 type WPImage = {
   url: string;
   alt?: string | null;
@@ -11,6 +25,8 @@ type WPImage = {
 
 type WpMediaNode = {
   sourceUrl?: string | null;
+  guid?: string | null;
+  mediaItemUrl?: string | null;
   altText?: string | null;
   mediaDetails?: {
     width?: number | null;
@@ -84,12 +100,15 @@ function normalizeWpMediaUrl(url?: string): string | undefined {
 }
 
 function mapWpImage(node: WpMediaNode | null | undefined): WPImage | undefined {
-  if (!node?.sourceUrl) return undefined;
+  const raw = (node?.guid || node?.sourceUrl || node?.mediaItemUrl || "").trim();
+  if (!raw) return undefined;
+  const url = normalizeWpMediaUrl(toLikelyOriginalUrl(raw));
+  if (!url) return undefined;
   return {
-    url: normalizeWpMediaUrl(node.sourceUrl)!,
-    alt: node.altText,
-    width: node.mediaDetails?.width ?? null,
-    height: node.mediaDetails?.height ?? null,
+    url,
+    alt: node?.altText,
+    width: node?.mediaDetails?.width ?? null,
+    height: node?.mediaDetails?.height ?? null,
   };
 }
 
@@ -1024,11 +1043,12 @@ export async function getPortfolioItem(slug: string): Promise<PortfolioItem | nu
   type PortfolioResponse = { portfolioItem?: WpPortfolioNode | null };
 
   const taxSelection = `${PORTFOLIO_TAX_FIELD} { nodes { slug name } }`;
+  const mediaFields = "sourceUrl guid mediaItemUrl altText mediaDetails { width height }";
   const buildEntryFieldSelection = (entryField: string, shape: "edge" | "direct") => {
     const entrySelection =
       shape === "edge"
-        ? `${entryField} { node { sourceUrl altText mediaDetails { width height } } }`
-        : `${entryField} { sourceUrl altText mediaDetails { width height } }`;
+        ? `${entryField} { node { ${mediaFields} } }`
+        : `${entryField} { ${mediaFields} }`;
     const featureSelection = PORTFOLIO_FEATURE_FIELD ? `${PORTFOLIO_FEATURE_FIELD}` : "";
     return PORTFOLIO_ACF_GROUP_FIELD
       ? `${PORTFOLIO_ACF_GROUP_FIELD} { ${entrySelection} ${featureSelection} }`
@@ -1043,7 +1063,7 @@ export async function getPortfolioItem(slug: string): Promise<PortfolioItem | nu
           ${includeExcerpt ? "excerpt" : ""}
           content
           date
-          featuredImage { node { sourceUrl altText mediaDetails { width height } } }
+          featuredImage { node { ${mediaFields} } }
           ${taxSelection}
           ${buildEntryFieldSelection(entryField, shape)}
           seo {
@@ -1069,7 +1089,7 @@ export async function getPortfolioItem(slug: string): Promise<PortfolioItem | nu
           ${includeExcerpt ? "excerpt" : ""}
           content
           date
-          featuredImage { node { sourceUrl altText mediaDetails { width height } } }
+          featuredImage { node { ${mediaFields} } }
           ${taxSelection}
           ${buildEntryFieldSelection(entryField, shape)}
         }
@@ -1084,7 +1104,7 @@ export async function getPortfolioItem(slug: string): Promise<PortfolioItem | nu
         ${includeExcerpt ? "excerpt" : ""}
         content
         date
-        featuredImage { node { sourceUrl altText mediaDetails { width height } } }
+        featuredImage { node { ${mediaFields} } }
       }
     }
   `;

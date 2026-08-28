@@ -775,6 +775,107 @@ img {
     }
 }
 
+.td-portfolio-content-wrap {
+  padding: 0 0 60px;
+}
+
+.td-portfolio-content {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #4a4a4a;
+}
+
+.td-portfolio-content h1,
+.td-portfolio-content h2,
+.td-portfolio-content h3,
+.td-portfolio-content h4 {
+  font-family: var(--td-ff-heading);
+  font-weight: 700;
+  color: #062539 !important;
+  margin-top: 40px;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.td-portfolio-content h2 {
+  font-size: clamp(22px, 2.5vw, 30px);
+  font-weight: 700;
+  color: #1c1d1f !important;
+  margin-top: 48px;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.td-portfolio-content h3 {
+  font-size: clamp(17px, 2vw, 22px);
+}
+
+.td-portfolio-content h2,
+.td-portfolio-content h3 {
+  color: #1c1d1f !important;
+}
+
+.td-portfolio-content p {
+  margin-bottom: 20px;
+  line-height: 1.8;
+  font-size: 16px;
+  color: #4a4a4a;
+}
+
+.td-portfolio-content ul,
+.td-portfolio-content ol {
+  padding-left: 24px;
+  margin: 16px 0 24px;
+}
+
+.td-portfolio-content ul {
+  list-style-type: disc !important;
+}
+
+.td-portfolio-content ol {
+  list-style-type: decimal !important;
+}
+
+.td-portfolio-content li {
+  display: list-item !important;
+  margin-bottom: 10px;
+  line-height: 1.7;
+  list-style-type: inherit !important;
+}
+
+.td-portfolio-content ul li,
+.td-portfolio-content ol li {
+  font-size: 16px;
+  color: #4a4a4a;
+  line-height: 1.75;
+  margin-bottom: 10px;
+}
+
+/* Remove top margin from first heading */
+.td-portfolio-content h2:first-child,
+.td-portfolio-content h3:first-child {
+  margin-top: 0;
+}
+
+.td-portfolio-content strong,
+.td-portfolio-content b {
+  font-weight: 700;
+  color: #062539;
+}
+
+.td-portfolio-content :first-child {
+  margin-top: 0;
+}
+
+/* Stat/result blocks — bold label + value */
+.td-portfolio-content p strong:first-child {
+  display: inline-block;
+  color: #062539;
+  font-weight: 700;
+}
+
 /* Portfolio detail pages: disable image dragging and right-click on images */
 .td-portfolio-entry-area img,
 .td-portfolio-long-image__slice,
