@@ -9,6 +9,7 @@ const ContactForm = () => {
     const searchParams = useSearchParams();
     const [status, setStatus] = useState<FormStatus>("idle");
     const [errorMessage, setErrorMessage] = useState("");
+    const [loadTime, setLoadTime] = useState(0);
     
     const [formData, setFormData] = useState({
         name: "",
@@ -16,6 +17,7 @@ const ContactForm = () => {
         subject: "",
         phone: "",
         message: "",
+        website: "",
     });
 
     // Pre-fill email from URL parameter (from footer form redirect)
@@ -25,6 +27,10 @@ const ContactForm = () => {
             setFormData((prev) => ({ ...prev, email: emailParam }));
         }
     }, [searchParams]);
+
+    useEffect(() => {
+        setLoadTime(Date.now());
+    }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -38,6 +44,20 @@ const ContactForm = () => {
         if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
             setStatus("error");
             setErrorMessage("Please fill in Name, Email, and Message fields.");
+            return;
+        }
+
+        // Honeypot: bots that fill hidden fields
+        if (formData.website) {
+            setStatus("success");
+            setFormData({ name: "", email: "", subject: "", phone: "", message: "", website: "" });
+            return;
+        }
+
+        // Time-based: reject submissions faster than a human could fill the form
+        if (Date.now() - loadTime < 4000) {
+            setStatus("success");
+            setFormData({ name: "", email: "", subject: "", phone: "", message: "", website: "" });
             return;
         }
 
@@ -59,7 +79,7 @@ const ContactForm = () => {
 
             setStatus("success");
             // Reset form on success
-            setFormData({ name: "", email: "", subject: "", phone: "", message: "" });
+            setFormData({ name: "", email: "", subject: "", phone: "", message: "", website: "" });
         } catch {
             setStatus("error");
             setErrorMessage("Unable to send your message. Please try again later or contact us directly.");
@@ -131,6 +151,15 @@ const ContactForm = () => {
                         />
                     </div>
                 </div>
+                <input
+                    name="website"
+                    type="text"
+                    value={formData.website}
+                    onChange={handleChange}
+                    tabIndex={-1}
+                    autoComplete="off"
+                    style={{ display: "none", position: "absolute", left: "-9999px" }}
+                />
                 <div className="col-lg-12">
                     <div className="td-contact-7-input-item mb-25">
                         <label className="labels" htmlFor="textareas">Message *</label>

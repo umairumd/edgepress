@@ -22,6 +22,7 @@ interface ContactFormData {
     subject?: string;
     phone?: string;
     message: string;
+    website?: string;
 }
 
 export async function POST(request: NextRequest) {
@@ -41,6 +42,11 @@ export async function POST(request: NextRequest) {
                 { error: "Name, email, and message are required" },
                 { status: 400 }
             );
+        }
+
+        // Honeypot: silent reject if filled
+        if (body.website) {
+            return NextResponse.json({ success: true }); // Silent reject
         }
 
         // Basic email validation
