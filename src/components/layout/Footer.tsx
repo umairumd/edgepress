@@ -48,6 +48,7 @@ const Footer = ({ style }: FooterProps = {}) => {
                                     <li><Link href="/team">Team</Link></li>
                                     <li><Link href="/portfolio">Portfolio</Link></li>
                                     <li><Link href="/contact">Contact</Link></li>
+                                    <li><Link href="/pricing">Pricing</Link></li>
                                 </ul>
                             </div>
                         </div>
@@ -56,7 +57,7 @@ const Footer = ({ style }: FooterProps = {}) => {
                                 <h3 className="td-footer-title mb-30">Quick Links</h3>
                                 <ul className="td-footer-widget-list">
                                     <li><Link href="/services">All Services</Link></li>
-                                    <li><Link href="/pricing">Pricing</Link></li>
+                                    <li><Link href="/testimonials">Testimonials</Link></li>
                                     <li><Link href="/blog">Blog</Link></li>
                                     <li><Link href="/privacy-policy">Privacy Policy</Link></li>
                                 </ul>
