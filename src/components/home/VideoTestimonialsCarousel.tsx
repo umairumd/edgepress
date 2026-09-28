@@ -14,8 +14,10 @@ function shuffleArray<T>(arr: T[]): T[] {
 
 export default function VideoTestimonialsCarousel({
   testimonials,
+  introText,
 }: {
   testimonials: TestimonialItem[];
+  introText?: string;
 }) {
   const { openVideo } = useVideoPopup();
   const [slides, setSlides] = useState(testimonials);
@@ -41,6 +43,9 @@ export default function VideoTestimonialsCarousel({
               <h2 className="td-section-6-bigtitle td-text-opacity">
                 SUCCESS STORIES
               </h2>
+              {introText && (
+                <p className="td-section-subtitle mt-15">{introText}</p>
+              )}
             </div>
           </div>
         </div>
